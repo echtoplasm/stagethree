@@ -43,21 +43,4 @@ services:
 
 volumes:
   pgdata:
-```
 
-**3. `.gitignore` at root**
-```
-node_modules/
-.env
-.env.local
-dist/
-build/
-*.log
-.DS_Store
-nginx/ssl/
-```
-
-**4. `.env.example` at root**
-```
-DB_USER=stagethree
-DB_PASSWORD=your_password_here
