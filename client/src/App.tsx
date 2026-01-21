@@ -12,7 +12,7 @@ function App() {
     <Router>
       <Navbar />
       <Routes>
-        <Route path="/posts" element={<PostCrud />} />
+        <Route path="/" element={<PostCrud />} />
         <Route path="/users" element={<UserCrud />} />
         <Route path="/stage" element={<StagePage />} />
       </Routes>

@@ -203,8 +203,8 @@ export function StageScene() {
       />
       <div style={{
         position: 'absolute',
-        top: 10,
-        left: 10,
+        top: 25,
+        left: 25,
         background: 'rgba(0,0,0,0.7)',
         color: 'white',
         padding: '10px',
