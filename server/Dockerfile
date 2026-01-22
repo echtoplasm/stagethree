@@ -13,6 +13,10 @@ RUN pnpm install --frozen-lockfile
 # Copy source
 COPY . .
 
+# accept build arg and set as env var
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
+
 # Build TypeScript
 RUN pnpm run build
 

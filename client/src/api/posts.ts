@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:3000/api/posts';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 export interface Post {
   id: number; 
@@ -12,7 +12,7 @@ export interface Post {
 }
 
 export const fetchAllPosts = async (): Promise<Post[]> => {
-  let res = await fetch(API_URL);
+  let res = await fetch(`${API_URL}/api/posts`);
   console.log('fetching for fetchAllPosts...');
   if (!res.ok) {
     throw new Error('Failed to fetch users');
