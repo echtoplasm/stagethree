@@ -1,4 +1,4 @@
-import 'dotenv/config';
+import dotenv from 'dotenv';
 import express, { Request, Response } from 'express';
 import pool from './db/db';
 import cors from 'cors';
@@ -6,6 +6,8 @@ import cors from 'cors';
 import userRoutes from './routes/users';
 import postRoutes from './routes/posts';
 import db from './db/knex';
+
+dotenv.config();
 
 const app = express();
 const PORT = 3000;
