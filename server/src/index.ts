@@ -23,6 +23,7 @@ app.use(express.json());
 app.use('/api/users', userRoutes);
 app.use('/api/posts', postRoutes);
 
+/*
 if (process.env.NODE_ENV === 'production') {
   db.migrate
     .latest()
@@ -32,7 +33,7 @@ if (process.env.NODE_ENV === 'production') {
       process.exit(1);
     });
 }
-
+*/
 app.get('/', (req: Request, res: Response) => {
   res.json({ message: 'Hello Typescript Express' });
 });
