@@ -36,6 +36,10 @@ RUN pnpm install --prod --frozen-lockfile
 # Copy built files from builder
 COPY --from=builder /app/dist ./dist
 
+# Copy migration files and knexfile
+COPY --from=builder /app/src/db ./src/db
+COPY --from=builder /app/src/knexfile.ts ./src/knexfile.ts
+
 EXPOSE 3000
 
 CMD ["node", "dist/index.js"]
