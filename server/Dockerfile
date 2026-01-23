@@ -30,7 +30,7 @@ COPY pnpm-lock.yaml ./
 
 # Install pnpm and production dependencies only
 RUN npm install -g pnpm
-RUN pnpm install --prod --frozen-lockfile
+RUN pnpm install --frozen-lockfile
 
 # Copy .env from builder
 COPY --from=builder /app/.env* ./
