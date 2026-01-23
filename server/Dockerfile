@@ -1,5 +1,4 @@
 FROM node:20-alpine AS builder
-
 WORKDIR /app
 
 # Copy package files
@@ -9,7 +8,6 @@ COPY pnpm-lock.yaml ./
 # Install pnpm and dependencies
 RUN npm install -g pnpm
 RUN pnpm install --frozen-lockfile
-
 RUN pnpm add -D ts-node typescript @types/node
 
 # Copy source
@@ -24,7 +22,6 @@ RUN pnpm run build
 
 # Production stage
 FROM node:20-alpine
-
 WORKDIR /app
 
 # Copy package files
@@ -35,6 +32,9 @@ COPY pnpm-lock.yaml ./
 RUN npm install -g pnpm
 RUN pnpm install --prod --frozen-lockfile
 
+# Copy .env from builder
+COPY --from=builder /app/.env* ./
+
 # Copy built files from builder
 COPY --from=builder /app/dist ./dist
 
@@ -43,5 +43,4 @@ COPY --from=builder /app/src/db ./src/db
 COPY --from=builder /app/src/knexfile.ts ./src/knexfile.ts
 
 EXPOSE 3000
-
 CMD ["node", "dist/index.js"]
