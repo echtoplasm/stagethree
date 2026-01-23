@@ -12,12 +12,12 @@ const config: { [key: string]: Knex.Config } = {
       password: process.env.DB_PASSWORD,
     },
     migrations: {
-      directory: './src/db/migrations',
+      directory: './db/migrations',
       tableName: 'knex_migrations',
       extension: 'ts',
     },
     seeds: {
-      directory: './src/db/seeds',
+      directory: './db/seeds',
       extension: 'ts',
     },
   },
@@ -26,12 +26,12 @@ const config: { [key: string]: Knex.Config } = {
     client: 'postgresql',
     connection: process.env.DATABASE_URL,
     migrations: {
-      directory: './src/db/migrations',
+      directory: './db/migrations',
       tableName: 'knex_migrations',
       extension: 'ts',
     },
     seeds: {
-      directory: './src/db/seeds',
+      directory: './db/seeds',
       extension: 'ts',
     },
   },
