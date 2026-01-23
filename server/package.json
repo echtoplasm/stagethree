@@ -7,7 +7,12 @@
     "dev": "nodemon --exec tsx src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "migrate": "knex --knexfile knexfile.ts migrate:latest",
+    "migrate:make": "knex --knexfile knexfile.ts migrate:make",
+    "migrate:rollback": "knex --knexfile knexfile.ts migrate:rollback",
+    "seed": "knex --knexfile knexfile.ts seed:run",
+    "seed:make": "knex --knexfile knexfile.ts seed:make"
   },
   "keywords": [],
   "author": "",
@@ -18,13 +23,16 @@
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
+    "knex": "^3.1.0",
     "pg": "^8.16.3"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
+    "@types/knex": "^0.16.1",
     "@types/node": "^25.0.3",
     "nodemon": "^3.1.11",
+    "ts-node": "^10.9.2",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   }
