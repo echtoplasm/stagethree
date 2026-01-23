@@ -10,6 +10,8 @@ COPY pnpm-lock.yaml ./
 RUN npm install -g pnpm
 RUN pnpm install --frozen-lockfile
 
+RUN pnpm add -D ts-node typescript @types/node
+
 # Copy source
 COPY . .
 
