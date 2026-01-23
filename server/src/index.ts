@@ -1,4 +1,9 @@
 import dotenv from 'dotenv';
+dotenv.config();
+
+console.log('DATABASE_URL:', process.env.DATABASE_URL);
+console.log('NODE_ENV:', process.env.NODE_ENV);
+
 import express, { Request, Response } from 'express';
 import pool from './db/db';
 import cors from 'cors';
@@ -7,7 +12,7 @@ import userRoutes from './routes/users';
 import postRoutes from './routes/posts';
 import db from './db/knex';
 
-dotenv.config();
+
 
 const app = express();
 const PORT = 3000;
