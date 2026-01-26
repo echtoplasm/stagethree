@@ -22,10 +22,10 @@ export function Navbar() {
             </li>
             <li className='mx-6'>
               <Link 
-                to="/posts" 
+                to="/stages" 
                 className="text-gray-300 hover:bg-gray-700 hover:text-white px-4 py-2 rounded-md text-sm font-medium transition"
               >
-                Posts
+                Stages
               </Link>
             </li>
             <div className='px-8'>
