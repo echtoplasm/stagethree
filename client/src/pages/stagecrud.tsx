@@ -57,16 +57,16 @@ export function StageCrud() {
           <div className="space-y-4">
             {stages.map(stage => (
               <div 
-                key={stage.stage_id}
+                key={stage.id_stg}
                 className="bg-white rounded-lg shadow p-6"
               >
-                <h2 className="text-xl font-semibold mb-2">{stage.name}</h2>
+                <h2 className="text-xl font-semibold mb-2">{stage.name_stg}</h2>
                 <div className="text-sm text-gray-600 space-y-1">
-                  <p>Width: {stage.width}ft</p>
-                  <p>Depth: {stage.depth}ft</p>
-                  {stage.height && <p>Height: {stage.height}ft</p>}
+                  <p>Width: {stage.width_stg}ft</p>
+                  <p>Depth: {stage.depth_stg}ft</p>
+                  {stage.height_stg && <p>Height: {stage.height_stg}ft</p>}
                   <p className="text-xs text-gray-400 mt-2">
-                    ID: {stage.stage_id}
+                    ID: {stage.id_stg}
                   </p>
                 </div>
               </div>
