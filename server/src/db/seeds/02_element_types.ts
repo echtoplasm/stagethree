@@ -1,48 +1,48 @@
 import { Knex } from "knex";
 
 export async function seed(knex: Knex): Promise<void> {
-  await knex("element_type").del();
+  await knex("element_type_elt").del();
 
-  await knex("element_type").insert([
+  await knex("element_type_elt").insert([
     { 
-      name: "Drum Riser", 
-      description: "Elevated platform for drum kit",
-      default_color: "#8B4513"
+      name_elt: "Drum Riser", 
+      description_elt: "Elevated platform for drum kit",
+      default_color_elt: "#8B4513"
     },
     { 
-      name: "Piano", 
-      description: "Grand or upright piano",
-      default_color: "#000000"
+      name_elt: "Piano", 
+      description_elt: "Grand or upright piano",
+      default_color_elt: "#000000"
     },
     { 
-      name: "Guitar Amp", 
-      description: "Guitar amplifier cabinet",
-      default_color: "#1C1C1C"
+      name_elt: "Guitar Amp", 
+      description_elt: "Guitar amplifier cabinet",
+      default_color_elt: "#1C1C1C"
     },
     { 
-      name: "Bass Amp", 
-      description: "Bass amplifier cabinet",
-      default_color: "#2C2C2C"
+      name_elt: "Bass Amp", 
+      description_elt: "Bass amplifier cabinet",
+      default_color_elt: "#2C2C2C"
     },
     { 
-      name: "Keyboard Stand", 
-      description: "Stand for synthesizers or keyboards",
-      default_color: "#4A4A4A"
+      name_elt: "Keyboard Stand", 
+      description_elt: "Stand for synthesizers or keyboards",
+      default_color_elt: "#4A4A4A"
     },
     { 
-      name: "Mic Stand", 
-      description: "Microphone stand",
-      default_color: "#C0C0C0"
+      name_elt: "Mic Stand", 
+      description_elt: "Microphone stand",
+      default_color_elt: "#C0C0C0"
     },
     { 
-      name: "Monitor Wedge", 
-      description: "Floor monitor speaker",
-      default_color: "#3C3C3C"
+      name_elt: "Monitor Wedge", 
+      description_elt: "Floor monitor speaker",
+      default_color_elt: "#3C3C3C"
     },
     { 
-      name: "Backdrop", 
-      description: "Stage backdrop or scrim",
-      default_color: "#1A1A2E"
+      name_elt: "Backdrop", 
+      description_elt: "Stage backdrop or scrim",
+      default_color_elt: "#1A1A2E"
     }
   ]);
 }
