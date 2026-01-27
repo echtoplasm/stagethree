@@ -31,10 +31,11 @@ export function UserCrud() {
     try {
       setLoading(true);
       await createUser({
-        email,
-        password,
-        first_name: firstName,
-        last_name: lastName
+        email_usr: email,
+        password_hash_usr: password, 
+        first_name_usr: firstName,
+        last_name_usr: lastName,
+        is_active_usr: true
       });
       setFirstName('');
       setLastName('');
@@ -99,7 +100,7 @@ export function UserCrud() {
           <div className="card-header">
             <h2>Create New User</h2>
           </div>
-          
+
           <form onSubmit={handleSubmit}>
             <div className="grid grid-cols-2 mb-4">
               <div className="form-group">

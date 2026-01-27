@@ -16,7 +16,7 @@ export const getUsers = async (): Promise<User[]> => {
   return response.json();
 };
 
-export const createUser = async (user: Omit<User, 'id_usr' | 'created_at_usr'>): Promise<User> => {
+export const createUser = async (user: User): Promise<User> => {
   const response = await fetch(`${API_URL}/api/users`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

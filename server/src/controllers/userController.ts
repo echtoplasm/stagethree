@@ -34,19 +34,19 @@ export const getUserById = async (req: Request, res: Response): Promise<void> =>
 
 export const createUser = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { email, password, first_name, last_name } = req.body;
+    const { email_usr, password_hash_usr, first_name_usr, last_name_usr } = req.body;
     
-    if (!email || !password || !first_name || !last_name) {
+    if (!email_usr || !password_hash_usr || !first_name_usr || !last_name_usr) {
       res.status(400).json({ error: 'Email, password, first name, and last name are required' });
       return;
     }
     
     const [user] = await db('user_usr')
       .insert({
-        email_usr: email,
-        password_hash_usr: password, // Should hash this with bcrypt
-        first_name_usr: first_name,
-        last_name_usr: last_name
+        email_usr,
+        password_hash_usr: password_hash_usr, // Should hash this with bcrypt
+        first_name_usr,
+        last_name_usr
       })
       .returning(['id_usr', 'email_usr', 'first_name_usr', 'last_name_usr', 'created_at_usr']);
     
@@ -60,13 +60,13 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
 export const updateUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
-    const { email, first_name, last_name, is_active } = req.body;
+    const { email_usr, first_name_usr, last_name_usr, is_active_usr } = req.body;
     
     const updateData: any = {};
-    if (email) updateData.email_usr = email;
-    if (first_name) updateData.first_name_usr = first_name;
-    if (last_name) updateData.last_name_usr = last_name;
-    if (is_active !== undefined) updateData.is_active_usr = is_active;
+    if (email_usr) updateData.email_usr = email_usr;
+    if (first_name_usr) updateData.first_name_usr = first_name_usr;
+    if (last_name_usr) updateData.last_name_usr = last_name_usr;
+    if (is_active_usr !== undefined) updateData.is_active_usr = is_active_usr;
     
     const [user] = await db('user_usr')
       .where('id_usr', id)
