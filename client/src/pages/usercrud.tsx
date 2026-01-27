@@ -5,9 +5,9 @@ import { getUsers, deleteUser, createUser } from "../api/users";
 export function UserCrud() {
   const [users, setUsers] = useState<User[]>([]);
   const [email, setEmail] = useState('');
-  const [name, setName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState<'admin' | 'user'>('user');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -24,16 +24,20 @@ export function UserCrud() {
       setLoading(false);
     }
   };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       setLoading(true);
-      await createUser({ name, email, password, role });
-      setName('');
+      await createUser({
+        email,
+        password,
+        first_name: firstName,
+        last_name: lastName
+      });
+      setFirstName('');
+      setLastName('');
       setEmail('');
       setPassword('');
-      setRole('user');
       await fetchUsers();
       setError(null);
     } catch (err) {
@@ -42,11 +46,9 @@ export function UserCrud() {
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleDelete = async (id: number) => {
+  }; const handleDelete = async (id: number) => {
     if (!confirm('Are you sure you want to delete this user?')) return;
-    
+
     try {
       setLoading(true);
       await deleteUser(id);
@@ -101,18 +103,32 @@ export function UserCrud() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Name
+                  First Name
                 </label>
                 <input
                   type="text"
                   placeholder="John Doe"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
                   required
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
                 />
               </div>
-              
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Last Name
+                </label>
+                <input
+                  type="text"
+                  placeholder="Doe"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  required
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                />
+              </div>
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Email
@@ -141,35 +157,22 @@ export function UserCrud() {
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Role
-                </label>
-                <select
-                  value={role}
-                  onChange={(e) => setRole(e.target.value as 'admin' | 'user')}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-                >
-                  <option value="user">User</option>
-                  <option value="admin">Admin</option>
-                </select>
-              </div>
-            </div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-4 rounded-lg transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
-            >
-              {loading ? (
-                <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                  Creating...
-                </>
-              ) : (
-                '+ Create User'
-              )}
-            </button>
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-4 rounded-lg transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+              >
+                {loading ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    Creating...
+                  </>
+                ) : (
+                  '+ Create User'
+                )}
+              </button>
+            </div>
           </form>
         </div>
 
@@ -191,35 +194,27 @@ export function UserCrud() {
           ) : (
             <ul className="divide-y divide-gray-100">
               {users.map((user) => (
-                <li key={user.id} className="px-6 py-4 hover:bg-gray-50 transition">
+                <li key={user.id_usr} className="px-6 py-4 hover:bg-gray-50 transition">
                   <div className="flex items-center justify-between">
                     <div className="flex-1">
                       <div className="flex items-center space-x-3">
                         <div className="flex-shrink-0">
                           <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
                             <span className="text-blue-600 font-semibold text-sm">
-                              {user.name.charAt(0).toUpperCase()}
+                              {user.first_name_usr.charAt(0).toUpperCase()}
                             </span>
                           </div>
                         </div>
                         <div>
-                          <p className="text-sm font-medium text-gray-900">{user.name}</p>
-                          <p className="text-sm text-gray-500">{user.email}</p>
+                          <p className="text-sm font-medium text-gray-900">{user.first_name_usr}</p>
+                          <p className="text-sm text-gray-500">{user.email_usr}</p>
                         </div>
                       </div>
                     </div>
-                    
+
                     <div className="flex items-center space-x-3">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                        user.role === 'admin' 
-                          ? 'bg-purple-100 text-purple-800' 
-                          : 'bg-gray-100 text-gray-800'
-                      }`}>
-                        {user.role}
-                      </span>
-                      
                       <button
-                        onClick={() => handleDelete(user.id)}
+                        onClick={() => handleDelete(user.id_usr)}
                         disabled={loading}
                         className="text-red-600 hover:text-red-800 hover:bg-red-50 p-2 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
                         title="Delete user"

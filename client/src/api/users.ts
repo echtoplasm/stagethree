@@ -1,13 +1,13 @@
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 export interface User {
-  id: number;
-  name: string;
-  email: string;
-  password: string;
-  role: 'admin' | 'user';
-  created_at: Date;
-  updated_at?: Date;
+  id_usr: number;
+  email_usr: string;
+  password_hash_usr: string;
+  first_name_usr: string;
+  last_name_usr: string;
+  is_active_usr: boolean;
+  created_at_usr: Date;
 }
 
 export const getUsers = async (): Promise<User[]> => {
@@ -16,13 +16,16 @@ export const getUsers = async (): Promise<User[]> => {
   return response.json();
 };
 
-export const createUser = async (user: Omit<User, 'id' | 'created_at'>): Promise<User> => {
-  const response = await fetch(API_URL, {
+export const createUser = async (user: Omit<User, 'id_usr' | 'created_at_usr'>): Promise<User> => {
+  const response = await fetch(`${API_URL}/api/users`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(user),
   });
-  if (!response.ok) throw new Error('Failed to create user');
+
+  if (!response.ok) {
+    throw new Error('unable to create new user');
+  }
   return response.json();
 };
 
@@ -38,7 +41,7 @@ export const updateUser = async (id: number, updates: Partial<User>): Promise<Us
 
 export const deleteUser = async (id: number): Promise<void> => {
   const response = await fetch(`${API_URL}/api/users/${id}`, {
-    method: 'DELETE'
+    method: 'DELETE',
   });
   if (!response.ok) throw new Error('Failed to delete user');
 };
