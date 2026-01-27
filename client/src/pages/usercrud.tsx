@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Trash2, UserPlus, Users as UsersIcon } from "lucide-react";
 import type { User } from "src/types/user";
 import { getUsers, deleteUser, createUser } from "../api/users";
 
@@ -24,6 +25,7 @@ export function UserCrud() {
       setLoading(false);
     }
   };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -46,7 +48,9 @@ export function UserCrud() {
     } finally {
       setLoading(false);
     }
-  }; const handleDelete = async (id: number) => {
+  };
+
+  const handleDelete = async (id: number) => {
     if (!confirm('Are you sure you want to delete this user?')) return;
 
     try {
@@ -68,168 +72,144 @@ export function UserCrud() {
 
   if (loading && users.length === 0) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
+      <div className="page-container flex-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading users...</p>
+          <div className="spinner" style={{ width: '48px', height: '48px', margin: '0 auto 1rem' }} />
+          <p className="text-secondary">Loading users...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <h2 className="text-4xl font-bold text-gray-900 mb-2">User Management :: Testing Actions  </h2>
-          <p className="text-gray-600">Create and manage user accounts</p>
-        </div>
+    <div className="page-container">
+      <div className="content-wrapper-narrow">
+        <header className="mb-8">
+          <h1>User Management</h1>
+          <p className="text-secondary">Create and manage user accounts</p>
+        </header>
 
-        {/* Error Alert */}
         {error && (
-          <div className="mb-6 bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg flex items-center">
-            <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-            </svg>
+          <div className="alert alert-error mb-6">
             {error}
           </div>
         )}
 
-        {/* Create User Form */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-8">
-          <h3 className="text-xl font-semibold text-gray-900 mb-4">Create New User</h3>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  First Name
-                </label>
+        <section className="card mb-6">
+          <div className="card-header">
+            <h2>Create New User</h2>
+          </div>
+          
+          <form onSubmit={handleSubmit}>
+            <div className="grid grid-cols-2 mb-4">
+              <div className="form-group">
+                <label className="form-label" htmlFor="firstName">First Name</label>
                 <input
+                  id="firstName"
                   type="text"
-                  placeholder="John Doe"
+                  className="form-input"
+                  placeholder="John"
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
                   required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Last Name
-                </label>
+              <div className="form-group">
+                <label className="form-label" htmlFor="lastName">Last Name</label>
                 <input
+                  id="lastName"
                   type="text"
+                  className="form-input"
                   placeholder="Doe"
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
                   required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Email
-                </label>
+              <div className="form-group">
+                <label className="form-label" htmlFor="email">Email</label>
                 <input
+                  id="email"
                   type="email"
+                  className="form-input"
                   placeholder="john@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Password
-                </label>
+              <div className="form-group">
+                <label className="form-label" htmlFor="password">Password</label>
                 <input
+                  id="password"
                   type="password"
+                  className="form-input"
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
                 />
               </div>
-
-
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-4 rounded-lg transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
-              >
-                {loading ? (
-                  <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    Creating...
-                  </>
-                ) : (
-                  '+ Create User'
-                )}
-              </button>
             </div>
-          </form>
-        </div>
 
-        {/* Users List */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-100">
-            <h3 className="text-xl font-semibold text-gray-900">
-              Users ({users.length})
-            </h3>
+            <button type="submit" className="btn btn-primary" disabled={loading}>
+              {loading ? (
+                <>
+                  <div className="spinner" style={{ width: '16px', height: '16px' }} />
+                  Creating...
+                </>
+              ) : (
+                <>
+                  <UserPlus size={18} />
+                  Create User
+                </>
+              )}
+            </button>
+          </form>
+        </section>
+
+        <section className="card">
+          <div className="card-header flex-between">
+            <h2>Users ({users.length})</h2>
           </div>
 
           {users.length === 0 ? (
-            <div className="text-center py-12">
-              <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-              </svg>
-              <p className="text-gray-500">No users found. Create your first user above!</p>
+            <div className="empty-state">
+              <UsersIcon size={64} />
+              <p>No users found. Create your first user above!</p>
             </div>
           ) : (
-            <ul className="divide-y divide-gray-100">
+            <ul className="list">
               {users.map((user) => (
-                <li key={user.id_usr} className="px-6 py-4 hover:bg-gray-50 transition">
-                  <div className="flex items-center justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-3">
-                        <div className="flex-shrink-0">
-                          <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                            <span className="text-blue-600 font-semibold text-sm">
-                              {user.first_name_usr.charAt(0).toUpperCase()}
-                            </span>
-                          </div>
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium text-gray-900">{user.first_name_usr}</p>
-                          <p className="text-sm text-gray-500">{user.email_usr}</p>
-                        </div>
+                <li key={user.id_usr} className="list-item">
+                  <div className="flex-between">
+                    <div className="flex gap-4">
+                      <div className="avatar">
+                        {user.first_name_usr.charAt(0).toUpperCase()}
+                      </div>
+                      <div>
+                        <p className="font-medium">{user.first_name_usr} {user.last_name_usr}</p>
+                        <p className="text-muted">{user.email_usr}</p>
                       </div>
                     </div>
 
-                    <div className="flex items-center space-x-3">
-                      <button
-                        onClick={() => handleDelete(user.id_usr)}
-                        disabled={loading}
-                        className="text-red-600 hover:text-red-800 hover:bg-red-50 p-2 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
-                        title="Delete user"
-                      >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
-                      </button>
-                    </div>
+                    <button
+                      onClick={() => handleDelete(user.id_usr)}
+                      disabled={loading}
+                      className="btn btn-ghost btn-danger"
+                      title="Delete user"
+                    >
+                      <Trash2 size={18} />
+                    </button>
                   </div>
                 </li>
               ))}
             </ul>
           )}
-        </div>
+        </section>
       </div>
     </div>
   );

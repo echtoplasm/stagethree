@@ -1,45 +1,35 @@
 import { Link } from 'react-router-dom';
+import { Users, Box, Boxes } from 'lucide-react';
 
 export function Navbar() {
   return (
-    <nav className="bg-gray-800">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
-          {/* Logo */}
-          <Link to="/" className="text-white text-xl font-bold hover:text-gray-300">
-            StageThree
-          </Link>
-          
-          {/* Navigation Links */}
-          <ul className="flex gap-4">
-            <li className='mx-6'>
-              <Link 
-                to="/users" 
-                className="text-gray-300 hover:bg-gray-700 hover:text-white px-4 py-2 rounded-md text-sm font-medium transition"
-              >
-                Users
-              </Link>
-            </li>
-            <li className='mx-6'>
-              <Link 
-                to="/stages" 
-                className="text-gray-300 hover:bg-gray-700 hover:text-white px-4 py-2 rounded-md text-sm font-medium transition"
-              >
-                Stages
-              </Link>
-            </li>
-            <div className='px-8'>
-            <li className='mx-6'>
-              <Link 
-                to="/stage" 
-                className="text-gray-300 hover:bg-gray-700 hover:text-white px-4 py-2 rounded-md text-sm font-medium transition"
-              >
-                3D Stage
-              </Link>
-            </li>
-            </div>
-          </ul>
-        </div>
+    <nav>
+      <div>
+        <Link to="/">
+          <span className="logo-icon">S3</span>
+          <span>StageThree</span>
+        </Link>
+        
+        <ul>
+          <li>
+            <Link to="/users">
+              <Users size={18} />
+              Users
+            </Link>
+          </li>
+          <li>
+            <Link to="/stages">
+              <Boxes size={18} />
+              Stages
+            </Link>
+          </li>
+          <li>
+            <Link to="/stage">
+              <Box size={18} />
+              3D Stage
+            </Link>
+          </li>
+        </ul>
       </div>
     </nav>
   );

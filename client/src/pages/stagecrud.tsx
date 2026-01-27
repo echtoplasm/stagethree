@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Box, Ruler, Layers } from 'lucide-react';
 import type { Stage } from 'src/api/stages';
 import { fetchAllStages } from '../api/stages';
 
@@ -12,8 +13,6 @@ export function StageCrud() {
       try {
         setLoading(true);
         const data = await fetchAllStages();
-        console.log('recieved data:', data);
-        console.log('Is array?', Array.isArray(data));
         setStages(data);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to fetch stages');
@@ -27,49 +26,74 @@ export function StageCrud() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-gray-600">Loading stages...</p>
+      <div className="page-container flex-center">
+        <div className="text-center">
+          <div className="spinner" style={{ width: '48px', height: '48px', margin: '0 auto 1rem' }} />
+          <p className="text-secondary">Loading stages...</p>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-red-600">Error: {error}</p>
+      <div className="page-container flex-center">
+        <div className="alert alert-error">
+          {error}
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4">
-      <div className="max-w-4xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Stages Test</h1>
-          <p className="text-gray-600 mt-2">Fetched {stages.length} stages from API</p>
-        </div>
+    <div className="page-container">
+      <div className="content-wrapper">
+        <header className="mb-8">
+          <h1>Stage Templates</h1>
+          <p className="text-secondary">Browse available stage configurations</p>
+        </header>
 
         {stages.length === 0 ? (
-          <div className="bg-white rounded-lg shadow p-8 text-center">
-            <p className="text-gray-500">No stages found</p>
+          <div className="empty-state">
+            <Box size={64} />
+            <p>No stage templates found</p>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="stages-grid">
             {stages.map(stage => (
-              <div 
-                key={stage.id_stg}
-                className="bg-white rounded-lg shadow p-6"
-              >
-                <h2 className="text-xl font-semibold mb-2">{stage.name_stg}</h2>
-                <div className="text-sm text-gray-600 space-y-1">
-                  <p>Width: {stage.width_stg}ft</p>
-                  <p>Depth: {stage.depth_stg}ft</p>
-                  {stage.height_stg && <p>Height: {stage.height_stg}ft</p>}
-                  <p className="text-xs text-gray-400 mt-2">
-                    ID: {stage.id_stg}
-                  </p>
+              <article key={stage.id_stg} className="stage-card">
+                <div className="stage-card-header">
+                  <Box size={24} />
+                  <h2>{stage.name_stg}</h2>
                 </div>
-              </div>
+                
+                <div className="stage-dimensions">
+                  <div className="dimension">
+                    <Ruler size={16} />
+                    <span className="dimension-label">Width</span>
+                    <span className="dimension-value">{stage.width_stg} ft</span>
+                  </div>
+                  
+                  <div className="dimension">
+                    <Ruler size={16} />
+                    <span className="dimension-label">Depth</span>
+                    <span className="dimension-value">{stage.depth_stg} ft</span>
+                  </div>
+                  
+                  {stage.height_stg && (
+                    <div className="dimension">
+                      <Layers size={16} />
+                      <span className="dimension-label">Height</span>
+                      <span className="dimension-value">{stage.height_stg} ft</span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="stage-card-footer">
+                  <span className="text-muted">ID: {stage.id_stg}</span>
+                  <button className="btn btn-ghost btn-sm">View Details</button>
+                </div>
+              </article>
             ))}
           </div>
         )}
