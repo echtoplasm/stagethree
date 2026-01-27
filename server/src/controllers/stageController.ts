@@ -5,7 +5,7 @@ export const getAllStages = async (req: Request, res: Response): Promise<void> =
   console.log('getAllStages called');
   try {
     // Check which database we're connected to   
-    const result = await db('stage_sta').select('*');
+    const result = await db('stage_stg').select('*');
     console.log('stage result', result);
     res.json(result);
   } catch (err) {
