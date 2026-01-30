@@ -2,11 +2,11 @@ import 'dotenv/config';
 
 console.log('DATABASE_URL:', process.env.DATABASE_URL);
 console.log('NODE_ENV:', process.env.NODE_ENV);
+console.log('JWT_SECRET', process.env.JWT_SECRET);
 
 import express, { Request, Response } from 'express';
-import pool from './db/db';
 import cors from 'cors';
-
+import cookieParser from 'cookie-parser';
 import userRoutes from './routes/users';
 import postRoutes from './routes/posts';
 import stageRoutes from './routes/stage';
@@ -15,9 +15,16 @@ import db from './db/knex';
 const app = express();
 const PORT = 3000;
 
-app.use(cors());
+//MiddleWare//
+app.use(cookieParser()); 
 app.use(express.json());
+app.use(cors({
+  origin: 'http://localhost:5173', 
+  credentials: true  
+}));
 
+
+//Routes//
 app.use('/api/users', userRoutes);
 app.use('/api/posts', postRoutes);
 app.use('/api/stages', stageRoutes);

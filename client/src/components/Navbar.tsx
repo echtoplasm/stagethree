@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Users, Box, Boxes } from 'lucide-react';
+import { Users, UserPlus, Box, Boxes, LogIn } from 'lucide-react';
 
 export function Navbar() {
   return (
@@ -9,7 +9,7 @@ export function Navbar() {
           <span className="logo-icon">S3</span>
           <span>StageThree</span>
         </Link>
-        
+
         <ul>
           <li>
             <Link to="/users">
@@ -29,8 +29,20 @@ export function Navbar() {
               3D Stage
             </Link>
           </li>
-        </ul>
-      </div>
-    </nav>
+          <li>
+            <Link to="/signup">
+              <UserPlus size={18} />
+            Sign Up
+          </Link>
+        </li>
+        <li>
+            <Link to="/signin">
+              <LogIn size={18} />
+              Log In
+            </Link>
+          </li>
+      </ul>
+    </div>
+  </nav >
   );
 }
