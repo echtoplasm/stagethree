@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { fetchAllProjects } from "../../api/projects";
-
+import { Folder } from 'lucide-react';
 export function ProjectCard() {
   const [projects, setProjects] = useState([]);
 
@@ -9,20 +9,21 @@ export function ProjectCard() {
     console.log(data);
     setProjects(data);
   }
-  
+
   useEffect(() => {
     fetchProjects();
   }, []);
 
-  return (
-    <div>
-      <h1>Projects</h1>
-      <ul>
-        {projects.map((project) =>(
-          <li key={project.id_prj}>{project.name_prj}</li>
-        ))}
-      </ul>
-    </div>
-  )
+return (
+  <div className="projects-list">
+    {projects.map((project) => (
+      <div key={project.id_prj} className="project-row">
+        <span className="icon"><Folder size={18}/></span>
+        <span className="name">{project.name_prj}</span>
+        <p className="stage-count">3 plots</p>
+      </div>
+    ))}
+  </div>
+);
 
 }
