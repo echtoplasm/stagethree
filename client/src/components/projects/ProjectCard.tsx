@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { fetchAllProjects } from "../../api/projects";
+import { fetchAllProjects, type Project } from "../../api/projects";
 import { Folder } from 'lucide-react';
 export function ProjectCard() {
-  const [projects, setProjects] = useState([]);
+  const [projects, setProjects] = useState<Project[]>([]);
 
   const fetchProjects = async () => {
     const data = await fetchAllProjects();
