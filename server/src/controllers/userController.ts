@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { LoginRequest, LoginResponse } from '../types/api';
-import { UserRecord } from '../types/database';
+import { UserDB } from '../utils/transformers';
 import bcrypt from 'bcrypt';
 import { Jwt } from 'jsonwebtoken';
 import jwt from 'jsonwebtoken';
