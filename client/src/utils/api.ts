@@ -4,9 +4,11 @@ interface ApiFetchOptions extends RequestInit {
   body?: any;
 }
 
-export const apiFetch = async (endpoint: string, options: ApiFetchOptions = {}) => {
+export const apiFetch = async <T = any>(
+  endpoint: string, 
+  options: ApiFetchOptions = {}
+): Promise<T> => {
   const { body, ...restOptions } = options;
-
   const config: RequestInit = {
     ...restOptions,
     credentials: 'include',
@@ -15,19 +17,18 @@ export const apiFetch = async (endpoint: string, options: ApiFetchOptions = {}) 
       ...restOptions.headers,
     },
   };
-
-
+  
   if (body && typeof body !== 'string') {
     config.body = JSON.stringify(body);
   } else if (body) {
     config.body = body;
   }
-
+  
   const response = await fetch(`${API_URL}${endpoint}`, config);
   
   if (!response.ok) {
     throw new Error(`API Error: ${response.status} ${response.statusText}`);
   }
-
-  return response.json();
+  
+  return response.json() as Promise<T>;
 };

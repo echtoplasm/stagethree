@@ -17,11 +17,10 @@ export function SignUpPage() {
     try {
       setLoading(true);
       await createUser({
-        email_usr: email,
-        password_hash_usr: password,
-        first_name_usr: firstName,
-        last_name_usr: lastName,
-        is_active_usr: true
+        email: email,
+        password: password,
+        firstName: firstName,
+        lastName: lastName,
       });
       setFirstName('');
       setLastName('');

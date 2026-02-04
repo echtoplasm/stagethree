@@ -61,36 +61,36 @@ export function StageCrud() {
         ) : (
           <div className="stages-grid">
             {stages.map(stage => (
-              <article key={stage.id_stg} className="stage-card">
+              <article key={stage.id} className="stage-card">
                 <div className="stage-card-header">
                   <Box size={24} />
-                  <h2>{stage.name_stg}</h2>
+                  <h2>{stage.name}</h2>
                 </div>
                 
                 <div className="stage-dimensions">
                   <div className="dimension">
                     <Ruler size={16} />
                     <span className="dimension-label">Width</span>
-                    <span className="dimension-value">{stage.width_stg} ft</span>
+                    <span className="dimension-value">{stage.width} ft</span>
                   </div>
                   
                   <div className="dimension">
                     <Ruler size={16} />
                     <span className="dimension-label">Depth</span>
-                    <span className="dimension-value">{stage.depth_stg} ft</span>
+                    <span className="dimension-value">{stage.depth} ft</span>
                   </div>
                   
-                  {stage.height_stg && (
+                  {stage.height && (
                     <div className="dimension">
                       <Layers size={16} />
                       <span className="dimension-label">Height</span>
-                      <span className="dimension-value">{stage.height_stg} ft</span>
+                      <span className="dimension-value">{stage.height} ft</span>
                     </div>
                   )}
                 </div>
 
                 <div className="stage-card-footer">
-                  <span className="text-muted">ID: {stage.id_stg}</span>
+                  <span className="text-muted">ID: {stage.id}</span>
                   <button className="btn btn-ghost btn-sm">View Details</button>
                 </div>
               </article>

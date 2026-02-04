@@ -1,21 +1,19 @@
+
 import { Request, Response } from 'express';
-import { LoginRequest, LoginResponse } from '../types/api';
-import { UserDB } from '../utils/transformers';
+import { LoginRequest } from '../types/api';
+import { UserDB, dbUserToApi, apiUserToDb } from '../utils/transformers';
 import bcrypt from 'bcrypt';
-import { Jwt } from 'jsonwebtoken';
 import jwt from 'jsonwebtoken';
 import db from '../db/knex';
 
+/**
+ * GET /api/users
+ * Fetch all users
+ */
 export const getAllUsers = async (req: Request, res: Response): Promise<void> => {
   try {
-    const users = await db('user_usr').select(
-      'id_usr',
-      'email_usr',
-      'first_name_usr',
-      'last_name_usr',
-      'is_active_usr',
-      'created_at_usr'
-    );
+    const rows: UserDB[] = await db('user_usr').select('*');
+    const users = rows.map(dbUserToApi);
     res.json(users);
   } catch (error) {
     console.error('Error fetching users:', error);
@@ -23,19 +21,15 @@ export const getAllUsers = async (req: Request, res: Response): Promise<void> =>
   }
 };
 
+/**
+ * GET /api/users/:id
+ * Fetch a single user by ID
+ */
 export const getUserById = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
-    const user = await db('user_usr')
-      .select(
-        'id_usr',
-        'email_usr',
-        'first_name_usr',
-        'last_name_usr',
-        'is_active_usr',
-        'created_at_usr'
-      )
-      .where('id_usr', id)
+    const user: UserDB | undefined = await db('user_usr')
+      .where({ id_usr: id })
       .first();
 
     if (!user) {
@@ -43,70 +37,134 @@ export const getUserById = async (req: Request, res: Response): Promise<void> =>
       return;
     }
 
-    res.json(user);
+    res.json(dbUserToApi(user));
   } catch (error) {
     console.error('Error fetching user:', error);
     res.status(500).json({ error: 'Failed to fetch user' });
   }
 };
 
+/**
+ * POST /api/users
+ * Create a new user
+ */
 export const createUser = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { email_usr, password_hash_usr, first_name_usr, last_name_usr } = req.body;
+    const { email, password, firstName, lastName } = req.body;
 
-    if (!email_usr || !password_hash_usr || !first_name_usr || !last_name_usr) {
+    // Validate required fields
+    if (!email || !password || !firstName || !lastName) {
       res.status(400).json({ error: 'Email, password, first name, and last name are required' });
       return;
     }
 
-    const [user] = await db('user_usr')
-      .insert({
-        email_usr,
-        password_hash_usr: password_hash_usr, // Should hash this with bcrypt
-        first_name_usr,
-        last_name_usr,
-      })
-      .returning(['id_usr', 'email_usr', 'first_name_usr', 'last_name_usr', 'created_at_usr']);
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    res.status(201).json(user);
+    // Transform API data to DB format
+    const dbData = apiUserToDb({ 
+      email, 
+      firstName, 
+      lastName 
+    });
+
+    // Add hashed password (not in transformer since it's auth-specific)
+    const insertData = {
+      ...dbData,
+      password_hash_usr: hashedPassword,
+    };
+
+    const [result]: UserDB[] = await db('user_usr')
+      .insert(insertData)
+      .returning('*');
+
+    res.status(201).json(dbUserToApi(result));
   } catch (error) {
     console.error('Error creating user:', error);
     res.status(500).json({ error: 'Failed to create user' });
   }
 };
 
+/**
+ * PUT /api/users/:id
+ * Update a user (full update)
+ */
 export const updateUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
-    const { email_usr, first_name_usr, last_name_usr, is_active_usr } = req.body;
+    const { email, firstName, lastName, isActive } = req.body;
 
-    const updateData: any = {};
-    if (email_usr) updateData.email_usr = email_usr;
-    if (first_name_usr) updateData.first_name_usr = first_name_usr;
-    if (last_name_usr) updateData.last_name_usr = last_name_usr;
-    if (is_active_usr !== undefined) updateData.is_active_usr = is_active_usr;
-
-    const [user] = await db('user_usr')
-      .where('id_usr', id)
-      .update(updateData)
-      .returning(['id_usr', 'email_usr', 'first_name_usr', 'last_name_usr', 'is_active_usr']);
-
-    if (!user) {
+    // Check if user exists
+    const exists = await db('user_usr').where({ id_usr: id }).first();
+    if (!exists) {
       res.status(404).json({ error: 'User not found' });
       return;
     }
 
-    res.json(user);
+    // Transform API data to DB format
+    const updates = apiUserToDb({ email, firstName, lastName, isActive });
+
+    // Only update if there are fields to update
+    if (Object.keys(updates).length === 0) {
+      res.status(400).json({ error: 'No valid fields to update' });
+      return;
+    }
+
+    const [result]: UserDB[] = await db('user_usr')
+      .where({ id_usr: id })
+      .update(updates)
+      .returning('*');
+
+    res.json(dbUserToApi(result));
   } catch (error) {
     console.error('Error updating user:', error);
     res.status(500).json({ error: 'Failed to update user' });
   }
 };
 
+/**
+ * PATCH /api/users/:id
+ * Partially update a user
+ */
+export const patchUser = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+
+    // Check if user exists
+    const exists = await db('user_usr').where({ id_usr: id }).first();
+    if (!exists) {
+      res.status(404).json({ error: 'User not found' });
+      return;
+    }
+
+    // Transform whatever fields were sent
+    const updates = apiUserToDb(req.body);
+
+    if (Object.keys(updates).length === 0) {
+      res.status(400).json({ error: 'No valid fields to update' });
+      return;
+    }
+
+    const [result]: UserDB[] = await db('user_usr')
+      .where({ id_usr: id })
+      .update(updates)
+      .returning('*');
+
+    res.json(dbUserToApi(result));
+  } catch (error) {
+    console.error('Error patching user:', error);
+    res.status(500).json({ error: 'Failed to update user' });
+  }
+};
+
+/**
+ * DELETE /api/users/:id
+ * Delete a user
+ */
 export const deleteUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
-    const deleted = await db('user_usr').where('id_usr', id).del();
+    const deleted = await db('user_usr').where({ id_usr: id }).del();
 
     if (deleted === 0) {
       res.status(404).json({ error: 'User not found' });
@@ -120,35 +178,45 @@ export const deleteUser = async (req: Request, res: Response): Promise<void> => 
   }
 };
 
+/**
+ * POST /api/auth/login
+ * Authenticate a user
+ */
 export const loginUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const { email, password }: LoginRequest = req.body;
 
-    const [user] = await db<UserRecord>('user_usr')
-      .select('id_usr', 'email_usr', 'password_hash_usr')
-      .where('email_usr', email)
-      .limit(1);
+    // Fetch user by email (DB format)
+    const user: UserDB | undefined = await db('user_usr')
+      .where({ email_usr: email })
+      .first();
 
     if (!user) {
-      res.status(401).json({ error: 'invalid credentials' });
+      res.status(401).json({ error: 'Invalid credentials' });
       return;
     }
 
+    // Verify password
     const isValidPassword = await bcrypt.compare(password, user.password_hash_usr);
 
-    console.log('Password Valid', isValidPassword);
+    if(isValidPassword){
+      console.log('isValidPassword:', isValidPassword);
+    }
 
     if (!isValidPassword) {
       res.status(401).json({ error: 'Invalid credentials' });
       return;
     }
 
+    // Generate JWT with clean data
+    const apiUser = dbUserToApi(user);
     const token = jwt.sign(
-      { userId: user.id_usr, email: user.email_usr },
+      { userId: apiUser.id, email: apiUser.email },
       process.env.JWT_SECRET!,
       { expiresIn: '15m' }
     );
 
+    // Set cookie
     res.cookie('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
@@ -156,14 +224,18 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
       maxAge: 15 * 60 * 1000,
     });
 
+    // Return clean user data
     res.json({
       user: {
-        id: user.id_usr,
-        email: user.email_usr,
+        id: apiUser.id,
+        email: apiUser.email,
+        firstName: apiUser.firstName,
+        lastName: apiUser.lastName,
       },
     });
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.error('Error during login:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+

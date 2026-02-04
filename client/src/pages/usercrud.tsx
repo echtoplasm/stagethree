@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Trash2, UserPlus, Users as UsersIcon } from "lucide-react";
-import type { User } from "src/types/user";
-import { getUsers, deleteUser, createUser } from "../api/users";
+import { getUsers, deleteUser, createUser, type User } from "../api/users";
 
 export function UserCrud() {
   const [users, setUsers] = useState<User[]>([]);
@@ -31,11 +30,10 @@ export function UserCrud() {
     try {
       setLoading(true);
       await createUser({
-        email_usr: email,
-        password_hash_usr: password, 
-        first_name_usr: firstName,
-        last_name_usr: lastName,
-        is_active_usr: true
+        email: email,
+        password: password,
+        firstName: firstName,
+        lastName: lastName,
       });
       setFirstName('');
       setLastName('');
@@ -185,20 +183,20 @@ export function UserCrud() {
           ) : (
             <ul className="list">
               {users.map((user) => (
-                <li key={user.id_usr} className="list-item">
+                <li key={user.id} className="list-item">
                   <div className="flex-between">
                     <div className="flex gap-4">
                       <div className="avatar">
-                        {user.first_name_usr.charAt(0).toUpperCase()}
+                        {user.firstName.charAt(0).toUpperCase()}
                       </div>
                       <div>
-                        <p className="font-medium">{user.first_name_usr} {user.last_name_usr}</p>
-                        <p className="text-muted">{user.email_usr}</p>
+                        <p className="font-medium">{user.firstName} {user.lastName}</p>
+                        <p className="text-muted">{user.email}</p>
                       </div>
                     </div>
 
                     <button
-                      onClick={() => handleDelete(user.id_usr)}
+                      onClick={() => handleDelete(user.id)}
                       disabled={loading}
                       className="btn btn-ghost btn-danger"
                       title="Delete user"
