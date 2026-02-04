@@ -5,7 +5,7 @@ export async function up(knex: Knex): Promise<void> {
   await knex.schema.createTable('role_rol', (table) => {
     table.increments('id_rol').primary();
     table.string('name_rol', 50).unique().notNullable();
-    table.string('description', 255);
+    table.string('description_rol', 255);
     table.timestamp('created_at_rol').defaultTo(knex.fn.now());
   });
 
