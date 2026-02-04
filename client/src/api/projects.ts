@@ -1,12 +1,12 @@
 import { apiFetch } from '../utils/api';
 
 export interface Project {
-  id_prj: number;
-  id_usr_prj: number;
-  name_prj: string;
-  description_prj?: string;
-  created_at_prj: string;
-  updated_at_prj?: string;
+  id: number;
+  userId: number;
+  name: string;
+  description?: string;
+  createdAt: string;
+  updatedAt?: string;
 }
 
 export const fetchAllProjects = async (): Promise<Project[]> => {
