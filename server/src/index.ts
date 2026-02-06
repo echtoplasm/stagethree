@@ -11,6 +11,8 @@ import userRoutes from './routes/users';
 import postRoutes from './routes/posts';
 import stageRoutes from './routes/stage';
 import projectRoutes from './routes/projects';
+import venueRoutes from './routes/venues';
+import equipmentRoutes from './routes/equipment';
 import db from './db/knex';
 
 const app = express();
@@ -31,6 +33,8 @@ app.use('/api/users', userRoutes);
 app.use('/api/posts', postRoutes);
 app.use('/api/stages', stageRoutes);
 app.use('/api/projects', projectRoutes);
+app.use('/api/venues', venueRoutes);
+app.use('/api/equipment', equipmentRoutes)
 
 /*
 if (process.env.NODE_ENV === 'production') {

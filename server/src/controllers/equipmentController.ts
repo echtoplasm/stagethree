@@ -14,7 +14,7 @@ const equipTable = 'equipment_type_eqt';
  * Fetch all equipment
  */
 export const getAllEquipment = async (req: Request, res: Response): Promise<void> => {
-  console.log('getAllStages called');
+  console.log('getAllEquipment called');
   try {
     const rows: EquipmentTypeDB[] = await db(equipTable).select('*');
     console.log('stage result', rows);
@@ -22,7 +22,7 @@ export const getAllEquipment = async (req: Request, res: Response): Promise<void
     const stages = rows.map(equipToApi);
     res.json(stages);
   } catch (err) {
-    console.error('Error in getallstages', err);
+    console.error('Error in getallequipment', err);
     res.status(500).json({ message: 'Unable to fetch all stages' });
   }
 };
@@ -39,14 +39,14 @@ export const getEquipmentById = async (req: Request, res: Response): Promise<voi
       .first();
 
     if (!equipment) {
-      res.status(404).json({ error: 'stage not found' });
+      res.status(404).json({ error: 'equipment not found' });
       return;
     }
 
     res.json(equipToApi(equipment));
   } catch (error) {
-    console.error('Error fetching user:', error);
-    res.status(500).json({ error: 'Failed to fetch user' });
+    console.error('Error fetching equipment by id:', error);
+    res.status(500).json({ error: 'Failed to fetch equipment' });
   }
 };
 
