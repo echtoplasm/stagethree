@@ -413,6 +413,44 @@ export const apiStateToDb = (apiState: Partial<StateAPI>): Partial<StateDB> => (
   ...(apiState.name && { name_sta: apiState.name }),
   ...(apiState.abbreviation && { abbreviation_sta: apiState.abbreviation }),
 });
+// ============================================
+// COUNTRIES
+// ============================================
+export interface CountryDB {
+  id_cty: number;
+  code_cty: string;
+  name_cty: string;
+}
+
+export interface CountryAPI {
+  id: number;
+  code: string;
+  name: string;
+}
+
+/**
+ * Converts Country data from database naming conventions to API/JavaScript naming conventions
+ *
+ * @param dbCountry - The Country object retrieved from the database
+ * @returns The same Country object converted to JavaScript naming conventions
+ */
+export const dbCountryToApi = (dbCountry: CountryDB): CountryAPI => ({
+  id: dbCountry.id_cty,
+  code: dbCountry.code_cty,
+  name: dbCountry.name_cty,
+});
+
+/**
+ * Converts Country data from API/JavaScript naming conventions to database naming conventions
+ * 
+ * @param apiCountry - Partial Country object with API naming to be stored in database
+ * @returns Partial Country object converted to database column naming
+ */
+export const apiCountryToDb = (apiCountry: Partial<CountryAPI>): Partial<CountryDB> => ({
+  ...(apiCountry.name && { name_cty: apiCountry.name }),
+  ...(apiCountry.code && { code_cty: apiCountry.code }),
+});
+
 
 // ============================================
 // IMAGES
