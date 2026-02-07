@@ -47,10 +47,6 @@ export const getVenueById = async (req: Request, res: Response): Promise<void> =
  * POST /api/equipment/
  * create a new venue
  *
- * 1. send the post req body for create venue
- * 2. convert to db format
- * 3. insert to db
- *
  */
 export const createVenue = async (req: Request, res: Response): Promise<void> => {
   try {

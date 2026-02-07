@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import pool from '../db/db';
 
+
+//THIS IS JUST AN EXAMPLE EXPRESS ROUTE//
 export const getAllPosts = async (req: Request, res: Response): Promise<void> => {
   try {
     const result = await pool.query(`Select * from posts;`);
