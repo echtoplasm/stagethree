@@ -13,6 +13,7 @@ import stageRoutes from './routes/stage';
 import projectRoutes from './routes/projects';
 import venueRoutes from './routes/venues';
 import equipmentRoutes from './routes/equipment';
+import stagePlotRoutes from './routes/stageplots';
 import db from './db/knex';
 
 const app = express();
@@ -35,6 +36,7 @@ app.use('/api/stages', stageRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/venues', venueRoutes);
 app.use('/api/equipment', equipmentRoutes)
+app.use('/api/stageplots', stagePlotRoutes);
 
 /*
 if (process.env.NODE_ENV === 'production') {
