@@ -14,6 +14,7 @@ import projectRoutes from './routes/projects';
 import venueRoutes from './routes/venues';
 import equipmentRoutes from './routes/equipment';
 import stagePlotRoutes from './routes/stageplots';
+import elementRoutes from './routes/elements';
 import db from './db/knex';
 
 const app = express();
@@ -35,9 +36,9 @@ app.use('/api/posts', postRoutes);
 app.use('/api/stages', stageRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/venues', venueRoutes);
-app.use('/api/equipment', equipmentRoutes)
+app.use('/api/equipment', equipmentRoutes);
 app.use('/api/stageplots', stagePlotRoutes);
-
+app.use('/api/elements', elementRoutes);
 /*
 if (process.env.NODE_ENV === 'production') {
   db.migrate
