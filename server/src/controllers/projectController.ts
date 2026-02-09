@@ -42,13 +42,13 @@ export const getProjectById = async (req: Request, res: Response): Promise<void>
  */
 export const createProject = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id, name } = req.params;
-    const row: ProjectDB[] = await db(projectTable).where({ id_prj: id });
-    const project = row.map(dbProjectToApi);
+    const dbData = apiProjectToDb(req.body);
+    const [row]: ProjectDB[] = await db(projectTable).insert(dbData).returning('*');
+    const project = dbProjectToApi(row);
     res.json(project);
   } catch (error) {
-    console.error('error fetching project by id', error);
-    res.status(500).json({ error: 'Failed to fetch project by id' });
+    console.error('error creating project', error);
+    res.status(500).json({ error: 'Failed to create project' });
   }
 };
 
