@@ -1,0 +1,32 @@
+meta {
+  name: create-elp-with-full-reqbody
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/elp
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "stagePlotId": 4, 
+    "elementTypeId": 22,
+    "positionX": 33,
+    "positionY": 22, 
+    "positionZ": 15, 
+    "rotationX": 12,
+    "rotationY":35, 
+    "rotationZ": 0,
+    "scaleX": 1, 
+    "scaleY": 1, 
+    "scaleZ": 1
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

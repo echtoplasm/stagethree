@@ -1,11 +1,11 @@
 meta {
-  name: delete-stageplot
+  name: get-element-by-id
   type: http
-  seq: 5
+  seq: 2
 }
 
-delete {
-  url: http://localhost:3000/api/stageplots/5
+get {
+  url: {{baseUrl}}/elements/21
   body: none
   auth: inherit
 }

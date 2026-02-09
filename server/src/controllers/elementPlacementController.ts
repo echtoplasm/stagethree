@@ -35,7 +35,7 @@ export const getElpById = async (req: Request, res: Response): Promise<void> => 
   try {
     const { id } = req.params;
 
-    const placement: ElpDB = await db(elpTable).where({ id_stp: id }).first();
+    const placement: ElpDB = await db(elpTable).where({ id_elp: id }).first();
 
     if (!placement) {
       res.status(404).json({
@@ -82,6 +82,9 @@ export const updateElp = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
     const dbData = elpToDb(req.body);
 
+    console.log('Request body: ', req.body);
+    console.log('Transformed dbData: ', dbData);
+
     const [updated] = await db(elpTable).where({ id_elp: id }).update(dbData).returning('*');
 
     if (!updated) {
@@ -121,7 +124,7 @@ export const deleteElp = async (req: Request, res: Response): Promise<void> => {
     const [results]: ElpDB[] = await db(elpTable)
       .delete()
       .where({
-        id_stp: id,
+        id_elp: id,
       })
       .returning('*');
 

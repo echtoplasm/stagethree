@@ -1,0 +1,29 @@
+meta {
+  name: create-elementPlacement-mininumfields
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/elp
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "stagePlotId": 2,
+    "elementTypeId": 18,
+    "positionX": 12,
+    "positionY": 12
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
+
+docs {
+  Request for only passing what may be the 2 dimensional plotting and letting the database populating with defaults
+}
