@@ -1,0 +1,23 @@
+meta {
+  name: update-inputchannel
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{baseUrl}}/inputchannels/3
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    stagePlotId: 2, 
+    channelNumber: 1
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

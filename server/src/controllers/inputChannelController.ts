@@ -28,7 +28,7 @@ export const getAllInputChannels = async (req: Request, res: Response): Promise<
 
 /**
  * GET /api/inputchannels/:id
- * Fetch stageplot by ID
+ * Fetch inputChannel by ID
  */
 
 export const getInputChannelById = async (req: Request, res: Response): Promise<void> => {
@@ -51,7 +51,7 @@ export const getInputChannelById = async (req: Request, res: Response): Promise<
 
 /**
  * POST /api/inputchannels
- * Create stageplot
+ * Create inputChannel
  *
  */
 
@@ -69,7 +69,7 @@ export const createInputChannel = async (req: Request, res: Response): Promise<v
 
 /**
  * PUT /api/inputchannels/:id
- * updated stageplot by id
+ * updated inputChannel by id
  */
 
 export const updateInputChannel = async (req: Request, res: Response): Promise<void> => {
@@ -95,7 +95,7 @@ export const updateInputChannel = async (req: Request, res: Response): Promise<v
 
 /**
  * DELETE /api/inputchannels/:id
- * delete stageplot by id
+ * delete inputChannel by id
  */
 
 export const deleteInputChannel = async (req: Request, res: Response): Promise<void> => {
