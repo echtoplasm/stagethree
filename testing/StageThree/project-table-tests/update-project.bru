@@ -1,0 +1,23 @@
+meta {
+  name: update-project
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{baseUrl}}/projects/2
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name" : "TESTING-jazz festival",
+    "description": "This was updated with PUT"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

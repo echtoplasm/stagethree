@@ -66,12 +66,35 @@ export const createVenue = async (req: Request, res: Response): Promise<void> =>
       capacity,
     });
 
-    const [result]: VenueDB[] = await db(venueTable)
-      .insert(dbVenueData)
-      .returning('*');
+    const [result]: VenueDB[] = await db(venueTable).insert(dbVenueData).returning('*');
 
     res.status(201).json(dbVenueToApi(result));
   } catch (error) {
     console.error('Error in the createVenue POST method ', error);
+  }
+};
+
+/**
+ * DELETE /api/venue/:id
+ * delete a venue
+ */
+
+export const deleteVenue = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+
+    const [result]: VenueDB[] = await db
+      .delete()
+      .where({
+        ven_id: id,
+      })
+      .returning('*');
+
+    res.json(dbVenueToApi(result));
+  } catch (err) {
+    console.error('Error in deleting venue', err);
+    res.status(500).json({
+      message: 'unable to delete venue',
+    });
   }
 };
