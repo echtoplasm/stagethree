@@ -125,3 +125,25 @@ export const deleteInputChannel = async (req: Request, res: Response): Promise<v
     res.json(incToApi(results));
   } catch (error) {}
 };
+
+/**
+ *  GET /api/inputchannels/stageplot/:id
+ *  get inputchannel by stage plot id
+ */
+
+export const getInputChannelByStagePlotId = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+
+    const results: InputChannelDB[] = await db(incTable).select('*').where({
+      id_stp_inc: id,
+    });
+
+    res.json(results.map(incToApi));
+  } catch (err) {
+    console.error('Unable to get inc by stage plot id', err);
+    res.status(500).json({
+      message: 'unable to get inc by stage plot id',
+    });
+  }
+};
