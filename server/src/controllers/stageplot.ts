@@ -166,6 +166,8 @@ export const deleteStagePlot = async (req: Request, res: Response): Promise<void
       })
       .returning('*');
 
-    res.json(dbStagePlotToApi(results));
+    res.json({
+    "successfully deleted" : dbStagePlotToApi(results)
+    });
   } catch (error) {}
 };
