@@ -1,0 +1,15 @@
+meta {
+  name: get-project-by-id
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/projects/3
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}
