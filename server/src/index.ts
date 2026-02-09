@@ -17,6 +17,7 @@ import elementRoutes from './routes/elements';
 import stateRoutes from './routes/states';
 import countryRoutes from './routes/countries';
 import inputChannelRoutes from './routes/inputChannels';
+import elpRoutes from './routes/elementPlacements';
 import db from './db/knex';
 
 const app = express();
@@ -43,6 +44,7 @@ app.use('/api/elements', elementRoutes);
 app.use('/api/states', stateRoutes);
 app.use('/api/countries', countryRoutes);
 app.use('/api/inputchannels', inputChannelRoutes);
+app.use('/api/elp', elpRoutes)
 /*
 if (process.env.NODE_ENV === 'production') {
   db.migrate

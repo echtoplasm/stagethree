@@ -10,8 +10,9 @@ const countryTable = 'country_cty';
  */
 export const getAllCountries = async (req: Request, res: Response): Promise<void> => {
   try {
-    const [results]: CountryDB[] = await db(countryTable).select('*');
-    res.json(dbCountryToApi(results));
+    const results: CountryDB[] = await db(countryTable).select('*');
+    console.log(results);
+    res.json(results.map(dbCountryToApi));
   } catch (err) {
     console.error('unable to get all countries', err);
   }
