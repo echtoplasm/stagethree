@@ -170,7 +170,7 @@ export const apiVenueToDb = (apiVenue: Partial<VenueAPI>): Partial<VenueDB> => (
   ...(apiVenue.address && { address_ven: apiVenue.address }),
   ...(apiVenue.city && { city_ven: apiVenue.city }),
   ...(apiVenue.stateId && { id_sta_ven: apiVenue.stateId }),
-  ...(apiVenue.countryId && { country_ven: apiVenue.countryId }),
+  ...(apiVenue.countryId && { id_cty_ven: apiVenue.countryId }),
   ...(apiVenue.capacity && { capacity_ven: apiVenue.capacity }),
 });
 

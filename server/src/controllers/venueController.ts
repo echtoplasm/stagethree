@@ -50,9 +50,9 @@ export const getVenueById = async (req: Request, res: Response): Promise<void> =
  */
 export const createVenue = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { name, address, city, country, capacity } = req.body;
+    const { name, address, city, countryId, stateId, capacity } = req.body;
 
-    if (!name || !address || !city || !country || !capacity) {
+    if (!name || !address || !city || !countryId || !stateId || !capacity) {
       res.status(401).json({
         error: 'Missing one of required fields',
       });
@@ -62,8 +62,9 @@ export const createVenue = async (req: Request, res: Response): Promise<void> =>
       name,
       address,
       city,
-      country,
-      capacity,
+      countryId,
+      stateId,
+      capacity
     });
 
     const [result]: VenueDB[] = await db(venueTable).insert(dbVenueData).returning('*');
