@@ -117,7 +117,7 @@ export const apiProjectToDb = (api: Partial<ProjectAPI>): Partial<ProjectDB> => 
 // ============================================
 // VENUES
 // ============================================
-interface VenueDB {
+export interface VenueDB {
   id_ven: number;
   name_ven: string;
   address_ven?: string;
