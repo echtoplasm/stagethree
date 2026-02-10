@@ -6,10 +6,18 @@ meta {
 
 post {
   url: {{baseUrl}}/venues/
-  body: none
+  body: json
   auth: inherit
+}
+
+body:json {
+  {
+    "name":"Grey eagle", 
+    "address":
+  }
 }
 
 settings {
   encodeUrl: true
+  timeout: 0
 }

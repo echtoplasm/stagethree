@@ -117,14 +117,14 @@ export const apiProjectToDb = (api: Partial<ProjectAPI>): Partial<ProjectDB> => 
 // ============================================
 // VENUES
 // ============================================
-export interface VenueDB {
+interface VenueDB {
   id_ven: number;
   name_ven: string;
-  address_ven: string | null;
-  city_ven: string | null;
-  id_sta_ven: number | null;
-  country_ven: string | null;
-  capacity_ven: number | null;
+  address_ven?: string;
+  city_ven?: string;
+  id_sta_ven?: number;
+  id_cty_ven?: number;
+  capacity_ven?: number;
   created_at_ven: Date | string;
 }
 
@@ -134,7 +134,7 @@ export interface VenueAPI {
   address?: string;
   city?: string;
   stateId?: number;
-  country?: string;
+  countryId?: number;
   capacity?: number;
   createdAt: string;
 }
@@ -151,7 +151,7 @@ export const dbVenueToApi = (dbVenue: VenueDB): VenueAPI => ({
   address: dbVenue.address_ven || undefined,
   city: dbVenue.city_ven || undefined,
   stateId: dbVenue.id_sta_ven || undefined,
-  country: dbVenue.country_ven || undefined,
+  countryId: dbVenue.id_cty_ven || undefined,
   capacity: dbVenue.capacity_ven || undefined,
   createdAt:
     typeof dbVenue.created_at_ven === 'string'
@@ -170,7 +170,7 @@ export const apiVenueToDb = (apiVenue: Partial<VenueAPI>): Partial<VenueDB> => (
   ...(apiVenue.address && { address_ven: apiVenue.address }),
   ...(apiVenue.city && { city_ven: apiVenue.city }),
   ...(apiVenue.stateId && { id_sta_ven: apiVenue.stateId }),
-  ...(apiVenue.country && { country_ven: apiVenue.country }),
+  ...(apiVenue.countryId && { country_ven: apiVenue.countryId }),
   ...(apiVenue.capacity && { capacity_ven: apiVenue.capacity }),
 });
 
