@@ -84,11 +84,11 @@ export const deleteVenue = async (req: Request, res: Response): Promise<void> =>
   try {
     const { id } = req.params;
 
-    const [result]: VenueDB[] = await db
-      .delete()
+    const [result]: VenueDB[] = await db(venueTable)
       .where({
-        ven_id: id,
+        id_ven: id,
       })
+      .delete()
       .returning('*');
 
     res.json(dbVenueToApi(result));
