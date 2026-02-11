@@ -15,3 +15,7 @@ export const fetchAllStagePlots = async (): Promise<StagePlot[]> => {
 export const fetchStagePlotsByProjectId = async (projectId: number): Promise<StagePlot[]> => {
   return apiFetch(`/api/stageplots/projects/${projectId}`);
 };
+
+export const fetchFullStagePlotConfig = async (plotId: number) => {
+  return apiFetch(`/api/stageplots/full/${plotId}`);
+};
