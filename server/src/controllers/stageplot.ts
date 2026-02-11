@@ -77,7 +77,6 @@ export const getAllStagePlotsByProjectId = async (req: Request, res: Response): 
 /**
  * POST /api/stageplots
  * Create stageplot
- *
  */
 
 export const createStagePlot = async (req: Request, res: Response): Promise<void> => {
@@ -99,6 +98,9 @@ export const createStagePlot = async (req: Request, res: Response): Promise<void
     res.json(dbStagePlotToApi(plots));
   } catch (error) {
     console.error('unable to createStagePlot', error);
+    res.status(404).json({
+      message: 'unable to create stage plot',
+    });
   }
 };
 
@@ -169,7 +171,12 @@ export const deleteStagePlot = async (req: Request, res: Response): Promise<void
     res.json({
       'successfully deleted': dbStagePlotToApi(results),
     });
-  } catch (error) {}
+  } catch (error) {
+    console.error('Unable to delete stage plot', error);
+    res.status(404).json({
+      message: 'Unable to delete stage plot',
+    });
+  }
 };
 
 /**
@@ -193,14 +200,14 @@ export const getFullStagePlotInfo = async (req: Request, res: Response): Promise
       .where('element_placement_elp.id_stp_elp', id)
       .select('element_placement_elp.*', 'element_type_elt.name_elt');
 
-     res.json({
+    res.json({
       ...stagePlot,
       inputChannels,
       elements,
     });
-
-
   } catch (err) {
     console.error(err);
   }
 };
+
+

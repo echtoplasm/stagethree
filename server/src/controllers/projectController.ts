@@ -1,6 +1,6 @@
 import db from '../db/knex';
 import { Request, Response } from 'express';
-import { dbProjectToApi, apiProjectToDb, ProjectDB } from '../utils/transformers';
+import { dbProjectToApi, apiProjectToDb, ProjectDB, StagePlotDB } from '../utils/transformers';
 import { asyncWrapProviders } from 'node:async_hooks';
 
 const projectTable = 'project_prj';
@@ -94,7 +94,6 @@ export const updateProject = async (req: Request, res: Response): Promise<void> 
 /**
  * DELETE /api/projects/:id
  * delete project by id
- *
  */
 
 export const deleteProject = async (req: Request, res: Response): Promise<void> => {
@@ -114,3 +113,4 @@ export const deleteProject = async (req: Request, res: Response): Promise<void> 
     res.status(404).json({ error: 'unable to delete project' });
   }
 };
+
