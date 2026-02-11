@@ -180,38 +180,27 @@ export const getFullStagePlotInfo = async (req: Request, res: Response): Promise
   try {
     const { id } = req.params;
 
-    const exists: StagePlotDB[] = await db(plotTable)
-      .select('*')
-      .where({ id_stp: id })
-      .returning('*');
+    const stagePlot = await db('stage_plot_stp').where('id_stp', id).first();
 
-    if (!exists) {
-      res.status(500).json({
-        error: 'unable to find stage plot with that id',
-      });
+    if (!stagePlot) {
+      res.status(404).json({ error: 'Stage plot not found' });
     }
 
-    const stagePlotData = await db(plotTable)
-      .leftJoin(
-        'element_placement_elp',
-        'stage_plot_stp.id_stp',
-        'element_placement_elp.id_stp_elp'
-      )
-      .leftJoin('element_type_elt', 'element_placement_elp.id_elt_elp', 'element_type_elt.id_elt')
-      .where('stage_plot_stp.id_stp', id)
-      .select(
-        'stage_plot_stp.*',
-        'element_placement_elp.id_elp',
-        'element_placement_elp.position_x_elp',
-        'element_placement_elp.position_y_elp',
-        'element_type_elt.name_elt'
-      );
+    const inputChannels = await db('input_channel_inc').where('id_stp_inc', id);
 
-    res.json(stagePlotData);
+    const elements = await db('element_placement_elp')
+      .leftJoin('element_type_elt', 'element_placement_elp.id_elt_elp', 'element_type_elt.id_elt')
+      .where('element_placement_elp.id_stp_elp', id)
+      .select('element_placement_elp.*', 'element_type_elt.name_elt');
+
+     res.json({
+      ...stagePlot,
+      inputChannels,
+      elements,
+    });
+
+
   } catch (err) {
-    console.error("unable to fetch stageplot information");
-    res.status(500).json({
-      errorMessage: "Unable to fetch related stage plot information"
-    })
+    console.error(err);
   }
 };
