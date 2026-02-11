@@ -6,6 +6,7 @@ import {
   createStagePlot,
   updateStagePlot,
   deleteStagePlot,
+  getFullStagePlotInfo,
 } from '../controllers/stageplot';
 
 const stagePlotRouter = Router();
@@ -18,6 +19,7 @@ stagePlotRouter.get('/:id', getStagePlotById);
 stagePlotRouter.post('/', createStagePlot);
 stagePlotRouter.put('/:id', updateStagePlot);
 stagePlotRouter.delete('/:id', deleteStagePlot);
+stagePlotRouter.get('/full/:id', getFullStagePlotInfo);
 
 stagePlotRouter.post('/', createStagePlot);
 

@@ -64,7 +64,7 @@ export const createVenue = async (req: Request, res: Response): Promise<void> =>
       city,
       countryId,
       stateId,
-      capacity
+      capacity,
     });
 
     const [result]: VenueDB[] = await db(venueTable).insert(dbVenueData).returning('*');
@@ -99,3 +99,5 @@ export const deleteVenue = async (req: Request, res: Response): Promise<void> =>
     });
   }
 };
+
+
