@@ -199,11 +199,14 @@ export const getFullStagePlotInfo = async (req: Request, res: Response): Promise
       .leftJoin('element_type_elt', 'element_placement_elp.id_elt_elp', 'element_type_elt.id_elt')
       .where('element_placement_elp.id_stp_elp', id)
       .select('element_placement_elp.*', 'element_type_elt.name_elt');
+    
+    const stage = await db('stage_stg').where('id_stg', stagePlot.id_stg_stp).first();
 
     res.json({
       ...stagePlot,
       inputChannels,
       elements,
+      stage
     });
   } catch (err) {
     console.error(err);
