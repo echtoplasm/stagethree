@@ -33,6 +33,7 @@ export function ProjectCard({ onPlotSelect } : ProjectCardProps) {
   const handleStagePlotClick = async (plotId: number) => {
     const fullPlotInfo = await fetchFullStagePlotConfig(plotId);
     onPlotSelect(fullPlotInfo);
+    console.log(fullPlotInfo);
   }
 
 

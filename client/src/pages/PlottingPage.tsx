@@ -1,64 +1,121 @@
+// PlottingPage.tsx
 import { useState } from 'react';
 import { ProjectCard } from '../components/projects/ProjectCard';
-import { ArrowRight, ArrowLeft, CircleX } from 'lucide-react'
+import { StageScene } from '../components/ThreeD';
+import { ArrowRight, ArrowLeft, CircleX } from 'lucide-react';
+import { fetchAllElementTypes, type ElementType } from '../api/element';
+import { useEffect } from 'react';
 
 export function PlottingPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedPlotConfig, setSelectedPlotConfig] = useState(null);
+  const [activeTab, setActiveTab] = useState<string | null>(null);
+  const [elementTypes, setElementTypes] = useState<ElementType[]>([]);
 
   const handlePlotSelect = (plotConfig: any) => {
     setSelectedPlotConfig(plotConfig);
-    console.log('Selected plot:', plotConfig);
+    setSidebarOpen(false); // Close sidebar after selection
+  };
+
+  const fetchElementTypes = async () => {
+    const data = await fetchAllElementTypes();
+    setElementTypes(data);
+    console.log(elementTypes);
   }
 
+  const handleTabClick = (tab: string) => {
+    setActiveTab(activeTab === tab ? null : tab); // Toggle drawer
+  };
+
+  useEffect(() => {
+    fetchElementTypes();
+  }, []);
   return (
-    <div className="app-layout">
+    <div className="plotting-layout">
+      {/* Overlay */}
       {sidebarOpen && (
-        <div
-          className="overlay"
-          onClick={() => setSidebarOpen(false)}
-        />
+        <div className="overlay" onClick={() => setSidebarOpen(false)} />
       )}
 
-      {/* Sidebar */}
+      {/* Left Sidebar - Projects */}
       <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
           <h2>Projects</h2>
-          <button
-            className="close-btn"
-            onClick={() => setSidebarOpen(false)}
-          >
+          <button className="close-btn" onClick={() => setSidebarOpen(false)}>
             <CircleX />
           </button>
         </div>
         <ProjectCard onPlotSelect={handlePlotSelect} />
       </aside>
 
-      {/* Main content */}
-      <main className="content">
-        {/* Toggle button */}
+      {/* Sidebar Toggle */}
+      <button
+        className="sidebar-toggle"
+        onClick={() => setSidebarOpen(!sidebarOpen)}
+      >
+        {sidebarOpen ? <ArrowLeft /> : <ArrowRight />}
+      </button>
+
+      {/* Main 3D Viewer */}
+      <div className="viewer-container">
+        <StageScene />
+      </div>
+
+      {/* Bottom Tab Bar */}
+      <div className="tab-bar">
         <button
-          className="sidebar-toggle"
-          onClick={() => setSidebarOpen(!sidebarOpen)}
+          className={`tab ${activeTab === 'equipment' ? 'active' : ''}`}
+          onClick={() => handleTabClick('equipment')}
         >
-          {sidebarOpen ? <ArrowLeft /> : <ArrowRight />}
+          Equipment
         </button>
+        <button
+          className={`tab ${activeTab === 'elements' ? 'active' : ''}`}
+          onClick={() => handleTabClick('elements')}
+        >
+          Elements
+        </button>
+        <button
+          className={`tab ${activeTab === 'inputs' ? 'active' : ''}`}
+          onClick={() => handleTabClick('inputs')}
+        >
+          Input Channels
+        </button>
+      </div>
 
-        <div className="panel equipment-panel">
-          <h2>Equipment Panel</h2>
-          {selectedPlotConfig && (
-          <pre>{JSON.stringify(selectedPlotConfig, null, 2)}</pre>
-          )}
-        </div>
-
-        <div className="panel canvas-panel">
-          <h2>2D Canvas</h2>
-        </div>
-
-        <div className="panel viewer-panel">
-          <h2>3D Viewer</h2>
-        </div>
-      </main>
+      {/* Bottom Drawer */}
+      <div className={`drawer ${activeTab ? 'open' : ''}`}>
+        {activeTab === 'equipment' && (
+          <div className="drawer-content">
+            <h3>Equipment</h3>
+            <p>Equipment palette will go here</p>
+          </div>
+        )}
+        {activeTab === 'elements' && (
+          <div className="drawer-content">
+            <h3>Stage Elements</h3>
+            <div className="element-row">
+              {elementTypes.map((elt: any) => (
+                <div key={elt.id} className='element-item'>{elt.name}</div>
+              ))}
+            </div>
+          </div>
+        )}
+        {activeTab === 'inputs' && (
+          <div className="drawer-content">
+            <h3>Input Channels</h3>
+            {selectedPlotConfig?.inputChannels && (
+              <ul>
+                {selectedPlotConfig.inputChannels.map((channel: any) => (
+                  <li key={channel.id_inc}>
+                    Ch {channel.channel_number_inc}: {channel.instrument_name_inc} ({channel.mic_type_inc})
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        )}
+      </div>
     </div>
-  )
+  );
 }

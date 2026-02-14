@@ -20,6 +20,7 @@ export function StageScene() {
   const mouseRef = useRef(new THREE.Vector2());
   const selectedObjectRef = useRef<THREE.Mesh | null>(null);
   const offsetRef = useRef(new THREE.Vector3());
+  const counterRef = useRef(0);
 
   useEffect(() => {
     if (!mountRef.current) return;
@@ -55,7 +56,7 @@ export function StageScene() {
     // Lighting
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
     scene.add(ambientLight);
-    
+
     const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
     directionalLight.position.set(5, 10, 5);
     scene.add(directionalLight);
@@ -66,8 +67,8 @@ export function StageScene() {
 
     // Stage plane (invisible for raycasting)
     const planeGeometry = new THREE.PlaneGeometry(20, 20);
-    const planeMaterial = new THREE.MeshBasicMaterial({ 
-      visible: false 
+    const planeMaterial = new THREE.MeshBasicMaterial({
+      visible: false
     });
     const plane = new THREE.Mesh(planeGeometry, planeMaterial);
     plane.rotation.x = -Math.PI / 2;
@@ -90,7 +91,7 @@ export function StageScene() {
     // Handle window resize
     const handleResize = () => {
       if (!mountRef.current || !camera || !renderer) return;
-      
+
       camera.aspect = mountRef.current.clientWidth / mountRef.current.clientHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(mountRef.current.clientWidth, mountRef.current.clientHeight);
@@ -106,7 +107,7 @@ export function StageScene() {
       mouseRef.current.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
 
       raycasterRef.current.setFromCamera(mouseRef.current, camera);
-      
+
       const intersects = raycasterRef.current.intersectObjects(
         scene.children.filter(child => child.name.startsWith('instrument-'))
       );
@@ -114,7 +115,7 @@ export function StageScene() {
       if (intersects.length > 0) {
         selectedObjectRef.current = intersects[0].object as THREE.Mesh;
         controlsRef.current!.enabled = false; // Disable orbit controls while dragging
-        
+
         // Calculate offset from object center to click point
         const intersectPoint = intersects[0].point;
         offsetRef.current.copy(intersectPoint).sub(selectedObjectRef.current.position);
@@ -129,7 +130,7 @@ export function StageScene() {
       mouseRef.current.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
 
       raycasterRef.current.setFromCamera(mouseRef.current, camera);
-      
+
       // Raycast against the stage plane
       const plane = scene.children.find(child => child.name === 'stage-plane');
       if (plane) {
@@ -159,11 +160,11 @@ export function StageScene() {
       renderer.domElement.removeEventListener('mousedown', handleMouseDown);
       renderer.domElement.removeEventListener('mousemove', handleMouseMove);
       renderer.domElement.removeEventListener('mouseup', handleMouseUp);
-      
+
       if (mountRef.current && renderer.domElement) {
         mountRef.current.removeChild(renderer.domElement);
       }
-      renderer.dispose();
+
     };
   }, []);
 
@@ -173,16 +174,17 @@ export function StageScene() {
     const geometry = new THREE.BoxGeometry(1, 1, 1);
     const material = new THREE.MeshStandardMaterial({ color });
     const mesh = new THREE.Mesh(geometry, material);
-    
+
+    const id = `instrument-${counterRef.current++}`; // ✓ Unique counter
     mesh.position.set(x, 0.5, z);
-    mesh.name = `instrument-${Date.now()}`;
+    mesh.name = id;
     mesh.castShadow = true;
     mesh.receiveShadow = true;
-    
+
     sceneRef.current.add(mesh);
 
     const newObject: StageObject = {
-      id: mesh.name,
+      id,
       name,
       position: mesh.position.clone(),
       mesh
@@ -192,24 +194,16 @@ export function StageScene() {
   };
 
   return (
-    <div style={{ width: '100%', height: '100vh' }}>
-      <div 
-        ref={mountRef} 
-        style={{ 
-          width: '100%', 
+    <div style={{ width: '100%', height: '100%' }}>
+      <div
+        ref={mountRef}
+        style={{
+          width: '100%',
           height: '100%',
           cursor: selectedObjectRef.current ? 'grabbing' : 'grab'
-        }} 
+        }}
       />
-      <div style={{
-        position: 'absolute',
-        top: 25,
-        left: 25,
-        background: 'rgba(0,0,0,0.7)',
-        color: 'white',
-        padding: '10px',
-        borderRadius: '5px'
-      }}>
+      <div className='stageobjects-overlay'>
         <h3>Stage Objects</h3>
         <ul>
           {objects.map(obj => (
