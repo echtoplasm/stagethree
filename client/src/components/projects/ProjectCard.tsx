@@ -13,9 +13,6 @@ export function ProjectCard({ onPlotSelect } : ProjectCardProps) {
   const [projects, setProjects] = useState<Project[]>([]);
   const [plots, setPlots] = useState<StagePlot[]>([]);
   const [selectedProjectId, setSelectedProjectId] = useState<number | null>(null);
-  const [selectedPlotId, setSelectedPlotId] = useState<number | null>(null);
-  const [plotConfig, setPlotConfig] = useState();
-
 
   const fetchProjects = async () => {
     const data = await fetchAllProjects();

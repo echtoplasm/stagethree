@@ -15,6 +15,7 @@ export function PlottingPage() {
   const handlePlotSelect = (plotConfig: any) => {
     setSelectedPlotConfig(plotConfig);
     setSidebarOpen(false); // Close sidebar after selection
+    console.log('Selected Plot config', selectedPlotConfig);
   };
 
   const fetchElementTypes = async () => {
@@ -104,15 +105,7 @@ export function PlottingPage() {
         {activeTab === 'inputs' && (
           <div className="drawer-content">
             <h3>Input Channels</h3>
-            {selectedPlotConfig?.inputChannels && (
-              <ul>
-                {selectedPlotConfig.inputChannels.map((channel: any) => (
-                  <li key={channel.id_inc}>
-                    Ch {channel.channel_number_inc}: {channel.instrument_name_inc} ({channel.mic_type_inc})
-                  </li>
-                ))}
-              </ul>
-            )}
+
           </div>
         )}
       </div>
