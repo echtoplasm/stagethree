@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { UserPlus } from "lucide-react";
 //import type { User } from "src/types/user";
-import { loginUser } from "../api/users";
+import { loginUser } from "../api/auth";
 
 export function SignInPage() {
   const [email, setEmail] = useState('');

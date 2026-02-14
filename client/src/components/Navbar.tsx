@@ -1,7 +1,36 @@
 import { Link } from 'react-router-dom';
-import { Users, UserPlus, Box, Boxes, LogIn } from 'lucide-react';
+import { Users, UserPlus, Box, Boxes, LogIn, UserMinus } from 'lucide-react';
+import { type User } from '../types/api';
+import { useState, useEffect } from 'react';
+import { fetchAuthMe, logoutUser } from '../api/auth';
 
 export function Navbar() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState<User>();
+
+
+  const authenticate = async () => {
+    const authRes = await fetchAuthMe();
+    if (authRes?.apiUser) {
+      setIsAuthenticated(true);
+      setUser(authRes.apiUser)
+    }
+    console.log(isAuthenticated);
+  }
+
+  const handleLogOut = async () => {
+    try {
+      logoutUser();
+    } catch (err) {
+      console.error('Logout failed', err)
+    }
+  }
+
+  useEffect(() => {
+    authenticate();
+  }, []);
+
+
   return (
     <nav>
       <div>
@@ -32,17 +61,31 @@ export function Navbar() {
           <li>
             <Link to="/signup">
               <UserPlus size={18} />
-            Sign Up
-          </Link>
-        </li>
-        <li>
-            <Link to="/signin">
-              <LogIn size={18} />
-              Log In
+              Sign Up
             </Link>
           </li>
-      </ul>
-    </div>
-  </nav >
+
+          {isAuthenticated ? (
+            <li>
+              <button onClick={handleLogOut}>
+                <UserMinus size={18} />
+                Logout {user?.firstName}
+              </button>
+            </li>
+          ) : (
+
+            <li>
+              <Link to="/signin">
+                <LogIn size={18} />
+                Log In
+              </Link>
+            </li>
+          )}
+
+
+
+        </ul>
+      </div>
+    </nav >
   );
 }

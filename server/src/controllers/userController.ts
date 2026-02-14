@@ -1,4 +1,3 @@
-
 import { Request, Response } from 'express';
 import { LoginRequest } from '../types/api';
 import { UserDB, dbUserToApi, apiUserToDb } from '../utils/transformers';
@@ -28,9 +27,7 @@ export const getAllUsers = async (req: Request, res: Response): Promise<void> =>
 export const getUserById = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
-    const user: UserDB | undefined = await db('user_usr')
-      .where({ id_usr: id })
-      .first();
+    const user: UserDB | undefined = await db('user_usr').where({ id_usr: id }).first();
 
     if (!user) {
       res.status(404).json({ error: 'User not found' });
@@ -62,10 +59,10 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Transform API data to DB format
-    const dbData = apiUserToDb({ 
-      email, 
-      firstName, 
-      lastName 
+    const dbData = apiUserToDb({
+      email,
+      firstName,
+      lastName,
     });
 
     // Add hashed password (not in transformer since it's auth-specific)
@@ -74,9 +71,7 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
       password_hash_usr: hashedPassword,
     };
 
-    const [result]: UserDB[] = await db('user_usr')
-      .insert(insertData)
-      .returning('*');
+    const [result]: UserDB[] = await db('user_usr').insert(insertData).returning('*');
 
     res.status(201).json(dbUserToApi(result));
   } catch (error) {
@@ -178,64 +173,4 @@ export const deleteUser = async (req: Request, res: Response): Promise<void> => 
   }
 };
 
-/**
- * POST /api/auth/login
- * Authenticate a user
- */
-export const loginUser = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const { email, password }: LoginRequest = req.body;
-
-    // Fetch user by email (DB format)
-    const user: UserDB | undefined = await db('user_usr')
-      .where({ email_usr: email })
-      .first();
-
-    if (!user) {
-      res.status(401).json({ error: 'Invalid credentials' });
-      return;
-    }
-
-    // Verify password
-    const isValidPassword = await bcrypt.compare(password, user.password_hash_usr);
-
-    if(isValidPassword){
-      console.log('isValidPassword:', isValidPassword);
-    }
-
-    if (!isValidPassword) {
-      res.status(401).json({ error: 'Invalid credentials' });
-      return;
-    }
-
-    // Generate JWT with clean data
-    const apiUser = dbUserToApi(user);
-    const token = jwt.sign(
-      { userId: apiUser.id, email: apiUser.email },
-      process.env.JWT_SECRET!,
-      { expiresIn: '15m' }
-    );
-
-    // Set cookie
-    res.cookie('token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 15 * 60 * 1000,
-    });
-
-    // Return clean user data
-    res.json({
-      user: {
-        id: apiUser.id,
-        email: apiUser.email,
-        firstName: apiUser.firstName,
-        lastName: apiUser.lastName,
-      },
-    });
-  } catch (error) {
-    console.error('Error during login:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-};
 

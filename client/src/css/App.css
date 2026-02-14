@@ -148,6 +148,7 @@ nav ul {
   list-style: none;
 }
 
+nav ul button,
 nav ul a {
   display: flex;
   align-items: center;
@@ -162,11 +163,20 @@ nav ul a {
   position: relative;
 }
 
+nav ul button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+}
+
+nav ul button:hover,
 nav ul a:hover {
   color: var(--text-primary);
   background: var(--bg-secondary);
 }
 
+nav ul button::after,
 nav ul a::after {
   content: '';
   position: absolute;
@@ -179,6 +189,7 @@ nav ul a::after {
   transition: width var(--transition);
 }
 
+nav ul button:hover::after,
 nav ul a:hover::after {
   width: 80%;
 }

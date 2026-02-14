@@ -5,7 +5,7 @@ import {
   createUser, 
   updateUser, 
   deleteUser, 
-  loginUser
+
 } from '../controllers/userController';
 import { authenticateToken } from '../middleware/auth';
 
@@ -17,7 +17,7 @@ router.get('/:id', authenticateToken, getUserById);
 
 //POST ROUTES//
 router.post('/register', createUser);
-router.post('/signin', loginUser)
+
 
 //PUT ROUTE//
 router.put('/:id', authenticateToken, updateUser);

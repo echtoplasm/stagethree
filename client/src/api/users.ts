@@ -1,4 +1,4 @@
-import type { LoginResponse, LoginRequest } from "../types/api";
+
 import { apiFetch } from "../utils/api";
 
 export interface User {
@@ -44,10 +44,4 @@ export const deleteUser = async (id: number): Promise<void> => {
   });
 };
 
-export const loginUser = async (email: string, password: string): Promise<LoginResponse> => {
-  const requestBody: LoginRequest = { email, password };
-  return apiFetch<LoginResponse>('/api/users/signin', {
-    method: 'POST',
-    body: requestBody,
-  });
-};
+
