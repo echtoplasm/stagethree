@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { LoginRequest } from '../types/api';
+import { type AuthRequest} from '../middleware/auth';
 import { UserDB, dbUserToApi, apiUserToDb } from '../utils/transformers';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
@@ -77,10 +78,10 @@ export const logOutUser = async (req: Request, res: Response): Promise<void> => 
  * authenticate the user to see if they have a token
  */
 
-export const authenticateMe = async(req: Request, res: Response): Promise<void> => {
+export const authenticateMe = async(req: AuthRequest, res: Response): Promise<void> => {
   const user = await db('user_usr')
     .select('*')
-    .where('id_usr', req.user.userId)
+    .where('id_usr', req.user?.userId)
     .first();
 
   const apiUser = dbUserToApi(user);
