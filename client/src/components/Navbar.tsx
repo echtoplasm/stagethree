@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Users, UserPlus, Box, Boxes, LogIn, UserMinus } from 'lucide-react';
+import { UserPlus, Box, Boxes, LogIn, UserMinus } from 'lucide-react';
 import { type User } from '../types/api';
 import { useState, useEffect } from 'react';
 import { fetchAuthMe, logoutUser } from '../api/auth';
@@ -43,24 +43,14 @@ export function Navbar() {
         </Link>
 
         <ul>
-          <li>
-            <Link to="/users">
-              <Users size={18} />
-              Users
-            </Link>
-          </li>
+
           <li>
             <Link to="/stages">
               <Boxes size={18} />
               Stages
             </Link>
           </li>
-          <li>
-            <Link to="/stage">
-              <Box size={18} />
-              3D Stage
-            </Link>
-          </li>
+
 
           {!isAuthenticated && (
             <li>
