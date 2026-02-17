@@ -41,7 +41,7 @@ export function ProjectCard({ onPlotSelect } : ProjectCardProps) {
 
 
 
-  return (
+ return (
     <div className="projects-list">
       {projects.map((project) => (
         <div key={project.id}>

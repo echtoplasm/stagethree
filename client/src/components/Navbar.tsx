@@ -3,8 +3,10 @@ import { Users, UserPlus, Box, Boxes, LogIn, UserMinus } from 'lucide-react';
 import { type User } from '../types/api';
 import { useState, useEffect } from 'react';
 import { fetchAuthMe, logoutUser } from '../api/auth';
+import { useNavigate } from 'react-router-dom';
 
 export function Navbar() {
+  const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState<User>();
 
@@ -21,6 +23,7 @@ export function Navbar() {
   const handleLogOut = async () => {
     try {
       logoutUser();
+      navigate('/');
     } catch (err) {
       console.error('Logout failed', err)
     }
@@ -58,12 +61,15 @@ export function Navbar() {
               3D Stage
             </Link>
           </li>
-          <li>
-            <Link to="/signup">
-              <UserPlus size={18} />
-              Sign Up
-            </Link>
-          </li>
+
+          {!isAuthenticated && (
+            <li>
+              <Link to="/signup">
+                <UserPlus size={18} />
+                Sign Up
+              </Link>
+            </li>
+          )}
 
           {isAuthenticated ? (
             <li>
@@ -81,8 +87,6 @@ export function Navbar() {
               </Link>
             </li>
           )}
-
-
 
         </ul>
       </div>
