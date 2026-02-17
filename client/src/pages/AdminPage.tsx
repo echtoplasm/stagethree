@@ -1,4 +1,4 @@
-import { UserCrud } from "./usercrud";
+import { UserCrud } from "../components/usercrud";
 
 export const AdminPage = () => {
 

@@ -26,5 +26,6 @@ export interface User {
   firstName: string;
   lastName: string;
   isActive: boolean;
-  createdAt: string;  // ISO string from API
+  roleId: number;
+  createdAt: string; 
 }
