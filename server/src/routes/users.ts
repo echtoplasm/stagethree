@@ -7,12 +7,12 @@ import {
   deleteUser, 
 
 } from '../controllers/userController';
-import { authenticateToken } from '../middleware/auth';
+import { authenticateToken, authenticateAdmin } from '../middleware/auth';
 
 const router = Router();
 
 //GET USER ROUTES//
-router.get('/', authenticateToken, getAllUsers);
+router.get('/', authenticateToken, authenticateAdmin, getAllUsers);
 router.get('/:id', authenticateToken, getUserById);
 
 //POST ROUTES//

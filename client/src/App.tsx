@@ -7,6 +7,7 @@ import { StageCrud } from './pages/stagecrud';
 import { PlottingPage } from './pages/PlottingPage';
 import {SignUpPage} from './pages/SignUpPage'
 import { SignInPage } from './pages/SignInPage';
+import {AdminPage} from './pages/AdminPage';
 function App() {
 
 
@@ -19,7 +20,8 @@ function App() {
         <Route path="/stages" element={<StageCrud />} />
         <Route path="/stage" element={<StagePage />} />
         <Route path="/signup" element={<SignUpPage />} />
-        <Route path="/signin" element={<SignInPage />} /> 
+        <Route path="/signin" element={<SignInPage />} />
+        <Route path="/admin" element={<AdminPage />} />
       </Routes>
     </Router>
   );

@@ -36,7 +36,11 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
 
     // Generate JWT with clean data
     const apiUser = dbUserToApi(user);
-    const token = jwt.sign({ userId: apiUser.id, email: apiUser.email }, process.env.JWT_SECRET!, {
+    const token = jwt.sign({ 
+      userId: apiUser.id,
+      email: apiUser.email, 
+      roleId: apiUser.roleId
+    }, process.env.JWT_SECRET!, {
       expiresIn: '15m',
     });
 
@@ -55,6 +59,7 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
         email: apiUser.email,
         firstName: apiUser.firstName,
         lastName: apiUser.lastName,
+        roleId: apiUser.roleId
       },
     });
   } catch (error) {
@@ -87,3 +92,4 @@ export const authenticateMe = async(req: AuthRequest, res: Response): Promise<vo
   const apiUser = dbUserToApi(user);
   res.json({ apiUser });
 }
+

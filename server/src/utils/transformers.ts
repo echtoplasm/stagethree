@@ -6,6 +6,8 @@ export enum PermissionsEnum {
 
 // ============================================
 // USERS
+//
+// roles = 1 regular, 2 admin, 3 superuser
 // ============================================
 export interface UserDB {
   id_usr: number;
@@ -15,7 +17,9 @@ export interface UserDB {
   last_name_usr: string;
   is_active_usr: boolean;
   created_at_usr: Date | string;
+  id_rol_usr: number;
   updated_at_usr?: Date | string;
+
 }
 
 export interface UserAPI {
@@ -25,6 +29,7 @@ export interface UserAPI {
   lastName: string;
   isActive: boolean;
   createdAt: string;
+  roleId: number;
   updatedAt?: string;
 }
 
@@ -44,6 +49,7 @@ export const dbUserToApi = (dbUser: UserDB): UserAPI => ({
     typeof dbUser.created_at_usr === 'string'
       ? dbUser.created_at_usr
       : dbUser.created_at_usr.toISOString(),
+  roleId: dbUser.id_rol_usr,
   updatedAt: dbUser.updated_at_usr
     ? typeof dbUser.updated_at_usr === 'string'
       ? dbUser.updated_at_usr
@@ -61,8 +67,10 @@ export const apiUserToDb = (apiUser: Partial<UserAPI>): Partial<UserDB> => ({
   ...(apiUser.email && { email_usr: apiUser.email }),
   ...(apiUser.firstName && { first_name_usr: apiUser.firstName }),
   ...(apiUser.lastName && { last_name_usr: apiUser.lastName }),
-  ...(apiUser.isActive !== undefined && { is_active_usr: apiUser.isActive }),
+  ...(apiUser.isActive !== undefined && { is_active_usr: apiUser.isActive }),   
+  ...(apiUser.roleId && { id_rol_usr: apiUser.roleId })
 });
+
 
 // ============================================
 // PROJECTS
