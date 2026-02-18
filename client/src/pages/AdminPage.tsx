@@ -1,5 +1,6 @@
-import { UserCrud } from "../components/usercrud";
-
+import { UserCrud} from "../components/usercrud";
+import {StageDelete} from "../components/shared/stage/StageDelete";
+import {StageCreate} from "../components/shared/stage/StageCreate"
 export const AdminPage = () => {
 
 
@@ -9,10 +10,13 @@ export const AdminPage = () => {
         <UserCrud />
       </section>
       <section>
+        <h2>Stage Section</h2>
+        <StageDelete />
+        <StageCreate />
 
       </section>
       <section>
-
+       
       </section>
     </div>
   )

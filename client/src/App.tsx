@@ -2,7 +2,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
 import { Navigate } from 'react-router-dom';
-import { StageCrud } from './pages/stagecrud';
+import { StageRead } from './components/shared/stage/StageRead';
 import { PlottingPage } from './pages/PlottingPage';
 import { SignUpPage } from './pages/SignUpPage'
 import { SignInPage } from './pages/SignInPage';
@@ -23,7 +23,7 @@ function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<PlottingPage />} />
-      <Route path="/stages" element={<StageCrud />} />
+      <Route path="/stages" element={<StageRead />} />
       <Route path="/signup" element={<SignUpPage />} />
       <Route path="/signin" element={<SignInPage />} />
       <Route

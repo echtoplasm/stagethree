@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import db from '../db/knex';
-import { dbStageToApi, StageDB } from '../utils/transformers';
-import { asyncWrapProviders } from 'node:async_hooks';
+import { apiStageToDb, dbStagePlotToApi, dbStageToApi, StageDB } from '../utils/transformers';
 
 const stageTable = 'stage_stg';
 
@@ -54,4 +53,84 @@ export const getStageById = async (req: Request, res: Response): Promise<void> =
 
     res.json(dbStageToApi(result));
   } catch (err) {}
+};
+
+/**
+ * DELETE /api/stages/:id
+ * delete stage by id
+ *
+ */
+
+export const deleteStage = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+
+    const exists = await db(stageTable)
+      .select()
+      .where({
+        id_stg: id,
+      })
+      .first();
+    if (!exists) {
+      res.status(500).json({
+        error: 'Stage with that ID does not exist',
+      });
+    }
+    const [result]: StageDB[] = await db(stageTable)
+      .delete()
+      .where({
+        id_stg: id,
+      })
+      .returning('*');
+
+    res.json(dbStageToApi(result));
+  } catch (err) {
+    res.status(500).json({
+      message: 'Error in delete stage API endpoint',
+      error: err,
+    });
+  }
+};
+
+/**
+ * PUT /api/stages/:id
+ * Update stage by id
+ */
+
+export const updateStage = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const { name, width, depth, height } = req.body;
+    const exists = await db(stageTable)
+      .select()
+      .where({
+        id_stg: id,
+      })
+      .first();
+    if (!exists) {
+      res.status(500).json({
+        error: 'Stage with that ID does not exist',
+      });
+    }
+
+    const updates = apiStageToDb({ name, width, depth, height });
+
+    if (Object.keys(updates).length === 0) {
+      res.status(400).json({ error: 'No valid fields to update' });
+      return;
+    }
+
+    const [result]: StageDB[] = await db(stageTable)
+      .where({ id_stg: id })
+      .update(updates)
+      .returning('*');
+
+    res.json(dbStageToApi(result));
+  } catch (err) {
+    console.error('Error in update stage endpoint');
+    res.status(500).json({
+      message: 'Error in update storage',
+      error: err,
+    });
+  }
 };

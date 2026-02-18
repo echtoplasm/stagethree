@@ -1,12 +1,27 @@
 import { useState, useEffect } from 'react';
-import { Box, Ruler, Layers } from 'lucide-react';
-import type { Stage } from 'src/api/stages';
-import { fetchAllStages } from '../api/stages';
+import { Box, Ruler, Layers, Trash } from 'lucide-react';
+import { fetchAllStages, deleteStage, type Stage } from '../../../api/stages';
 
-export function StageCrud() {
+export function StageRead() {
   const [stages, setStages] = useState<Stage[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [stageForm, setStageForm] = useState<Stage>({
+    id: 0,
+    name: '',
+    width: 0,
+    depth: 0,
+    height: 0
+  });
+
+  const handleEdit = (stage: Stage) => {
+    setStageForm(stage);
+  }
+
+
+  const handleDelete = (stageId: number) => {
+    deleteStage(stageId);
+  }
 
   useEffect(() => {
     const loadStages = async () => {
@@ -65,21 +80,22 @@ export function StageCrud() {
                 <div className="stage-card-header">
                   <Box size={24} />
                   <h2>{stage.name}</h2>
+
                 </div>
-                
+
                 <div className="stage-dimensions">
                   <div className="dimension">
                     <Ruler size={16} />
                     <span className="dimension-label">Width</span>
                     <span className="dimension-value">{stage.width} ft</span>
                   </div>
-                  
+
                   <div className="dimension">
                     <Ruler size={16} />
                     <span className="dimension-label">Depth</span>
                     <span className="dimension-value">{stage.depth} ft</span>
                   </div>
-                  
+
                   {stage.height && (
                     <div className="dimension">
                       <Layers size={16} />
@@ -92,6 +108,11 @@ export function StageCrud() {
                 <div className="stage-card-footer">
                   <span className="text-muted">ID: {stage.id}</span>
                   <button className="btn btn-ghost btn-sm">View Details</button>
+                </div>
+                <div>
+                  <button onClick={() => handleDelete(stage.id)}  >
+                    <Trash size={16} />
+                  </button>
                 </div>
               </article>
             ))}
