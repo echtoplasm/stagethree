@@ -1,14 +1,17 @@
 import { Link } from 'react-router-dom';
-import { UserPlus, Box, Boxes, LogIn, UserMinus } from 'lucide-react';
+import { UserPlus, Boxes, LogIn, UserMinus, ShieldUser } from 'lucide-react';
 import { type User } from '../types/api';
 import { useState, useEffect } from 'react';
 import { fetchAuthMe, logoutUser } from '../api/auth';
 import { useNavigate } from 'react-router-dom';
-
+import { Login } from './shared/navAuth/Login'
+import {SignUp} from './shared/navAuth/Signup'
 export function Navbar() {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState<User>();
+  const [showLogin, setShowLogin] = useState(false);
+  const [showSignUp, setShowSignUp] = useState(false);
 
 
   const authenticate = async () => {
@@ -35,51 +38,62 @@ export function Navbar() {
 
 
   return (
-    <nav>
-      <div>
-        <Link to="/">
-          <span className="logo-icon">S3</span>
-          <span>StageThree</span>
-        </Link>
-
-        <ul>
-
-          <li>
-            <Link to="/stages">
-              <Boxes size={18} />
-              Stages
-            </Link>
-          </li>
-
-
-          {!isAuthenticated && (
+    <>
+      <nav>
+        <div>
+          <Link to="/">
+            <span className="logo-icon">S3</span>
+            <span>StageThree</span>
+          </Link>
+          <ul>
             <li>
-              <Link to="/signup">
-                <UserPlus size={18} />
-                Sign Up
+              <Link to="/stages">
+                <Boxes size={18} />
+                Stages
               </Link>
             </li>
-          )}
+            {!isAuthenticated && (
+              <li>
+                <button onClick={() => setShowSignUp(true)} className='btn'>
+                  <UserPlus size={18} />
+                  Sign Up
+                </button>
+              </li>
+            )}
+            {isAuthenticated ? (
+              <li>
+                <button onClick={handleLogOut} className='btn'>
+                  <UserMinus size={18} />
+                  Logout {user?.firstName}
+                </button>
+              </li>
+            ) : (
+              <li>
+                <button className="btn" onClick={() => setShowLogin(true)}>
+                  <LogIn size={18} />Sign In
+                </button>
+              </li>
+            )}
+            {user?.roleId === 2 && (
+              <li>
+                <Link to="/admin">
+                  <ShieldUser size={18} />
+                  Admin
+                </Link>
+              </li>
+            )}
+          </ul>
+        </div>
+      </nav>
+      {showLogin && (
+        <Login onClose={() => setShowLogin(false)} onSuccess={() => setShowLogin(false)} />
+      )}
 
-          {isAuthenticated ? (
-            <li>
-              <button onClick={handleLogOut}>
-                <UserMinus size={18} />
-                Logout {user?.firstName}
-              </button>
-            </li>
-          ) : (
-
-            <li>
-              <Link to="/signin">
-                <LogIn size={18} />
-                Log In
-              </Link>
-            </li>
-          )}
-
-        </ul>
-      </div>
-    </nav >
+      {showSignUp && (
+        <SignUp onClose={() => setShowSignUp(false)} onSuccess={() => setShowSignUp(false)} />
+      )}
+    </>
   );
+
+
 }
