@@ -10,12 +10,12 @@ interface UserDeleteProps {
 
 export function UserDelete({ user, onClose, onSuccess }: UserDeleteProps) {
 
- if(!user) return null;
+  if (!user) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    await deleteUser(user.id);
     onSuccess();
-    deleteUser(user.id);
   }
 
 
