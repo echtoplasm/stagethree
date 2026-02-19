@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 
 const ADMIN_ROLE_ID = 2;
 
-interface AuthRequest extends Request {
+export interface AuthRequest extends Request {
   user?: {
     userId: number;
     email: string;

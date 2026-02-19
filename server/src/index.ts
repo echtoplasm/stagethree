@@ -22,7 +22,7 @@ import authRoutes from './routes/auth';
 import db from './db/knex';
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 //MiddleWare//
 app.use(cookieParser());
