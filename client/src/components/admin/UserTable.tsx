@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { getUsers } from "../../api/users";
 import { type User } from "../../types/api"
 import { UserCreate } from "./UserCreate"
+import { UserUpdate } from "./UserUpdate";
 import { Plus, Trash, Pencil } from "lucide-react";
 
 
@@ -10,6 +11,8 @@ export const UserTable = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [userCreate, setUserCreate] = useState(false);
+  const [userUpdate, setUserUpdate] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
   const fetchUsers = async () => {
     try {
@@ -87,7 +90,12 @@ export const UserTable = () => {
                   <td>{user.email}</td>
                   <td>{user.roleId === 2 ? 'Admin' : 'User'}</td>
                   <td className="flex gap-2">
-                    <button className="btn btn-sm btn-ghost">
+                    <button className="btn btn-sm btn-ghost"
+                      onClick={() => {
+                        setSelectedUser(user)
+                        setUserUpdate(true)
+                      }
+                      }>
                       <Pencil size={16} />
                     </button>
                     <button className="btn btn-sm btn-danger">
@@ -106,8 +114,20 @@ export const UserTable = () => {
             onSuccess={() => {
               fetchUsers()
               setUserCreate(false);
-            }
-            }
+            }}
+
+
+          />
+        )}
+
+        {userUpdate && (
+          <UserUpdate
+            user={selectedUser}
+            onClose={() => setUserUpdate(false)}
+            onSuccess={() => {
+              fetchUsers()
+              setUserUpdate(false)
+            }}
           />
         )}
       </div>
