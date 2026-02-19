@@ -6,17 +6,8 @@ export function StageRead() {
   const [stages, setStages] = useState<Stage[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [stageForm, setStageForm] = useState<Stage>({
-    id: 0,
-    name: '',
-    width: 0,
-    depth: 0,
-    height: 0
-  });
 
-  const handleEdit = (stage: Stage) => {
-    setStageForm(stage);
-  }
+
 
 
   const handleDelete = (stageId: number) => {
