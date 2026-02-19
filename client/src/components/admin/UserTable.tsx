@@ -4,6 +4,7 @@ import { type User } from "../../types/api"
 import { UserCreate } from "./UserCreate"
 import { UserUpdate } from "./UserUpdate";
 import { Plus, Trash, Pencil } from "lucide-react";
+import { UserDelete } from "./UserDelete";
 
 
 export const UserTable = () => {
@@ -12,6 +13,7 @@ export const UserTable = () => {
   const [error, setError] = useState('');
   const [userCreate, setUserCreate] = useState(false);
   const [userUpdate, setUserUpdate] = useState(false);
+  const [userDelete, setUserDelete] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
   const fetchUsers = async () => {
@@ -98,7 +100,11 @@ export const UserTable = () => {
                       }>
                       <Pencil size={16} />
                     </button>
-                    <button className="btn btn-sm btn-danger">
+                    <button className="btn btn-sm btn-danger"
+                      onClick={() => {
+                        setSelectedUser(user)
+                        setUserDelete(true)
+                      }}>
                       <Trash size={16} />
                     </button>
                   </td>
@@ -127,6 +133,17 @@ export const UserTable = () => {
             onSuccess={() => {
               fetchUsers()
               setUserUpdate(false)
+            }}
+          />
+        )}
+
+        {userDelete && (
+          <UserDelete
+            user={selectedUser}
+            onClose={() => setUserDelete(false)}
+            onSuccess={() => {
+              fetchUsers()
+              setUserDelete(false)
             }}
           />
         )}
