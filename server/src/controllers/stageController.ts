@@ -56,6 +56,33 @@ export const getStageById = async (req: Request, res: Response): Promise<void> =
 };
 
 /**
+ * POST /api/stages
+ * Create stages
+ *
+ */
+
+export const createStage = async(req: Request, res: Response): Promise<void> => {
+  try{
+    const {name, width, depth, height} = req.body;
+
+    const data = ({name, width, depth, height})
+
+    const dbdata = apiStageToDb(data)
+
+    const [result]: StageDB[] = await db(stageTable).insert(dbdata).returning('*');
+
+    res.json(dbStageToApi(result));
+
+  }catch(err){
+    console.error("unable to post create stage");
+    res.status(500).json({
+      message: "unable to post create stage",
+      error: err
+    })
+  }
+}
+
+/**
  * DELETE /api/stages/:id
  * delete stage by id
  *

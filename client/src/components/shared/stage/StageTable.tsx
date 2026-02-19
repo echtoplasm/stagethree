@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Box, Trash } from 'lucide-react';
+import { Box, Trash, Plus } from 'lucide-react';
 import type { Stage } from '../../../api/stages';
-import { fetchAllStages} from '../../../api/stages';
+import { fetchAllStages } from '../../../api/stages';
 import { StageUpdate } from './StageUpdate';
-import {StageDelete} from './StageDelete';
+import { StageDelete } from './StageDelete';
+import { StageCreate } from './StageCreate';
 
 export function StageTable() {
   const [stages, setStages] = useState<Stage[]>([]);
@@ -12,11 +13,7 @@ export function StageTable() {
   const [update, setUpdate] = useState(false);
   const [deleteStage, setStageDelete] = useState(false);
   const [selectedStage, setSelectedStage] = useState<Stage | null>(null)
-
-
-
-
-
+  const [stageCreate, setStageCreate] = useState(false);
 
 
   useEffect(() => {
@@ -62,6 +59,10 @@ export function StageTable() {
         <header className="mb-8">
           <h1>Delete Stage</h1>
           <p className="text-secondary">Select a stage to delete</p>
+          <button className="btn btn-primary" onClick={() => setStageCreate(true)}>
+            <Plus size={18} />
+            Create New Stage
+          </button>
         </header>
         {stages.length === 0 ? (
           <div className="empty-state">
@@ -92,10 +93,10 @@ export function StageTable() {
                     <td>
                       <button
                         className="btn btn-danger btn-sm"
-                        onClick={() =>{ 
-                            setSelectedStage(stage)
-                            setStageDelete(true)
-                          }}
+                        onClick={() => {
+                          setSelectedStage(stage)
+                          setStageDelete(true)
+                        }}
                       >
                         <Trash size={16} />
                         Delete
@@ -136,7 +137,14 @@ export function StageTable() {
             setStageDelete(false);
             setSelectedStage(null);
           }}
-          
+
+        />
+      )}
+
+      {stageCreate && (
+        <StageCreate
+          onSuccess={() => fetchAllStages()}
+          onClose={() => setStageCreate(false)}
         />
       )}
     </div >
