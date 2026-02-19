@@ -10,7 +10,7 @@ export const fetchAuthMe = async () => {
 
 export const loginUser = async (email: string, password: string): Promise<LoginResponse> => {
   const requestBody: LoginRequest = { email, password };
-  return apiFetch<LoginResponse>('/api/auth/signin', {
+  return apiFetch<LoginResponse>('/api/auth/login', {
     method: 'POST',
     body: requestBody,
   });

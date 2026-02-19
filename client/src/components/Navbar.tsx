@@ -1,41 +1,27 @@
 import { Link } from 'react-router-dom';
 import { UserPlus, Boxes, LogIn, UserMinus, ShieldUser } from 'lucide-react';
-import { type User } from '../types/api';
-import { useState, useEffect } from 'react';
-import { fetchAuthMe, logoutUser } from '../api/auth';
 import { useNavigate } from 'react-router-dom';
-import { Login } from './shared/navAuth/Login'
-import {SignUp} from './shared/navAuth/Signup'
+import { logoutUser } from '../api/auth';
+import { useAuth } from '../contexts/AuthContext';
+import { Login } from './shared/navAuth/Login';
+import { SignUp } from './shared/navAuth/Signup';
+import { useState } from 'react';
+
 export function Navbar() {
   const navigate = useNavigate();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState<User>();
+  const { isAuthenticated, user, login, logout } = useAuth();
   const [showLogin, setShowLogin] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
 
-
-  const authenticate = async () => {
-    const authRes = await fetchAuthMe();
-    if (authRes?.apiUser) {
-      setIsAuthenticated(true);
-      setUser(authRes.apiUser)
-    }
-    console.log(isAuthenticated);
-  }
-
   const handleLogOut = async () => {
     try {
-      logoutUser();
+      await logoutUser();
+      logout();
       navigate('/');
     } catch (err) {
-      console.error('Logout failed', err)
+      console.error('Logout failed', err);
     }
-  }
-
-  useEffect(() => {
-    authenticate();
-  }, []);
-
+  };
 
   return (
     <>
@@ -70,7 +56,7 @@ export function Navbar() {
             ) : (
               <li>
                 <button className="btn" onClick={() => setShowLogin(true)}>
-                  <LogIn size={18} />Sign In
+                  <LogIn size={18} /> Sign In
                 </button>
               </li>
             )}
@@ -86,14 +72,17 @@ export function Navbar() {
         </div>
       </nav>
       {showLogin && (
-        <Login onClose={() => setShowLogin(false)} onSuccess={() => setShowLogin(false)} />
+        <Login
+          onClose={() => setShowLogin(false)}
+          onSuccess={(user) => {
+            login(user);
+            setShowLogin(false);
+          }}
+        />
       )}
-
       {showSignUp && (
         <SignUp onClose={() => setShowSignUp(false)} onSuccess={() => setShowSignUp(false)} />
       )}
     </>
   );
-
-
 }

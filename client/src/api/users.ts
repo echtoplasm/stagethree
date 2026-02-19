@@ -1,15 +1,7 @@
 
 import { apiFetch } from "../utils/api";
 
-export interface User {
-  id: number;
-  email: string;
-  firstName: string;
-  lastName: string;
-  isActive: boolean;
-  createdAt: string;
-  updatedAt?: string;
-}
+import {type User} from "../types/api"
 
 export const getUsers = async (): Promise<User[]> => {
   return apiFetch<User[]>('/api/users');
@@ -25,7 +17,7 @@ export const createUser = async (userData: {
   firstName: string;
   lastName: string;
 }): Promise<User> => {
-  return apiFetch<User>('/api/users', {
+  return apiFetch<User>('/api/users/register', {
     method: 'POST',
     body: userData,
   });

@@ -17,6 +17,7 @@ export interface LoginResponse {
     email: string;
     firstName: string;
     lastName: string;
+    roleId: number;
   };
 }
 
@@ -25,7 +26,7 @@ export interface User {
   email: string;
   firstName: string;
   lastName: string;
-  isActive: boolean;
+  isActive?: boolean;
   roleId: number;
-  createdAt: string; 
+  createdAt?: string; 
 }

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Trash2, UserPlus, Users as UsersIcon } from "lucide-react";
-import { getUsers, deleteUser, createUser, type User } from "../api/users";
+import { getUsers, deleteUser, createUser} from "../api/users";
+import {type User} from "../types/api"
 
 export function UserCrud() {
   const [users, setUsers] = useState<User[]>([]);

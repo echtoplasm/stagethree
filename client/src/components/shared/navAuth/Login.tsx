@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { X, LogIn } from "lucide-react";
 import { loginUser } from "../../../api/auth";
-
+import { type User } from "../../../types/api";
 interface LoginProps {
   onClose: () => void;
-  onSuccess: () => void;
+  onSuccess: (user: User) => void;
 }
 
 export function Login({ onClose, onSuccess }: LoginProps) {
@@ -15,9 +15,10 @@ export function Login({ onClose, onSuccess }: LoginProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await loginUser(email, password);
+      const res = await loginUser(email, password);
+      console.log(res);
       setError(false);
-      onSuccess();
+      onSuccess(res.user);
     } catch (err) {
       setError(true);
       console.error(err);
