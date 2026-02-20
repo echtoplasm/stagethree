@@ -20,6 +20,12 @@ export const fetchAllProjectByUserId = async (id: number): Promise<Project[]> =>
 export const createNewProject = async (project: Omit<Project, 'id'>): Promise<Project> => {
   return apiFetch('/api/projects', {
     method: 'POST',
-    body: project
+    body: project,
+  });
+};
+
+export const deleteProject = async (projectId: number): Promise<Project> => {
+  return apiFetch(`/api/projects/${projectId}`, {
+    method: 'DELETE'
   })
-}
+};

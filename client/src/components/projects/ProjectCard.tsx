@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { fetchAllProjectByUserId, type Project } from "../../api/projects";
 import { fetchFullStagePlotConfig, fetchStagePlotsByProjectId, type StagePlot } from "../../api/stagePlots";
-import { Folder, Plus } from 'lucide-react';
-import {ProjectCreate} from './ProjectCreate'
+import { Folder, Plus, Trash } from 'lucide-react';
+import { ProjectCreate } from './ProjectCreate'
+import { ProjectDelete } from './ProjectDelete';
 import { useAuth } from '../../contexts/AuthContext';
 
 
@@ -16,6 +17,8 @@ export function ProjectCard({ onPlotSelect }: ProjectCardProps) {
   const [plots, setPlots] = useState<StagePlot[]>([]);
   const [selectedProjectId, setSelectedProjectId] = useState<number | null>(null);
   const [projectCreate, setProjectCreate] = useState(false);
+  const [projectDelete, setProjectDelete] = useState(false);
+  const [projectIdToDelete, setProjectIdToDelete] = useState<number | null>(null);
 
   const { user } = useAuth();
 
@@ -40,6 +43,12 @@ export function ProjectCard({ onPlotSelect }: ProjectCardProps) {
     console.log(fullPlotInfo);
   }
 
+  const handleProjectDeleteClick = async (idToDelete: number) => {
+    if(!idToDelete) return null;
+    setProjectIdToDelete(idToDelete);
+    setProjectDelete(true);
+  }
+
 
 
   useEffect(() => {
@@ -62,7 +71,13 @@ export function ProjectCard({ onPlotSelect }: ProjectCardProps) {
           >
             <span className="icon"><Folder size={18} /></span>
             <span className="name">{project.name}</span>
-            <p className="stage-count">plots</p>
+            <button className="delete btn btn-small btn-danger"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleProjectDeleteClick(project.id);
+              }}  >
+              <Trash size={18} />
+            </button>
           </div>
           {selectedProjectId === project.id && (
             <div className="stage-plots-dropdown">
@@ -75,9 +90,20 @@ export function ProjectCard({ onPlotSelect }: ProjectCardProps) {
       ))}
 
       {projectCreate && (
-        <ProjectCreate 
-          onSuccess={() =>{ fetchProjects(), setProjectCreate(false)}}
-          onClose={() => setProjectCreate(false)}/>
+        <ProjectCreate
+          onSuccess={() => { fetchProjects(), setProjectCreate(false) }}
+          onClose={() => setProjectCreate(false)} />
+      )}
+
+      {projectDelete && (
+        <ProjectDelete
+          projectId={projectIdToDelete}
+          onSuccess={() => {
+            fetchProjects();
+            setProjectDelete(false);
+          }}
+          onClose={() => setProjectDelete(false)}
+        />
       )}
     </div>
 
