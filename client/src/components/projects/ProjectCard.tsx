@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { fetchAllProjects, type Project } from "../../api/projects";
+import { fetchAllProjectByUserId, type Project } from "../../api/projects";
 import { fetchFullStagePlotConfig, fetchStagePlotsByProjectId, type StagePlot } from "../../api/stagePlots";
 import { Folder } from 'lucide-react';
+import { useAuth } from '../../contexts/AuthContext';
 
 
 interface ProjectCardProps {
@@ -9,13 +10,16 @@ interface ProjectCardProps {
 }
 
 
-export function ProjectCard({ onPlotSelect } : ProjectCardProps) {
+export function ProjectCard({ onPlotSelect }: ProjectCardProps) {
   const [projects, setProjects] = useState<Project[]>([]);
   const [plots, setPlots] = useState<StagePlot[]>([]);
   const [selectedProjectId, setSelectedProjectId] = useState<number | null>(null);
 
+  const { user } = useAuth();
+
   const fetchProjects = async () => {
-    const data = await fetchAllProjects();
+    if (!user) return null;
+    const data = await fetchAllProjectByUserId(user.id);
     console.log(data);
     setProjects(data);
   }
@@ -37,11 +41,11 @@ export function ProjectCard({ onPlotSelect } : ProjectCardProps) {
 
   useEffect(() => {
     fetchProjects();
-  }, []);
+  }, [user]);
 
 
 
- return (
+  return (
     <div className="projects-list">
       {projects.map((project) => (
         <div key={project.id}>

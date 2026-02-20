@@ -61,6 +61,7 @@ export const getAllStagePlotsByProjectId = async (req: Request, res: Response): 
 
     if (plots.length === 0) {
       res.status(404).json({
+        message: 'no plots associated with that project id',
         error: 'No plots associated with that project id',
       });
       return;

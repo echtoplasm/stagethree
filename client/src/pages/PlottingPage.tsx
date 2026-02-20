@@ -1,4 +1,3 @@
-// PlottingPage.tsx
 import { useState } from 'react';
 import { ProjectCard } from '../components/projects/ProjectCard';
 import { StageScene } from '../components/ThreeD';
@@ -14,7 +13,7 @@ export function PlottingPage() {
 
   const handlePlotSelect = (plotConfig: any) => {
     setSelectedPlotConfig(plotConfig);
-    setSidebarOpen(false); // Close sidebar after selection
+    setSidebarOpen(false);
     console.log('Selected Plot config', selectedPlotConfig);
   };
 
@@ -25,7 +24,7 @@ export function PlottingPage() {
   }
 
   const handleTabClick = (tab: string) => {
-    setActiveTab(activeTab === tab ? null : tab); // Toggle drawer
+    setActiveTab(activeTab === tab ? null : tab);
   };
 
   useEffect(() => {

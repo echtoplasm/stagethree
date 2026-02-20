@@ -10,5 +10,16 @@ export interface Project {
 }
 
 export const fetchAllProjects = async (): Promise<Project[]> => {
-  return apiFetch('/api/projects')
+  return apiFetch('/api/projects');
 };
+
+export const fetchAllProjectByUserId = async (id: number): Promise<Project[]> => {
+  return apiFetch(`/api/projects/user/${id}`);
+};
+
+export const createNewProject = async (data: Project): Promise<void> => {
+  return apiFetch('/api/projects', {
+    method: 'POST',
+    body: data
+  })
+}

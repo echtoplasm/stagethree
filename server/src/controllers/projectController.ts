@@ -114,3 +114,20 @@ export const deleteProject = async (req: Request, res: Response): Promise<void> 
   }
 };
 
+/**
+ * GET /api/user/projects/:id
+ * Get projects by user id in order to populate projects for specific user
+ *
+ */
+
+export const getProjectByUserId = async (req: Request, res: Response): Promise<void> => {
+  const { id } = req.params;
+
+  const projects: ProjectDB[] = await db(projectTable).select('*').where({
+    id_usr_prj: id,
+  });
+  
+  const apiProjects = projects.map(dbProjectToApi);
+
+  res.status(200).json(apiProjects);
+};
