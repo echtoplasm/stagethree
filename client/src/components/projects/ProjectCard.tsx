@@ -27,6 +27,7 @@ export function ProjectCard({ onPlotSelect }: ProjectCardProps) {
   }
 
   const handleProjectClick = async (projectId: number) => {
+    setPlots([]);
     setSelectedProjectId(projectId);
     const stagePlots = await fetchStagePlotsByProjectId(projectId);
     setPlots(stagePlots);

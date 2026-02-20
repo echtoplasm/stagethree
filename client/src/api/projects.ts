@@ -1,7 +1,7 @@
 import { apiFetch } from '../utils/api';
 
 export interface Project {
-  id?: number;
+  id: number;
   userId: number;
   name: string;
   description?: string;
@@ -17,9 +17,9 @@ export const fetchAllProjectByUserId = async (id: number): Promise<Project[]> =>
   return apiFetch(`/api/projects/user/${id}`);
 };
 
-export const createNewProject = async (data: Project): Promise<void> => {
+export const createNewProject = async (project: Omit<Project, 'id'>): Promise<Project> => {
   return apiFetch('/api/projects', {
     method: 'POST',
-    body: data
+    body: project
   })
 }
