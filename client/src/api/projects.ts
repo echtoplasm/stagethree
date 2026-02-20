@@ -1,11 +1,11 @@
 import { apiFetch } from '../utils/api';
 
 export interface Project {
-  id: number;
+  id?: number;
   userId: number;
   name: string;
   description?: string;
-  createdAt: string;
+  createdAt?: string;
   updatedAt?: string;
 }
 

@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { fetchAllProjectByUserId, type Project } from "../../api/projects";
 import { fetchFullStagePlotConfig, fetchStagePlotsByProjectId, type StagePlot } from "../../api/stagePlots";
-import { Folder } from 'lucide-react';
+import { Folder, Plus } from 'lucide-react';
+import {ProjectCreate} from './ProjectCreate'
 import { useAuth } from '../../contexts/AuthContext';
 
 
@@ -14,6 +15,7 @@ export function ProjectCard({ onPlotSelect }: ProjectCardProps) {
   const [projects, setProjects] = useState<Project[]>([]);
   const [plots, setPlots] = useState<StagePlot[]>([]);
   const [selectedProjectId, setSelectedProjectId] = useState<number | null>(null);
+  const [projectCreate, setProjectCreate] = useState(false);
 
   const { user } = useAuth();
 
@@ -47,6 +49,10 @@ export function ProjectCard({ onPlotSelect }: ProjectCardProps) {
 
   return (
     <div className="projects-list">
+      <button className="btn btn-primary" onClick={() => setProjectCreate(true)}>
+        <Plus size={18} />
+        Create New Project
+      </button>
       {projects.map((project) => (
         <div key={project.id}>
           <div
@@ -66,6 +72,13 @@ export function ProjectCard({ onPlotSelect }: ProjectCardProps) {
           )}
         </div>
       ))}
+
+      {projectCreate && (
+        <ProjectCreate 
+          onSuccess={() =>{ fetchProjects(), setProjectCreate(false)}}
+          onClose={() => setProjectCreate(false)}/>
+      )}
     </div>
+
   );
 }

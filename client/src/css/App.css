@@ -436,6 +436,7 @@ nav ul button:hover::after {
 .form-input,
 .form-select,
 .form-textarea {
+  color: var(--text-primary);
   width: 100%;
   padding: 0.625rem 1rem;
   font-size: 0.9375rem;
