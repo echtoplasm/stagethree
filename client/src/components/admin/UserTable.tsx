@@ -7,6 +7,7 @@ import { Plus, Trash, Pencil } from "lucide-react";
 import { UserDelete } from "./UserDelete";
 
 
+
 export const UserTable = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
@@ -15,7 +16,11 @@ export const UserTable = () => {
   const [userUpdate, setUserUpdate] = useState(false);
   const [userDelete, setUserDelete] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
-
+  const roleLabel: Record<number, string> = {
+    1: 'User',
+    2: 'Admin',
+    3: 'Super User',
+  };
   const fetchUsers = async () => {
     try {
       setLoading(true);
@@ -90,7 +95,7 @@ export const UserTable = () => {
                   <td>{user.firstName}</td>
                   <td>{user.lastName}</td>
                   <td>{user.email}</td>
-                  <td>{user.roleId === 2 ? 'Admin' : 'User'}</td>
+                  <td>{roleLabel[user.roleId] ?? 'User'}</td>
                   <td className="flex gap-2">
                     <button className="btn btn-sm btn-ghost"
                       onClick={() => {
@@ -128,7 +133,7 @@ export const UserTable = () => {
 
         {userUpdate && (
           <UserUpdate
-            user={selectedUser}
+            userUpdate={selectedUser}
             onClose={() => setUserUpdate(false)}
             onSuccess={() => {
               fetchUsers()

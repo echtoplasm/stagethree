@@ -87,7 +87,7 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
 export const updateUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
-    const { email, firstName, lastName, isActive } = req.body;
+    const { email, firstName, lastName, isActive, roleId } = req.body;
 
     // Check if user exists
     const exists = await db('user_usr').where({ id_usr: id }).first();
@@ -97,7 +97,7 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
     }
 
     // Transform API data to DB format
-    const updates = apiUserToDb({ email, firstName, lastName, isActive });
+    const updates = apiUserToDb({ email, firstName, lastName, isActive, roleId });
 
     // Only update if there are fields to update
     if (Object.keys(updates).length === 0) {
@@ -166,7 +166,10 @@ export const deleteUser = async (req: Request, res: Response): Promise<void> => 
       return;
     }
 
-    res.status(204).send();
+    res.status(200).json({
+      message: "User successfully deleted", 
+      userDeleted: `${deleted}`
+    });
   } catch (error) {
     console.error('Error deleting user:', error);
     res.status(500).json({ error: 'Failed to delete user' });

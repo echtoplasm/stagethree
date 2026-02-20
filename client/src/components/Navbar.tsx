@@ -60,7 +60,7 @@ export function Navbar() {
                 </button>
               </li>
             )}
-            {user?.roleId === 2 && (
+            {(user?.roleId ?? 0) >= 2 && (
               <li>
                 <Link to="/admin">
                   <ShieldUser size={18} />

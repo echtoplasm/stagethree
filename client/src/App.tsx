@@ -26,7 +26,7 @@ function AppRoutes() {
 
       <Route
         path="/admin"
-        element={user?.roleId === 2 ? <AdminPage /> : <Navigate to="/" />}
+        element={(user?.roleId ?? 0) >= 2 ? <AdminPage /> : <Navigate to="/" />}
       />
     </Routes>
   );

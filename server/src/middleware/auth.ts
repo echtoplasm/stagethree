@@ -46,7 +46,7 @@ export const authenticateToken = (req: AuthRequest, res: Response, next: NextFun
  * @param next - 
  */
 export const authenticateAdmin = (req: AuthRequest, res: Response, next: NextFunction): void => {
-  if (!req.user || req.user.roleId !== ADMIN_ROLE_ID) {
+  if (!req.user || req.user.roleId < ADMIN_ROLE_ID) {
     res.status(403).json({ error: 'Forbidden' });
   }
 
