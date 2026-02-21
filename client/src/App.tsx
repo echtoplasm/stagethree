@@ -1,10 +1,9 @@
-
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
 import { Navigate } from 'react-router-dom';
 import { StageRead } from './components/shared/stage/StageRead';
 import { PlottingPage } from './pages/PlottingPage';
-
+import { useEffect, useState } from 'react';
 import { AdminPage } from './pages/AdminPage';
 import { AuthProvider } from './contexts/AuthContext';
 import { useAuth } from './contexts/AuthContext';
@@ -33,10 +32,22 @@ function AppRoutes() {
 }
 
 function App() {
+  const [theme, setTheme ] = useState('dark');
+  
+  const toggleTheme = () => {
+    const next = theme === 'dark' ? 'light' : 'dark';
+    setTheme(next);
+    document.documentElement.setAttribute('data-theme', next);
+  }
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, []);
+
   return (
     <AuthProvider>
       <Router>
-        <Navbar />
+        <Navbar onThemeToggle={toggleTheme} theme={theme} />
         <AppRoutes />
       </Router>
     </AuthProvider>

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { UserPlus, Boxes, LogIn, UserMinus, ShieldUser } from 'lucide-react';
+import { UserPlus, Boxes, LogIn, UserMinus, ShieldUser, Sun, Moon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { logoutUser } from '../api/auth';
 import { useAuth } from '../contexts/AuthContext';
@@ -7,7 +7,13 @@ import { Login } from './shared/navAuth/Login';
 import { SignUp } from './shared/navAuth/Signup';
 import { useState } from 'react';
 
-export function Navbar() {
+interface NavbarProps {
+  onThemeToggle: () => void;
+  theme: string;
+}
+
+
+export function Navbar({ onThemeToggle, theme}: NavbarProps) {
   const navigate = useNavigate();
   const { isAuthenticated, user, login, logout } = useAuth();
   const [showLogin, setShowLogin] = useState(false);
@@ -68,6 +74,11 @@ export function Navbar() {
                 </Link>
               </li>
             )}
+            <div>
+              <button onClick={onThemeToggle}>
+                {theme === 'dark' ? <Moon/> : <Sun />}
+              </button>
+            </div>
           </ul>
         </div>
       </nav>

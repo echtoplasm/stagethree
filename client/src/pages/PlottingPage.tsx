@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ProjectCard } from '../components/projects/ProjectCard';
 import { StageScene } from '../components/ThreeD';
-import { ArrowRight, ArrowLeft, CircleX } from 'lucide-react';
+import { ArrowRight, CircleX } from 'lucide-react';
 import { fetchAllElementTypes, type ElementType } from '../api/element';
 import { useEffect } from 'react';
 
@@ -50,10 +50,12 @@ export function PlottingPage() {
 
       {/* Sidebar Toggle */}
       <button
-        className="sidebar-toggle"
+        className={`sidebar-toggle ${sidebarOpen ? 'open' : ''}`}
         onClick={() => setSidebarOpen(!sidebarOpen)}
+        aria-label="Toggle saved projects"
       >
-        {sidebarOpen ? <ArrowLeft /> : <ArrowRight />}
+        <ArrowRight className="toggle-arrow" />
+        <span className="toggle-label">Saved Projects</span>
       </button>
 
       {/* Main 3D Viewer */}
