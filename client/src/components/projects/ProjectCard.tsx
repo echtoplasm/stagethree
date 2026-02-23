@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { fetchAllProjectByUserId, type Project } from "../../api/projects";
 import { fetchFullStagePlotConfig, fetchStagePlotsByProjectId, type StagePlot } from "../../api/stagePlots";
-import { Folder, Plus, Trash } from 'lucide-react';
+import { Folder, Plus, PlusCircle, Trash } from 'lucide-react';
 import { ProjectCreate } from './ProjectCreate'
 import { ProjectDelete } from './ProjectDelete';
 import { useAuth } from '../../contexts/AuthContext';
+import { PlotCreate } from '../plotting/PlotCreate';
 
 
 interface ProjectCardProps {
@@ -19,6 +20,8 @@ export function ProjectCard({ onPlotSelect }: ProjectCardProps) {
   const [projectCreate, setProjectCreate] = useState(false);
   const [projectDelete, setProjectDelete] = useState(false);
   const [projectIdToDelete, setProjectIdToDelete] = useState<number | null>(null);
+  const [createPlot, setCreatePlot] = useState(false);
+
 
   const { user } = useAuth();
 
@@ -44,7 +47,7 @@ export function ProjectCard({ onPlotSelect }: ProjectCardProps) {
   }
 
   const handleProjectDeleteClick = async (idToDelete: number) => {
-    if(!idToDelete) return null;
+    if (!idToDelete) return null;
     setProjectIdToDelete(idToDelete);
     setProjectDelete(true);
   }
@@ -84,6 +87,10 @@ export function ProjectCard({ onPlotSelect }: ProjectCardProps) {
               {plots.map((plot) => (
                 <div key={plot.id} onClick={() => handleStagePlotClick(plot.id)}>{plot.name}</div>
               ))}
+              <button className='btn-small' onClick={() => { setCreatePlot(true), setSelectedProjectId(project.id) }}>
+                <span><PlusCircle size={18} /> Create new plot</span>
+              </button>
+
             </div>
           )}
         </div>
@@ -105,6 +112,19 @@ export function ProjectCard({ onPlotSelect }: ProjectCardProps) {
           onClose={() => setProjectDelete(false)}
         />
       )}
+
+      {createPlot && selectedProjectId !== null && (
+        <PlotCreate
+          projectId={selectedProjectId}
+          onSuccess={() => {
+            fetchProjects();
+            handleProjectClick(selectedProjectId);
+            setCreatePlot(false);
+          }}
+          onClose={() => { setCreatePlot(false) }}
+        />
+      )}
+
     </div>
 
   );

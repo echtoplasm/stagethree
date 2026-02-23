@@ -3,12 +3,13 @@ import { createNewProject } from "../../api/projects";
 import { useAuth } from "../../contexts/AuthContext";
 import { type Project } from "../../api/projects";
 import {X} from 'lucide-react';
-interface UserCreateProps {
+
+interface ProjectCreateProps {
   onClose: () => void;
   onSuccess: () => void;
 }
 
-export const ProjectCreate = ({onClose, onSuccess}: UserCreateProps) => {
+export const ProjectCreate = ({onClose, onSuccess}: ProjectCreateProps) => {
   const {user} = useAuth();
   if(!user) return null;
   const [projectForm, setProjectForm] = useState<Omit<Project, 'id'>>({

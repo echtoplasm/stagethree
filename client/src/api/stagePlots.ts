@@ -19,3 +19,10 @@ export const fetchStagePlotsByProjectId = async (projectId: number): Promise<Sta
 export const fetchFullStagePlotConfig = async (plotId: number) => {
   return apiFetch(`/api/stageplots/full/${plotId}`);
 };
+
+export const createStagePlot = async (data: Omit<StagePlot, 'id' | 'createdAt'>): Promise<StagePlot> => {
+  return apiFetch(`/api/stageplots`, {
+    method: 'POST',
+    body: JSON.stringify(data)
+  });
+};
