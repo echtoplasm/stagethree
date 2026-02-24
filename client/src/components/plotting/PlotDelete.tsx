@@ -1,7 +1,7 @@
 import { deleteStagePlot } from '../../api/stagePlots';
 
 interface PlotDeleteProps {
-  plotId: number;
+  plotId: number | null;
   onSuccess: () => void;
   onClose: () => void;
 }
@@ -11,6 +11,7 @@ export const PlotDelete = ({ plotId, onSuccess, onClose }: PlotDeleteProps) => {
   console.log(`Plot delete recieved: PlotId :::`, plotId);
 
   const handleSubmit = async (e: React.FormEvent) => {
+    if(!plotId) return null;
     e.preventDefault();
     await deleteStagePlot(plotId);
     onSuccess();

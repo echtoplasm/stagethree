@@ -100,7 +100,8 @@ export function ProjectCard({ onPlotSelect }: ProjectCardProps) {
                   {plots.map((plot) => (
                     <div key={plot.id} onClick={() => handleStagePlotClick(plot.id)}>
                       {plot.name}
-                      <button onClick={() => {
+                      <button onClick={(e) => {
+                        e.stopPropagation()
                         handlePlotDeleteClick(plot.id);
                       }}>
                         <Trash size={18} />
@@ -153,7 +154,7 @@ export function ProjectCard({ onPlotSelect }: ProjectCardProps) {
               plotId={plotToDelete}
               onSuccess={() => {
                 fetchAllStagePlots();
-                /*handleProjectClick(selectedProjectId!);*/
+                handleProjectClick(selectedProjectId!);
                 setPlotDelete(false);
               }}
               onClose={() => {
