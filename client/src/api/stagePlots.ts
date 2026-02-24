@@ -20,9 +20,17 @@ export const fetchFullStagePlotConfig = async (plotId: number) => {
   return apiFetch(`/api/stageplots/full/${plotId}`);
 };
 
-export const createStagePlot = async (data: Omit<StagePlot, 'id' | 'createdAt'>): Promise<StagePlot> => {
+export const createStagePlot = async (
+  data: Omit<StagePlot, 'id' | 'createdAt'>
+): Promise<StagePlot> => {
   return apiFetch(`/api/stageplots`, {
     method: 'POST',
-    body: JSON.stringify(data)
+    body: JSON.stringify(data),
+  });
+};
+
+export const deleteStagePlot = async (plotId: number): Promise<void> => {
+  return apiFetch(`/api/stageplots/${plotId}`, {
+    method: 'DELETE',
   });
 };

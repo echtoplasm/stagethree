@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { fetchAllProjectByUserId, type Project } from "../../api/projects";
-import { fetchFullStagePlotConfig, fetchStagePlotsByProjectId, type StagePlot } from "../../api/stagePlots";
+import { fetchAllStagePlots, fetchFullStagePlotConfig, fetchStagePlotsByProjectId, type StagePlot } from "../../api/stagePlots";
 import { Folder, Plus, PlusCircle, Trash } from 'lucide-react';
 import { ProjectCreate } from './ProjectCreate'
 import { ProjectDelete } from './ProjectDelete';
 import { useAuth } from '../../contexts/AuthContext';
 import { PlotCreate } from '../plotting/PlotCreate';
-
+import { PlotDelete } from '../plotting/PlotDelete.tsx'
 
 interface ProjectCardProps {
   onPlotSelect: (plotConfig: any) => void;
@@ -21,7 +21,8 @@ export function ProjectCard({ onPlotSelect }: ProjectCardProps) {
   const [projectDelete, setProjectDelete] = useState(false);
   const [projectIdToDelete, setProjectIdToDelete] = useState<number | null>(null);
   const [createPlot, setCreatePlot] = useState(false);
-
+  const [plotToDelete, setPlotToDelete] = useState<number | null>(null);
+  const [plotDelete, setPlotDelete] = useState(false);
 
   const { user } = useAuth();
 
@@ -52,6 +53,12 @@ export function ProjectCard({ onPlotSelect }: ProjectCardProps) {
     setProjectDelete(true);
   }
 
+  const handlePlotDeleteClick = async (plotId: number) => {
+    if (!plotId) return null;
+    setPlotToDelete(plotId);
+    setPlotDelete(true);
+  }
+
 
 
   useEffect(() => {
@@ -62,70 +69,100 @@ export function ProjectCard({ onPlotSelect }: ProjectCardProps) {
 
   return (
     <div className="projects-list">
-      <button className="btn btn-primary" onClick={() => setProjectCreate(true)}>
-        <Plus size={18} />
-        Create New Project
-      </button>
-      {projects.map((project) => (
-        <div key={project.id}>
-          <div
-            className="project-row"
-            onClick={() => handleProjectClick(project.id)}
-          >
-            <span className="icon"><Folder size={18} /></span>
-            <span className="name">{project.name}</span>
-            <button className="delete btn btn-small btn-danger"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleProjectDeleteClick(project.id);
-              }}  >
-              <Trash size={18} />
-            </button>
-          </div>
-          {selectedProjectId === project.id && (
-            <div className="stage-plots-dropdown">
-              {plots.map((plot) => (
-                <div key={plot.id} onClick={() => handleStagePlotClick(plot.id)}>{plot.name}</div>
-              ))}
-              <button className='btn-small' onClick={() => { setCreatePlot(true), setSelectedProjectId(project.id) }}>
-                <span><PlusCircle size={18} /> Create new plot</span>
-              </button>
-
+      {!user ? (
+        <span>sign in to save projects</span>
+      ) : (
+        <>
+          <button className="btn btn-primary" onClick={() => setProjectCreate(true)}>
+            <Plus size={18} />
+            Create New Project
+          </button>
+          {projects.map((project) => (
+            <div key={project.id}>
+              <div
+                className="project-row"
+                onClick={() => handleProjectClick(project.id)}
+              >
+                <span className="icon"><Folder size={18} /></span>
+                <span className="name">{project.name}</span>
+                <button
+                  className="delete btn btn-small btn-danger"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleProjectDeleteClick(project.id);
+                  }}
+                >
+                  <Trash size={18} />
+                </button>
+              </div>
+              {selectedProjectId === project.id && (
+                <div className="stage-plots-dropdown">
+                  {plots.map((plot) => (
+                    <div key={plot.id} onClick={() => handleStagePlotClick(plot.id)}>
+                      {plot.name}
+                      <button onClick={() => {
+                        handlePlotDeleteClick(plot.id);
+                      }}>
+                        <Trash size={18} />
+                      </button>
+                    </div>
+                  ))}
+                  <button
+                    className="btn-small"
+                    onClick={() => {
+                      setCreatePlot(true);
+                      setSelectedProjectId(project.id);
+                    }}
+                  >
+                    <span><PlusCircle size={18} /> Create new plot</span>
+                  </button>
+                </div>
+              )}
             </div>
+          ))}
+          {projectCreate && (
+            <ProjectCreate
+              onSuccess={() => { fetchProjects(); setProjectCreate(false); }}
+              onClose={() => setProjectCreate(false)}
+            />
           )}
-        </div>
-      ))}
+          {projectDelete && (
+            <ProjectDelete
+              projectId={projectIdToDelete}
+              onSuccess={() => {
+                fetchProjects();
+                setProjectDelete(false);
+              }}
+              onClose={() => setProjectDelete(false)}
+            />
+          )}
+          {createPlot && selectedProjectId !== null && (
+            <PlotCreate
+              projectId={selectedProjectId}
+              onSuccess={() => {
+                fetchProjects();
+                handleProjectClick(selectedProjectId);
+                setCreatePlot(false);
+              }}
+              onClose={() => setCreatePlot(false)}
+            />
+          )}
 
-      {projectCreate && (
-        <ProjectCreate
-          onSuccess={() => { fetchProjects(), setProjectCreate(false) }}
-          onClose={() => setProjectCreate(false)} />
+          {plotDelete && (
+            <PlotDelete
+              plotId={plotToDelete}
+              onSuccess={() => {
+                fetchAllStagePlots();
+                /*handleProjectClick(selectedProjectId!);*/
+                setPlotDelete(false);
+              }}
+              onClose={() => {
+                setPlotDelete(false);
+              }}
+            />
+          )}
+        </>
       )}
-
-      {projectDelete && (
-        <ProjectDelete
-          projectId={projectIdToDelete}
-          onSuccess={() => {
-            fetchProjects();
-            setProjectDelete(false);
-          }}
-          onClose={() => setProjectDelete(false)}
-        />
-      )}
-
-      {createPlot && selectedProjectId !== null && (
-        <PlotCreate
-          projectId={selectedProjectId}
-          onSuccess={() => {
-            fetchProjects();
-            handleProjectClick(selectedProjectId);
-            setCreatePlot(false);
-          }}
-          onClose={() => { setCreatePlot(false) }}
-        />
-      )}
-
     </div>
-
   );
 }
