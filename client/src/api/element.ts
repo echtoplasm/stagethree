@@ -8,6 +8,7 @@ export interface ElementType {
   defaultColor?: string;
 }
 
+
 export const fetchAllElementTypes = async (): Promise<ElementType[]> => {
   return apiFetch('/api/elements');
 };

@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-
+import { useStageContext } from '../contexts/StageContext';
+import { type ElementPlacement } from '../api/elementPlacement';
 interface StageObject {
   id: string;
   name: string;
@@ -20,7 +21,9 @@ export function StageScene() {
   const mouseRef = useRef(new THREE.Vector2());
   const selectedObjectRef = useRef<THREE.Mesh | null>(null);
   const offsetRef = useRef(new THREE.Vector3());
-  const counterRef = useRef(0);
+
+
+  const { elementPlacements, stage } = useStageContext();
 
   useEffect(() => {
     if (!mountRef.current) return;
@@ -62,7 +65,7 @@ export function StageScene() {
     scene.add(directionalLight);
 
     // Stage floor (grid)
-    const gridHelper = new THREE.GridHelper(20, 20, 0x444444, 0x222222);
+    const gridHelper = new THREE.GridHelper(stage?.width, stage?.depth, 0x444444, 0x222222);
     scene.add(gridHelper);
 
     // Stage plane (invisible for raycasting)
@@ -74,11 +77,6 @@ export function StageScene() {
     plane.rotation.x = -Math.PI / 2;
     plane.name = 'stage-plane';
     scene.add(plane);
-
-    // Add sample objects
-    addInstrument('Drum Kit', 0, 0, 0xff0000);
-    addInstrument('Guitar Amp', -3, 0, 0x00ff00);
-    addInstrument('Keyboard', 3, 0, 0x0000ff);
 
     // Animation loop
     const animate = () => {
@@ -168,30 +166,42 @@ export function StageScene() {
     };
   }, []);
 
-  const addInstrument = (name: string, x: number, z: number, color: number) => {
-    if (!sceneRef.current) return;
+  useEffect(() => {
+    if (!sceneRef.current || !elementPlacements.length) return;
 
-    const geometry = new THREE.BoxGeometry(1, 1, 1);
-    const material = new THREE.MeshStandardMaterial({ color });
-    const mesh = new THREE.Mesh(geometry, material);
+    sceneRef.current.children
+      .filter(child => child.name.startsWith('instrument-'))
+      .forEach(child => sceneRef.current!.remove(child));
 
-    const id = `instrument-${counterRef.current++}`; // ✓ Unique counter
-    mesh.position.set(x, 0.5, z);
-    mesh.name = id;
-    mesh.castShadow = true;
-    mesh.receiveShadow = true;
+    setObjects([]);
 
-    sceneRef.current.add(mesh);
+    elementPlacements.forEach(placement => addInstrument(placement));
+  }, [elementPlacements]);
 
-    const newObject: StageObject = {
-      id,
-      name,
-      position: mesh.position.clone(),
-      mesh
-    };
+const addInstrument = (placement: ElementPlacement) => {
+  if (!sceneRef.current) return;
 
-    setObjects(prev => [...prev, newObject]);
-  };
+  const geometry = new THREE.BoxGeometry(
+    placement.scaleX,
+    placement.scaleZ,
+    placement.scaleY
+  );
+  const material = new THREE.MeshStandardMaterial({ color: 0x4a90d9 });
+  const mesh = new THREE.Mesh(geometry, material);
+
+  mesh.position.set(placement.positionX, placement.positionY, placement.positionZ);
+  mesh.rotation.set(placement.rotationX, placement.rotationY, placement.rotationZ);
+  mesh.name = `instrument-${placement.id}`;
+
+  sceneRef.current.add(mesh);
+
+  setObjects(prev => [...prev, {
+    id: `instrument-${placement.id}`,
+    name: placement.name,
+    position: mesh.position.clone(),
+    mesh
+  }]);
+};
 
   return (
     <div style={{ width: '100%', height: '100%' }}>
@@ -208,7 +218,7 @@ export function StageScene() {
         <ul>
           {objects.map(obj => (
             <li key={obj.id}>
-              {obj.name} - ({obj.position.x.toFixed(1)}, {obj.position.z.toFixed(1)})
+              {obj.name} - ({obj.position.x}, {obj.position.z})
             </li>
           ))}
         </ul>

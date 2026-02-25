@@ -5,8 +5,9 @@ import { StageRead } from './components/shared/stage/StageRead';
 import { PlottingPage } from './pages/PlottingPage';
 import { useEffect, useState } from 'react';
 import { AdminPage } from './pages/AdminPage';
-import {LandingPage} from './pages/LandingPage';
+import { LandingPage } from './pages/LandingPage';
 import { AuthProvider } from './contexts/AuthContext';
+import { StageProvider } from './contexts/StageContext';
 import { useAuth } from './contexts/AuthContext';
 
 
@@ -23,7 +24,7 @@ function AppRoutes() {
     <Routes>
       <Route path="/" element={<LandingPage />} />
       <Route path="/stages" element={<StageRead />} />
-      <Route path="/app" element={<PlottingPage/>} />
+      <Route path="/app" element={<PlottingPage />} />
 
       <Route
         path="/admin"
@@ -34,8 +35,8 @@ function AppRoutes() {
 }
 
 function App() {
-  const [theme, setTheme ] = useState('dark');
-  
+  const [theme, setTheme] = useState('dark');
+
   const toggleTheme = () => {
     const next = theme === 'dark' ? 'light' : 'dark';
     setTheme(next);
@@ -48,10 +49,12 @@ function App() {
 
   return (
     <AuthProvider>
-      <Router>
-        <Navbar onThemeToggle={toggleTheme} theme={theme} />
-        <AppRoutes />
-      </Router>
+      <StageProvider>
+        <Router>
+          <Navbar onThemeToggle={toggleTheme} theme={theme} />
+          <AppRoutes />
+        </Router>
+      </StageProvider>
     </AuthProvider>
   );
 }

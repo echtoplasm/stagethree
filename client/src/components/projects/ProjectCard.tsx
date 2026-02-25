@@ -7,13 +7,11 @@ import { ProjectDelete } from './ProjectDelete';
 import { useAuth } from '../../contexts/AuthContext';
 import { PlotCreate } from '../plotting/PlotCreate';
 import { PlotDelete } from '../plotting/PlotDelete.tsx'
-
-interface ProjectCardProps {
-  onPlotSelect: (plotConfig: any) => void;
-}
+import { useStageContext } from '../../contexts/StageContext.tsx';
+import { type FullStagePlotResponse } from '../../api/stagePlots';
 
 
-export function ProjectCard({ onPlotSelect }: ProjectCardProps) {
+export function ProjectCard() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [plots, setPlots] = useState<StagePlot[]>([]);
   const [selectedProjectId, setSelectedProjectId] = useState<number | null>(null);
@@ -25,6 +23,15 @@ export function ProjectCard({ onPlotSelect }: ProjectCardProps) {
   const [plotDelete, setPlotDelete] = useState(false);
 
   const { user } = useAuth();
+  const { setActiveProject, setElementPlacements, setInputChannels, setStage } = useStageContext();
+
+
+  const onPlotSelect = (data: FullStagePlotResponse) => {
+    setElementPlacements(data.elements);
+    setInputChannels(data.inputChannels);
+    setStage(data.stage)
+    setActiveProject(data.project);
+  }
 
   const fetchProjects = async () => {
     if (!user) return null;

@@ -19,7 +19,6 @@ export interface UserDB {
   created_at_usr: Date | string;
   id_rol_usr: number;
   updated_at_usr?: Date | string;
-
 }
 
 export interface UserAPI {
@@ -67,10 +66,9 @@ export const apiUserToDb = (apiUser: Partial<UserAPI>): Partial<UserDB> => ({
   ...(apiUser.email && { email_usr: apiUser.email }),
   ...(apiUser.firstName && { first_name_usr: apiUser.firstName }),
   ...(apiUser.lastName && { last_name_usr: apiUser.lastName }),
-  ...(apiUser.isActive !== undefined && { is_active_usr: apiUser.isActive }),   
-  ...(apiUser.roleId && { id_rol_usr: apiUser.roleId })
+  ...(apiUser.isActive !== undefined && { is_active_usr: apiUser.isActive }),
+  ...(apiUser.roleId && { id_rol_usr: apiUser.roleId }),
 });
-
 
 // ============================================
 // PROJECTS
@@ -413,7 +411,7 @@ export const dbStateToApi = (dbState: StateDB): StateAPI => ({
 
 /**
  * Converts State data from API/JavaScript naming conventions to database naming conventions
- * 
+ *
  * @param apiState - Partial State object with API naming to be stored in database
  * @returns Partial State object converted to database column naming
  */
@@ -450,7 +448,7 @@ export const dbCountryToApi = (dbCountry: CountryDB): CountryAPI => ({
 
 /**
  * Converts Country data from API/JavaScript naming conventions to database naming conventions
- * 
+ *
  * @param apiCountry - Partial Country object with API naming to be stored in database
  * @returns Partial Country object converted to database column naming
  */
@@ -458,7 +456,6 @@ export const apiCountryToDb = (apiCountry: Partial<CountryAPI>): Partial<Country
   ...(apiCountry.name && { name_cty: apiCountry.name }),
   ...(apiCountry.code && { code_cty: apiCountry.code }),
 });
-
 
 // ============================================
 // IMAGES
@@ -483,7 +480,7 @@ export interface ImageAPI {
 
 /**
  * Converts Image data from database naming conventions to API/JavaScript naming conventions
- * 
+ *
  * @param dbImage - The Image object retrieved from the database
  * @returns The same Image object converted to JavaScript naming conventions
  */
@@ -501,7 +498,7 @@ export const dbImageToApi = (dbImage: ImageDB): ImageAPI => ({
 
 /**
  * Converts Image data from API/JavaScript naming conventions to database naming conventions
- * 
+ *
  * @param apiImage - Partial Image object with API naming to be stored in database
  * @returns Partial Image object converted to database column naming
  */
@@ -533,7 +530,7 @@ export interface EquipmentTypeAPI {
 
 /**
  * Converts EquipmentType data from database naming conventions to API/JavaScript naming conventions
- * 
+ *
  * @param dbEquipmentType - The EquipmentType object retrieved from the database
  * @returns The same EquipmentType object converted to JavaScript naming conventions
  */
@@ -547,7 +544,7 @@ export const dbEquipmentTypeToApi = (dbEquipmentType: EquipmentTypeDB): Equipmen
 
 /**
  * Converts EquipmentType data from API/JavaScript naming conventions to database naming conventions
- * 
+ *
  * @param apiEquipmentType - Partial EquipmentType object with API naming to be stored in database
  * @returns Partial EquipmentType object converted to database column naming
  */
@@ -581,7 +578,7 @@ export interface ElementTypeAPI {
 
 /**
  * Converts ElementType data from database naming conventions to API/JavaScript naming conventions
- * 
+ *
  * @param dbElementType - The ElementType object retrieved from the database
  * @returns The same ElementType object converted to JavaScript naming conventions
  */
@@ -595,7 +592,7 @@ export const dbElementTypeToApi = (dbElementType: ElementTypeDB): ElementTypeAPI
 
 /**
  * Converts ElementType data from API/JavaScript naming conventions to database naming conventions
- * 
+ *
  * @param apiElementType - Partial ElementType object with API naming to be stored in database
  * @returns Partial ElementType object converted to database column naming
  */
@@ -645,7 +642,7 @@ export interface ElementPlacementAPI {
 
 /**
  * Converts ElementPlacement data from database naming conventions to API/JavaScript naming conventions
- * 
+ *
  * @param dbElementPlacement - The ElementPlacement object retrieved from the database
  * @returns The same ElementPlacement object converted to JavaScript naming conventions
  */
@@ -673,7 +670,7 @@ export const dbElementPlacementToApi = (
 
 /**
  * Converts ElementPlacement data from API/JavaScript naming conventions to database naming conventions
- * 
+ *
  * @param apiElementPlacement - Partial ElementPlacement object with API naming to be stored in database
  * @returns Partial ElementPlacement object converted to database column naming
  */
@@ -730,7 +727,7 @@ export interface InputChannelAPI {
 
 /**
  * Converts InputChannel data from database naming conventions to API/JavaScript naming conventions
- * 
+ *
  * @param dbInputChannel - The InputChannel object retrieved from the database
  * @returns The same InputChannel object converted to JavaScript naming conventions
  */
@@ -749,7 +746,7 @@ export const dbInputChannelToApi = (dbInputChannel: InputChannelDB): InputChanne
 
 /**
  * Converts InputChannel data from API/JavaScript naming conventions to database naming conventions
- * 
+ *
  * @param apiInputChannel - Partial InputChannel object with API naming to be stored in database
  * @returns Partial InputChannel object converted to database column naming
  */

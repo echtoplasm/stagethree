@@ -7,15 +7,11 @@ import { useEffect } from 'react';
 
 export function PlottingPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [selectedPlotConfig, setSelectedPlotConfig] = useState(null);
   const [activeTab, setActiveTab] = useState<string | null>(null);
   const [elementTypes, setElementTypes] = useState<ElementType[]>([]);
 
-  const handlePlotSelect = (plotConfig: any) => {
-    setSelectedPlotConfig(plotConfig);
-    setSidebarOpen(false);
-    console.log('Selected Plot config', selectedPlotConfig);
-  };
+  
+
 
   const fetchElementTypes = async () => {
     const data = await fetchAllElementTypes();
@@ -45,7 +41,7 @@ export function PlottingPage() {
             <CircleX />
           </button>
         </div>
-        <ProjectCard onPlotSelect={handlePlotSelect} />
+        <ProjectCard />
       </aside>
 
       {/* Sidebar Toggle */}

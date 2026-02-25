@@ -5,6 +5,13 @@ import {
   apiStagePlotToDb,
   StagePlotDB,
   StagePlotAPI,
+  dbInputChannelToApi,
+  dbStageToApi,
+  dbProjectToApi,
+  ProjectDB,
+  StageDB,
+  StageAPI,
+  ProjectAPI,
 } from '../utils/transformers';
 
 const plotTable = 'stage_plot_stp';
@@ -186,32 +193,100 @@ export const deleteStagePlot = async (req: Request, res: Response): Promise<void
  */
 export const getFullStagePlotInfo = async (req: Request, res: Response): Promise<void> => {
   try {
+    /**
+     * Wrote these specific type conversions since this endpoint is using data
+     * that is extremely use case specific and very unlikely that data will be
+     * returned and formatted like this elsewhere
+     *
+     */
+    interface dbElement {
+      created_at_elp: string;
+      id_elp: number;
+      id_elt_elp: number;
+      id_stp_elp: number;
+      name_elt: string;
+      position_x_elp: number;
+      position_y_elp: number;
+      position_z_elp: number;
+      rotation_x_elp: number;
+      rotation_y_elp: number;
+      rotation_z_elp: number;
+      scale_x_elp: number;
+      scale_y_elp: number;
+      scale_z_elp: number;
+    }
+
+    interface apiElement {
+      createdAt: string;
+      id: number;
+      elementTypeId: number;
+      stagePlotId: number;
+      name: string;
+      positionX: number;
+      positionY: number;
+      positionZ: number;
+      rotationX: number;
+      rotationY: number;
+      rotationZ: number;
+      scaleX: number;
+      scaleY: number;
+      scaleZ: number;
+    }
+
+    const dbElementToApi = (dbel: dbElement): apiElement => ({
+      createdAt: dbel.created_at_elp,
+      id: dbel.id_elp,
+      elementTypeId: dbel.id_elt_elp,
+      stagePlotId: dbel.id_stp_elp,
+      name: dbel.name_elt,
+      positionX: dbel.position_x_elp,
+      positionY: dbel.position_y_elp,
+      positionZ: dbel.position_z_elp,
+      rotationX: dbel.rotation_x_elp,
+      rotationY: dbel.rotation_y_elp,
+      rotationZ: dbel.rotation_z_elp,
+      scaleX: dbel.scale_x_elp,
+      scaleY: dbel.scale_y_elp,
+      scaleZ: dbel.scale_z_elp,
+    });
+
     const { id } = req.params;
 
+    //stageplot to api conversion
     const stagePlot = await db('stage_plot_stp').where('id_stp', id).first();
-
     if (!stagePlot) {
       res.status(404).json({ error: 'Stage plot not found' });
     }
+    const stagePlotApi = dbStagePlotToApi(stagePlot);
 
+    //input channel api conversion
     const inputChannels = await db('input_channel_inc').where('id_stp_inc', id);
+    const inputChannelsApi = inputChannels.map(dbInputChannelToApi);
 
-    const elements = await db('element_placement_elp')
+    //endpoint specific elements to api
+    const elements: dbElement[] = await db('element_placement_elp')
       .leftJoin('element_type_elt', 'element_placement_elp.id_elt_elp', 'element_type_elt.id_elt')
       .where('element_placement_elp.id_stp_elp', id)
       .select('element_placement_elp.*', 'element_type_elt.name_elt');
-    
-    const stage = await db('stage_stg').where('id_stg', stagePlot.id_stg_stp).first();
 
+    const apiElements = elements.map(dbElementToApi);
+
+    //Stage data passed to the res.json
+    const stage : StageDB = await db('stage_stg').where('id_stg', stagePlot.id_stg_stp).first();
+    const stageApi : StageAPI = dbStageToApi(stage);
+
+    const projectId = stagePlotApi.projectId;
+    const project : ProjectDB = await db('project_prj').where('id_prj', projectId).first();
+    
+    const projectApi : ProjectAPI = dbProjectToApi(project);
     res.json({
-      ...stagePlot,
-      inputChannels,
-      elements,
-      stage
+      stagePlot: stagePlotApi,
+      inputChannels: inputChannelsApi,
+      elements: apiElements,
+      stage: stageApi,
+      project: projectApi, 
     });
   } catch (err) {
     console.error(err);
   }
 };
-
-
