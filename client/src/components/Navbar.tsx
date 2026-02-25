@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { UserPlus, Boxes, LogIn, UserMinus, ShieldUser, Sun, Moon } from 'lucide-react';
+import { UserPlus, Boxes, LogIn, UserMinus, ShieldUser, Sun, Moon, Home } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { logoutUser } from '../api/auth';
 import { useAuth } from '../contexts/AuthContext';
@@ -44,6 +44,13 @@ export function Navbar({ onThemeToggle, theme}: NavbarProps) {
                 Stages
               </Link>
             </li>
+            <li>
+              <Link to="/app">
+                <Home size={18} />
+                App
+              </Link>
+            </li>
+          
             {!isAuthenticated && (
               <li>
                 <button onClick={() => setShowSignUp(true)} className='btn'>

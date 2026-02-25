@@ -1,9 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { LucideInfinity, List, Rotate3d, Spotlight } from 'lucide-react';
+import { SignUp } from '../components/shared/navAuth/Signup';
 
 export const LandingPage = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [visible, setVisible] = useState(false);
+  const [promptSignUp, setPromptSignUp] = useState(false);
 
   useEffect(() => {
     setVisible(true);
@@ -30,7 +33,7 @@ export const LandingPage = () => {
       const cols = Math.ceil(canvas.width / 60) + 1;
       const rows = Math.ceil(canvas.height / 60) + 1;
 
-      // Perspective grid lines
+      // canvas grid lines
       ctx.strokeStyle = 'rgba(59, 130, 246, 0.07)';
       ctx.lineWidth = 1;
 
@@ -50,7 +53,7 @@ export const LandingPage = () => {
         ctx.stroke();
       }
 
-      // Accent dots at intersections
+      // intersections of moving grid canvas
       ctx.fillStyle = 'rgba(59, 130, 246, 0.15)';
       for (let i = 0; i < cols; i++) {
         for (let j = 0; j < rows; j++) {
@@ -78,7 +81,7 @@ export const LandingPage = () => {
     <div className="landing">
       <canvas ref={canvasRef} className="landing-canvas" />
 
-      {/* Hero */}
+      {/* heading section */}
       <section className={`landing-hero ${visible ? 'landing-visible' : ''}`}>
         <div className="landing-eyebrow">
           <span className="landing-dot" />
@@ -93,46 +96,55 @@ export const LandingPage = () => {
           who need precision stage layouts — not guesswork.
         </p>
         <div className="landing-cta">
-          <Link to="/stages" className="btn btn-primary landing-btn-primary">
+          <Link to="/app" className="btn btn-primary landing-btn-primary">
             Open App
           </Link>
-          <Link to="/signup" className="btn landing-btn-ghost">
+          <button className="btn landing-btn-ghost"
+            onClick={() => setPromptSignUp(true)}>
             Create Account
-          </Link>
+          </button>
         </div>
       </section>
 
-      {/* Feature strip */}
+      {/* features, i need to add some more features here */}
       <section className={`landing-features ${visible ? 'landing-visible' : ''}`}>
         <div className="landing-feature">
-          <div className="landing-feature-icon">3D</div>
+          <div className="landing-feature-icon"><Rotate3d size={20} /></div>
           <h3>Real-time 3D Plotting</h3>
           <p>Visualize your stage setup in three dimensions before load-in day.</p>
         </div>
         <div className="landing-feature">
-          <div className="landing-feature-icon">∞</div>
+          <div className="landing-feature-icon"><LucideInfinity size={20} /></div>
           <h3>Unlimited Projects</h3>
           <p>Organize plots by project. Keep every tour, festival, and corporate event separate.</p>
         </div>
         <div className="landing-feature">
-          <div className="landing-feature-icon">⌗</div>
+          <div className="landing-feature-icon"><List size={20} /></div>
           <h3>Input List Built In</h3>
           <p>Channel-by-channel input lists attached to each stage plot. No more spreadsheets.</p>
         </div>
         <div className="landing-feature">
-          <div className="landing-feature-icon">◎</div>
+          <div className="landing-feature-icon"><Spotlight size={20} /></div>
           <h3>Stage Templates</h3>
           <p>Start from proven stage configurations or build from your own dimensions.</p>
         </div>
       </section>
 
-      {/* Bottom CTA */}
+      {/* bottom call to acttion */}
       <section className={`landing-bottom ${visible ? 'landing-visible' : ''}`}>
         <p className="landing-bottom-label">Ready to plot?</p>
-        <Link to="/signup" className="btn btn-primary landing-btn-primary">
+        <button className="btn btn-primary landing-btn-primary"
+          onClick={() => setPromptSignUp(true)}>
           Get Started Free
-        </Link>
+        </button>
       </section>
+      {promptSignUp && (
+        <SignUp
+          onSuccess={() => setPromptSignUp(false)}
+          onClose={() => setPromptSignUp(false)} />
+      )}
     </div>
+
+
   );
 };

@@ -1,18 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Box, Ruler, Layers, Trash } from 'lucide-react';
-import { fetchAllStages, deleteStage, type Stage } from '../../../api/stages';
+import { Box, Ruler, Layers } from 'lucide-react';
+import { fetchAllStages, type Stage } from '../../../api/stages';
 
 export function StageRead() {
   const [stages, setStages] = useState<Stage[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-
-
-
-  const handleDelete = (stageId: number) => {
-    deleteStage(stageId);
-  }
 
   useEffect(() => {
     const loadStages = async () => {
@@ -99,11 +93,6 @@ export function StageRead() {
                 <div className="stage-card-footer">
                   <span className="text-muted">ID: {stage.id}</span>
                   <button className="btn btn-ghost btn-sm">View Details</button>
-                </div>
-                <div>
-                  <button onClick={() => handleDelete(stage.id)}  >
-                    <Trash size={16} />
-                  </button>
                 </div>
               </article>
             ))}

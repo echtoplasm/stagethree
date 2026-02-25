@@ -5,6 +5,7 @@ import { StageRead } from './components/shared/stage/StageRead';
 import { PlottingPage } from './pages/PlottingPage';
 import { useEffect, useState } from 'react';
 import { AdminPage } from './pages/AdminPage';
+import {LandingPage} from './pages/LandingPage';
 import { AuthProvider } from './contexts/AuthContext';
 import { useAuth } from './contexts/AuthContext';
 
@@ -20,8 +21,9 @@ function AppRoutes() {
 
   return (
     <Routes>
-      <Route path="/" element={<PlottingPage />} />
+      <Route path="/" element={<LandingPage />} />
       <Route path="/stages" element={<StageRead />} />
+      <Route path="/app" element={<PlottingPage/>} />
 
       <Route
         path="/admin"
