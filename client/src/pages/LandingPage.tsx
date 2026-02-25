@@ -93,7 +93,7 @@ export const LandingPage = () => {
         </h1>
         <p className="landing-subtitle">
           StageThree is the production tool built for engineers, TDs, and event planners
-          who need precision stage layouts — not guesswork.
+          who need precision stage layouts, not guesswork.
         </p>
         <div className="landing-cta">
           <Link to="/app" className="btn btn-primary landing-btn-primary">
