@@ -6,13 +6,13 @@ import { fetchAllElementTypes, type ElementType } from '../api/element';
 import { useEffect } from 'react';
 import { InputChannelDrawer } from '../components/inputChannels/inputChannelDrawer';
 import { InputChannelModal } from '../components/inputChannels/inputChannelsModal';
+import { ElementsDrawer } from '../components/elements/elementsDrawer';
+
 export function PlottingPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<string | null>(null);
   const [elementTypes, setElementTypes] = useState<ElementType[]>([]);
   const [inputChannelModal, setInputChannelModal] = useState(false);
-  
-
 
   const fetchElementTypes = async () => {
     const data = await fetchAllElementTypes();
@@ -27,6 +27,8 @@ export function PlottingPage() {
   useEffect(() => {
     fetchElementTypes();
   }, []);
+
+
   return (
     <div className="plotting-layout">
       {/* Overlay */}
@@ -94,16 +96,14 @@ export function PlottingPage() {
           <div className="drawer-content">
             <h3>Stage Elements</h3>
             <div className="element-row">
-              {elementTypes.map((elt: any) => (
-                <div key={elt.id} className='element-item'>{elt.name}</div>
-              ))}
+              <ElementsDrawer />
             </div>
           </div>
         )}
         {activeTab === 'inputs' && (
           <div className="drawer-content">
             <button onClick={() => setInputChannelModal(true)}>
-            <Maximize2 />
+              <Maximize2 />
             </button>
             <h3>Input Channels</h3>
             <InputChannelDrawer />

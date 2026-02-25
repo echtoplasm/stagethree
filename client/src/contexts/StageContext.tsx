@@ -3,6 +3,7 @@ import { type Project } from '../api/projects';
 import { type InputChannel } from '../api/inputChannel';
 import { type Stage } from '../api/stages';
 import {type ElementPlacement} from '../api/elementPlacement';
+import type { StagePlot } from 'src/api/stagePlots';
 
 interface StageContextType {
   elementPlacements: ElementPlacement[];
@@ -13,6 +14,8 @@ interface StageContextType {
   setInputChannels: (inputChannels: InputChannel[]) => void;
   stage: Stage | null;
   setStage: (stage: Stage | null) => void;
+  stagePlot: StagePlot | null;
+  setStagePlot: (stageplot: StagePlot | null) => void;
 }
 
 const StageContext = createContext<StageContextType | undefined>(undefined);
@@ -23,7 +26,7 @@ export function StageProvider({ children }: { children: React.ReactNode }) {
   const [activeProject, setActiveProject] = useState<Project | null>(null);
   const [inputChannels, setInputChannels] = useState<InputChannel[]>([]);
   const [stage, setStage] = useState<Stage | null>(null);
-
+  const [stagePlot, setStagePlot] = useState<StagePlot | null>(null);
 
   return (
     <StageContext.Provider value={{
@@ -34,7 +37,9 @@ export function StageProvider({ children }: { children: React.ReactNode }) {
       inputChannels,
       setInputChannels,
       stage,
-      setStage
+      setStage,
+      stagePlot,
+      setStagePlot
     }}>
       {children}
     </StageContext.Provider>

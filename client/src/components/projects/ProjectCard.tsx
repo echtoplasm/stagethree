@@ -23,16 +23,13 @@ export function ProjectCard() {
   const [plotDelete, setPlotDelete] = useState(false);
 
   const { user } = useAuth();
-  const { setActiveProject, setElementPlacements, setInputChannels, setStage } = useStageContext();
+  const { setActiveProject, setElementPlacements, setInputChannels, setStage, setStagePlot } = useStageContext();
 
 
-  const onPlotSelect = (data: FullStagePlotResponse) => {
-    setElementPlacements(data.elements);
-    setInputChannels(data.inputChannels);
-    setStage(data.stage)
-    setActiveProject(data.project);
-  }
-
+  /** 
+   * Fetch projects by userid using client/api/ project file with a !user auth guard
+   * calls setProjects state to render all user created projects
+   * */
   const fetchProjects = async () => {
     if (!user) return null;
     const data = await fetchAllProjectByUserId(user.id);
@@ -40,6 +37,12 @@ export function ProjectCard() {
     setProjects(data);
   }
 
+  /**
+   * click handler to set state of plots and selected projectId 
+   *
+   *
+   * @param projectId - projectId to updated selectedprojectId state
+   */
   const handleProjectClick = async (projectId: number) => {
     setPlots([]);
     setSelectedProjectId(projectId);
@@ -48,12 +51,42 @@ export function ProjectCard() {
     console.log(stagePlots);
   }
 
+
+  //============= FUNCTIONS FOR PASSING DATA TO THREEJS SCENE ===============//
+  /**
+   * helper function for handleStagePlotClick that sets stage context provider
+   * that will then be accessible to the three.js scene
+   *
+   * @param data - stagePlotResponse from apiFetch stageplot:full
+   */
+  const onPlotSelect = (data: FullStagePlotResponse) => {
+    setElementPlacements(data.elements);
+    setInputChannels(data.inputChannels);
+    setStage(data.stage)
+    setActiveProject(data.project);
+    setStagePlot(data.stagePlot);
+  }
+
+  /**
+   * @param plotId - click handler for fetching full stageplot config 
+   * from API
+   */
   const handleStagePlotClick = async (plotId: number) => {
     const fullPlotInfo = await fetchFullStagePlotConfig(plotId);
     onPlotSelect(fullPlotInfo);
     console.log(fullPlotInfo);
   }
+  //==================================================================//
 
+  /**===================DELETE HANDLERS===============================//
+   * These delete project/plot by id
+   * 
+   * sets the state of project/plot to delete to be passed to the 
+   * Delete modals
+   *
+   * both contain early returns if param are falsy
+   *
+   */
   const handleProjectDeleteClick = async (idToDelete: number) => {
     if (!idToDelete) return null;
     setProjectIdToDelete(idToDelete);
@@ -65,9 +98,15 @@ export function ProjectCard() {
     setPlotToDelete(plotId);
     setPlotDelete(true);
   }
+  /*=================================================================*/
 
 
 
+  /** 
+   * Use effect to fetch projects on page load
+   * dependency array: user - ensures no projects are rendered
+   * if user is not truthy
+   * */
   useEffect(() => {
     fetchProjects();
   }, [user]);
@@ -144,6 +183,7 @@ export function ProjectCard() {
               onClose={() => setProjectDelete(false)}
             />
           )}
+
           {createPlot && selectedProjectId !== null && (
             <PlotCreate
               projectId={selectedProjectId}

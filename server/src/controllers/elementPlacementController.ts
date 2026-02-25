@@ -66,7 +66,11 @@ export const createElp = async (req: Request, res: Response): Promise<void> => {
 
     const [newPlacement] = await db('element_placement_elp').insert(dbData).returning('*');
 
-    res.status(201).json(elpToApi(newPlacement));
+    res.status(201).json({
+      newPlacement: elpToApi(newPlacement),
+      message: "new placement made"
+    });
+
   } catch (error) {
     console.error('Error creating element placement:', error);
     res.status(500).json({ error: 'Internal server error' });
