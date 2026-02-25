@@ -1,15 +1,16 @@
 import { useState } from 'react';
 import { ProjectCard } from '../components/projects/ProjectCard';
 import { StageScene } from '../components/ThreeD';
-import { ArrowRight, CircleX } from 'lucide-react';
+import { ArrowRight, CircleX, Maximize2 } from 'lucide-react';
 import { fetchAllElementTypes, type ElementType } from '../api/element';
 import { useEffect } from 'react';
-
+import { InputChannelDrawer } from '../components/inputChannels/inputChannelDrawer';
+import { InputChannelModal } from '../components/inputChannels/inputChannelsModal';
 export function PlottingPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<string | null>(null);
   const [elementTypes, setElementTypes] = useState<ElementType[]>([]);
-
+  const [inputChannelModal, setInputChannelModal] = useState(false);
   
 
 
@@ -101,9 +102,16 @@ export function PlottingPage() {
         )}
         {activeTab === 'inputs' && (
           <div className="drawer-content">
+            <button onClick={() => setInputChannelModal(true)}>
+            <Maximize2 />
+            </button>
             <h3>Input Channels</h3>
-
+            <InputChannelDrawer />
           </div>
+        )}
+
+        {inputChannelModal && (
+          <InputChannelModal onClose={() => setInputChannelModal(false)} />
         )}
       </div>
     </div>
