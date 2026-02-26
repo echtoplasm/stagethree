@@ -2,12 +2,14 @@ import { useState, useEffect } from "react";
 import { useStageContext } from "../../contexts/StageContext";
 import { fetchAllElementTypes, type ElementType } from "../../api/element";
 import { createNewElementPlacement, type ElementPlacement } from "../../api/elementPlacement";
-
+import { useAuth } from "../../contexts/AuthContext";
 
 export const ElementsDrawer = () => {
   const [elementTypes, setElementTypes] = useState<ElementType[]>([]);
   const { stagePlot, setElementPlacements, elementPlacements } = useStageContext();
-  
+  const { isAuthenticated } = useAuth();
+  const isSandbox = !isAuthenticated;
+
 
   const fetchElementTypes = async () => {
     const data = await fetchAllElementTypes();
@@ -15,11 +17,11 @@ export const ElementsDrawer = () => {
     console.log(elementTypes);
   }
 
-  
-  const handleElementClick = async(elt: ElementType) => {
-    if(!stagePlot) return null;
 
-    const data : ElementPlacement = {
+  const handleElementClick = async (elt: ElementType) => {
+    if (!stagePlot && !isSandbox) return null;
+
+    const data: ElementPlacement = {
       elementTypeId: elt.id,
       stagePlotId: stagePlot?.id,
       name: elt.name,
@@ -30,12 +32,20 @@ export const ElementsDrawer = () => {
       rotationY: 0,
       rotationZ: 0,
       scaleX: 1,
-      scaleY: 1, 
+      scaleY: 1,
       scaleZ: 1
     }
 
-  const newPlacement =  await createNewElementPlacement(data);
-  setElementPlacements([...elementPlacements, newPlacement]);
+    if (isSandbox) {
+
+      setElementPlacements([...elementPlacements, { ...data, id: Date.now() }])
+
+    } else {
+
+      const newPlacement = await createNewElementPlacement(data);
+      setElementPlacements([...elementPlacements, newPlacement]);
+
+    }
   }
 
   useEffect(() => {

@@ -4,7 +4,7 @@ export interface ElementPlacement {
   createdAt?: string;
   id?: number;
   elementTypeId: number;
-  stagePlotId: number;
+  stagePlotId?: number;
   name: string;
   positionX: number;
   positionY: number;
