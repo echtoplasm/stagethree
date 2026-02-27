@@ -2,9 +2,12 @@ import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { useStageContext } from '../contexts/StageContext';
-import { type ElementPlacement } from '../api/elementPlacement';
+import { type ElementPlacement, updateElementPlacement } from '../api/elementPlacement';
+import { useAuth } from '../contexts/AuthContext';
+
 interface StageObject {
   id: string;
+  placementId: number;
   name: string;
   position: THREE.Vector3;
   mesh: THREE.Mesh;
@@ -24,7 +27,8 @@ export function StageScene() {
 
 
   const { elementPlacements, stage } = useStageContext();
-
+  const { isAuthenticated} = useAuth();
+  const isSandbox = !isAuthenticated;
 
 
   /** 
@@ -35,13 +39,21 @@ export function StageScene() {
     const selected = selectedObjectRef.current;
     selectedObjectRef.current = null;
     if (controlsRef.current) controlsRef.current.enabled = true;
-
     if (selected) {
-      setObjects(prev => prev.map(obj =>
-        obj.mesh === selected ? {
-          ...obj, position: selected.position.clone()
-        } : obj
-      ))
+      setObjects(prev => prev.map(obj => {
+        console.log(obj.id)
+        if (obj.mesh === selected) {
+          if (!isSandbox) {
+            updateElementPlacement(obj.placementId, {
+              positionX: selected.position.x,
+              positionY: selected.position.y,
+              positionZ: selected.position.z,
+            });
+          }
+          return { ...obj, position: selected.position.clone() }
+        }
+        return obj;
+      }))
     }
   }
 
@@ -204,14 +216,14 @@ export function StageScene() {
     const material = new THREE.MeshStandardMaterial({ color: 0x4a90d9 });
     const mesh = new THREE.Mesh(geometry, material);
 
-    mesh.position.set(placement.positionX, placement.positionY + .5, placement.positionZ);
+    mesh.position.set(placement.positionX, placement.positionY, placement.positionZ);
     mesh.rotation.set(placement.rotationX, placement.rotationY, placement.rotationZ);
     mesh.name = `instrument-${placement.id}`;
-
     sceneRef.current.add(mesh);
-
+    console.log('adding to objects state', placement.name)
     setObjects(prev => [...prev, {
-      id: `instrument-${placement.id}`,
+      id: `scene-element-id-${placement.id}`,
+      placementId: placement.id!,
       name: placement.name,
       position: mesh.position.clone(),
       mesh
@@ -233,7 +245,7 @@ export function StageScene() {
         <ul>
           {objects.map(obj => (
             <li key={obj.id}>
-              {obj.name} - (x: {Number(obj.position.x).toFixed(2)}, z: {Number(obj.position.z).toFixed(2)})
+              {obj.name} - x: {Number(obj.position.x.toFixed(2))} , z: {Number(obj.position.z.toFixed(2))})
             </li>
           ))}
         </ul>

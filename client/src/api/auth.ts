@@ -2,9 +2,9 @@ import { apiFetch } from '../utils/api';
 import type { LoginResponse, LoginRequest } from '../types/api';
 
 export const fetchAuthMe = async () => {
-  return apiFetch('/api/auth/me', { 
-    credentials: 'include', 
-    method: 'POST'
+  return apiFetch('/api/auth/me', {
+    credentials: 'include',
+    method: 'POST',
   });
 };
 
@@ -16,8 +16,8 @@ export const loginUser = async (email: string, password: string): Promise<LoginR
   });
 };
 
-export const logoutUser = async(): Promise<void> => {
+export const logoutUser = async (): Promise<void> => {
   return apiFetch('/api/auth/signout', {
-    method: 'POST'
+    method: 'POST',
   });
-}
+};

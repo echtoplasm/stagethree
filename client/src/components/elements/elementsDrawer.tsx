@@ -18,6 +18,13 @@ export const ElementsDrawer = () => {
   }
 
 
+  /**
+   * an event helper function for element click, that recieves data from context and param
+   * formats that data according to the ElementPlacement interface contract setsElementPlacement
+   * state and pushes to API
+   *
+   * @param elt - the element type to be passed to be formatted and setup for db insertion 
+   */
   const handleElementClick = async (elt: ElementType) => {
     if (!stagePlot && !isSandbox) return null;
 
@@ -41,9 +48,9 @@ export const ElementsDrawer = () => {
       setElementPlacements([...elementPlacements, { ...data, id: Date.now() }])
 
     } else {
-
+      //api call in order to insert the data for creating a new el placement
       const newPlacement = await createNewElementPlacement(data);
-      setElementPlacements([...elementPlacements, newPlacement]);
+      setElementPlacements([...elementPlacements, { ...newPlacement, name: elt.name }]);
 
     }
   }

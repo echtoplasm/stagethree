@@ -22,5 +22,18 @@ export const createNewElementPlacement = async (data: ElementPlacement): Promise
     method: 'POST',
     body: data,
   });
+  console.log(newPlacement);
   return newPlacement.newPlacement;
 };
+
+export const updateElementPlacement = async (id: number, data: Partial<ElementPlacement>): Promise<ElementPlacement> => {
+  const updatedElp = await apiFetch(`/api/elp/${id}`, {
+    method: 'PATCH',
+    body: {
+      positionX: data.positionX,
+      positionY: data.positionY,
+      positionZ: data.positionZ,
+    }
+  })
+  return updatedElp;
+}

@@ -68,9 +68,8 @@ export const createElp = async (req: Request, res: Response): Promise<void> => {
 
     res.status(201).json({
       newPlacement: elpToApi(newPlacement),
-      message: "new placement made"
+      message: 'new placement made',
     });
-
   } catch (error) {
     console.error('Error creating element placement:', error);
     res.status(500).json({ error: 'Internal server error' });
@@ -136,5 +135,53 @@ export const deleteElp = async (req: Request, res: Response): Promise<void> => {
   } catch (error) {
     console.error('Error deleting:', error);
     res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+/**
+ * PATCH /api/elp/:id
+ */
+
+export const partialUpdateElp = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const data = req.body;
+
+    const dataDb = elpToDb(data);
+
+    const exists = await db(elpTable)
+      .select('*')
+      .where({
+        id_elp: id,
+      })
+      .first();
+
+    if (!exists)
+      res.status(404).json({
+        message: 'there is no element placement with that id',
+      });
+
+    const [result]: ElpDB[] = await db(elpTable)
+      .where({ id_elp: id})
+      .update({
+        position_x_elp: dataDb.position_x_elp,
+        position_y_elp: dataDb.position_y_elp,
+        position_z_elp: dataDb.position_z_elp,
+      })
+      .returning('*');
+
+    const apiResult = elpToApi(result);
+
+    res.status(200).json({
+      message: 'successful element placement update',
+      placementUpdate: apiResult,
+    });
+
+    console.log('successfully updated element placement via paritalUpdateElp')
+  } catch (err) {
+    res.status(500).json({
+      message: 'unable to update element placement',
+      error: err,
+    });
   }
 };

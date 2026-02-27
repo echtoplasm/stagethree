@@ -205,15 +205,15 @@ export const getFullStagePlotInfo = async (req: Request, res: Response): Promise
       id_elt_elp: number;
       id_stp_elp: number;
       name_elt: string;
-      position_x_elp: number;
-      position_y_elp: number;
-      position_z_elp: number;
-      rotation_x_elp: number;
-      rotation_y_elp: number;
-      rotation_z_elp: number;
-      scale_x_elp: number;
-      scale_y_elp: number;
-      scale_z_elp: number;
+      position_x_elp: string;
+      position_y_elp: string;
+      position_z_elp: string;
+      rotation_x_elp: string;
+      rotation_y_elp: string;
+      rotation_z_elp: string;
+      scale_x_elp: string;
+      scale_y_elp: string;
+      scale_z_elp: string;
     }
 
     interface apiElement {
@@ -239,15 +239,15 @@ export const getFullStagePlotInfo = async (req: Request, res: Response): Promise
       elementTypeId: dbel.id_elt_elp,
       stagePlotId: dbel.id_stp_elp,
       name: dbel.name_elt,
-      positionX: dbel.position_x_elp,
-      positionY: dbel.position_y_elp,
-      positionZ: dbel.position_z_elp,
-      rotationX: dbel.rotation_x_elp,
-      rotationY: dbel.rotation_y_elp,
-      rotationZ: dbel.rotation_z_elp,
-      scaleX: dbel.scale_x_elp,
-      scaleY: dbel.scale_y_elp,
-      scaleZ: dbel.scale_z_elp,
+      positionX: parseFloat(dbel.position_x_elp),
+      positionY: parseFloat(dbel.position_y_elp),
+      positionZ: parseFloat(dbel.position_z_elp),
+      rotationX: parseFloat(dbel.rotation_x_elp),
+      rotationY: parseFloat(dbel.rotation_y_elp),
+      rotationZ: parseFloat(dbel.rotation_z_elp),
+      scaleX: parseFloat(dbel.scale_x_elp),
+      scaleY: parseFloat(dbel.scale_y_elp),
+      scaleZ: parseFloat(dbel.scale_z_elp),
     });
 
     const { id } = req.params;
@@ -272,19 +272,19 @@ export const getFullStagePlotInfo = async (req: Request, res: Response): Promise
     const apiElements = elements.map(dbElementToApi);
 
     //Stage data passed to the res.json
-    const stage : StageDB = await db('stage_stg').where('id_stg', stagePlot.id_stg_stp).first();
-    const stageApi : StageAPI = dbStageToApi(stage);
+    const stage: StageDB = await db('stage_stg').where('id_stg', stagePlot.id_stg_stp).first();
+    const stageApi: StageAPI = dbStageToApi(stage);
 
     const projectId = stagePlotApi.projectId;
-    const project : ProjectDB = await db('project_prj').where('id_prj', projectId).first();
-    
-    const projectApi : ProjectAPI = dbProjectToApi(project);
+    const project: ProjectDB = await db('project_prj').where('id_prj', projectId).first();
+
+    const projectApi: ProjectAPI = dbProjectToApi(project);
     res.json({
       stagePlot: stagePlotApi,
       inputChannels: inputChannelsApi,
       elements: apiElements,
       stage: stageApi,
-      project: projectApi, 
+      project: projectApi,
     });
   } catch (err) {
     console.error(err);

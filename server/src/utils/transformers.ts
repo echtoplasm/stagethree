@@ -612,15 +612,15 @@ export interface ElementPlacementDB {
   id_elp: number;
   id_stp_elp: number;
   id_elt_elp: number;
-  position_x_elp: number;
-  position_y_elp: number;
-  position_z_elp: number;
-  rotation_x_elp: number;
-  rotation_y_elp: number;
-  rotation_z_elp: number;
-  scale_x_elp: number;
-  scale_y_elp: number;
-  scale_z_elp: number;
+  position_x_elp: string;
+  position_y_elp: string;
+  position_z_elp: string;
+  rotation_x_elp: string;
+  rotation_y_elp: string;
+  rotation_z_elp: string;
+  scale_x_elp: string;
+  scale_y_elp: string;
+  scale_z_elp: string;
   created_at_elp: Date | string;
 }
 
@@ -647,26 +647,28 @@ export interface ElementPlacementAPI {
  * @returns The same ElementPlacement object converted to JavaScript naming conventions
  */
 
+
 export const dbElementPlacementToApi = (
   dbElementPlacement: ElementPlacementDB
 ): ElementPlacementAPI => ({
   id: dbElementPlacement.id_elp,
   stagePlotId: dbElementPlacement.id_stp_elp,
   elementTypeId: dbElementPlacement.id_elt_elp,
-  positionX: dbElementPlacement.position_x_elp,
-  positionY: dbElementPlacement.position_y_elp,
-  positionZ: dbElementPlacement.position_z_elp,
-  rotationX: dbElementPlacement.rotation_x_elp,
-  rotationY: dbElementPlacement.rotation_y_elp,
-  rotationZ: dbElementPlacement.rotation_z_elp,
-  scaleX: dbElementPlacement.scale_x_elp,
-  scaleY: dbElementPlacement.scale_y_elp,
-  scaleZ: dbElementPlacement.scale_z_elp,
+  positionX: parseFloat(dbElementPlacement.position_x_elp),
+  positionY: parseFloat(dbElementPlacement.position_y_elp),
+  positionZ: parseFloat(dbElementPlacement.position_z_elp),
+  rotationX: parseFloat(dbElementPlacement.rotation_x_elp),
+  rotationY: parseFloat(dbElementPlacement.rotation_y_elp),
+  rotationZ: parseFloat(dbElementPlacement.rotation_z_elp),
+  scaleX: parseFloat(dbElementPlacement.scale_x_elp),
+  scaleY: parseFloat(dbElementPlacement.scale_y_elp),
+  scaleZ: parseFloat(dbElementPlacement.scale_z_elp),
   createdAt:
     typeof dbElementPlacement.created_at_elp === 'string'
       ? dbElementPlacement.created_at_elp
       : dbElementPlacement.created_at_elp.toISOString(),
 });
+
 
 /**
  * Converts ElementPlacement data from API/JavaScript naming conventions to database naming conventions
@@ -680,26 +682,26 @@ export const apiElementPlacementToDb = (
   ...(apiElementPlacement.stagePlotId && { id_stp_elp: apiElementPlacement.stagePlotId }),
   ...(apiElementPlacement.elementTypeId && { id_elt_elp: apiElementPlacement.elementTypeId }),
   ...(apiElementPlacement.positionX !== undefined && {
-    position_x_elp: apiElementPlacement.positionX,
+    position_x_elp: apiElementPlacement.positionX.toString(),
   }),
   ...(apiElementPlacement.positionY !== undefined && {
-    position_y_elp: apiElementPlacement.positionY,
+    position_y_elp: apiElementPlacement.positionY.toString(),
   }),
   ...(apiElementPlacement.positionZ !== undefined && {
-    position_z_elp: apiElementPlacement.positionZ,
+    position_z_elp: apiElementPlacement.positionZ.toString(),
   }),
   ...(apiElementPlacement.rotationX !== undefined && {
-    rotation_x_elp: apiElementPlacement.rotationX,
+    rotation_x_elp: apiElementPlacement.rotationX.toString(),
   }),
   ...(apiElementPlacement.rotationY !== undefined && {
-    rotation_y_elp: apiElementPlacement.rotationY,
+    rotation_y_elp: apiElementPlacement.rotationY.toString(),
   }),
   ...(apiElementPlacement.rotationZ !== undefined && {
-    rotation_z_elp: apiElementPlacement.rotationZ,
+    rotation_z_elp: apiElementPlacement.rotationZ.toString(),
   }),
-  ...(apiElementPlacement.scaleX !== undefined && { scale_x_elp: apiElementPlacement.scaleX }),
-  ...(apiElementPlacement.scaleY !== undefined && { scale_y_elp: apiElementPlacement.scaleY }),
-  ...(apiElementPlacement.scaleZ !== undefined && { scale_z_elp: apiElementPlacement.scaleZ }),
+  ...(apiElementPlacement.scaleX !== undefined && { scale_x_elp: apiElementPlacement.scaleX.toString() }),
+  ...(apiElementPlacement.scaleY !== undefined && { scale_y_elp: apiElementPlacement.scaleY.toString() }),
+  ...(apiElementPlacement.scaleZ !== undefined && { scale_z_elp: apiElementPlacement.scaleZ.toString() }),
 });
 
 // ============================================
