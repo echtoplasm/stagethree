@@ -98,6 +98,7 @@ export function StageScene() {
     scene.add(directionalLight);
 
     // Stage floor (grid)
+    console.log('stage state:',  stage);
     const gridHelper = new THREE.GridHelper(stage?.width ?? 20, stage?.depth ?? 20, 0x444444, 0x222222);
     scene.add(gridHelper);
 
@@ -192,7 +193,7 @@ export function StageScene() {
       }
 
     };
-  }, []);
+  }, [stage]);
 
   useEffect(() => {
     if (!sceneRef.current || !elementPlacements.length) return;
@@ -216,7 +217,7 @@ export function StageScene() {
     const material = new THREE.MeshStandardMaterial({ color: 0x4a90d9 });
     const mesh = new THREE.Mesh(geometry, material);
 
-    mesh.position.set(placement.positionX, placement.positionY, placement.positionZ);
+    mesh.position.set(placement.positionX, placement.positionY + 0.5, placement.positionZ);
     mesh.rotation.set(placement.rotationX, placement.rotationY, placement.rotationZ);
     mesh.name = `instrument-${placement.id}`;
     sceneRef.current.add(mesh);

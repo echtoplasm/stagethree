@@ -3,13 +3,15 @@ import { useStageContext } from "../../contexts/StageContext";
 import { fetchAllElementTypes, type ElementType } from "../../api/element";
 import { createNewElementPlacement, type ElementPlacement } from "../../api/elementPlacement";
 import { useAuth } from "../../contexts/AuthContext";
+import { PromptProjectCreate } from "./CreateProjectPrompt";
 
 export const ElementsDrawer = () => {
   const [elementTypes, setElementTypes] = useState<ElementType[]>([]);
   const { stagePlot, setElementPlacements, elementPlacements } = useStageContext();
   const { isAuthenticated } = useAuth();
+  const [promptProjSelect, setPromptProjSelect] = useState(false);
   const isSandbox = !isAuthenticated;
-
+  
 
   const fetchElementTypes = async () => {
     const data = await fetchAllElementTypes();
@@ -26,7 +28,10 @@ export const ElementsDrawer = () => {
    * @param elt - the element type to be passed to be formatted and setup for db insertion 
    */
   const handleElementClick = async (elt: ElementType) => {
-    if (!stagePlot && !isSandbox) return null;
+    if (!stagePlot && !isSandbox) {
+      setPromptProjSelect(true);
+      return null;
+    };
 
     const data: ElementPlacement = {
       elementTypeId: elt.id,
@@ -65,6 +70,12 @@ export const ElementsDrawer = () => {
       {elementTypes.map((elt: any) => (
         <div key={elt.id} className='element-item' onClick={() => handleElementClick(elt)}>{elt.name}</div>
       ))}
+
+      {promptProjSelect && (
+        <PromptProjectCreate
+          onClose={() => setPromptProjSelect(false)}
+        />
+      )}
     </div>
   )
 }
