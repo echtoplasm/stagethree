@@ -1,6 +1,16 @@
 import db from '../db/knex';
 import { Request, Response } from 'express';
-import { dbProjectToApi, apiProjectToDb, ProjectDB, StagePlotDB } from '../utils/transformers';
+import {
+  dbProjectToApi,
+  apiProjectToDb,
+  ProjectDB,
+  StagePlotDB,
+  apiStagePlotToDb,
+  StageDB,
+  dbStageToApi,
+  apiStageToDb,
+  dbStagePlotToApi,
+} from '../utils/transformers';
 import { asyncWrapProviders } from 'node:async_hooks';
 
 const projectTable = 'project_prj';
@@ -126,8 +136,58 @@ export const getProjectByUserId = async (req: Request, res: Response): Promise<v
   const projects: ProjectDB[] = await db(projectTable).select('*').where({
     id_usr_prj: id,
   });
-  
+
   const apiProjects = projects.map(dbProjectToApi);
 
   res.status(200).json(apiProjects);
+};
+
+/**
+ * POST /api/projects/default
+ * Create default project and plots for authenticated user who has not set
+ * a project and plot while plotting
+ */
+
+export const createDefaultPlotAndProject = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { defaultProject, defaultStage, defaultStagePlot } = req.body;
+
+    const defaultProjectDb = apiProjectToDb(defaultProject);
+    const defaultStageDb = apiStageToDb(defaultStage);
+    const defaultPlotDb = apiStagePlotToDb(defaultStagePlot);
+
+    let project: ProjectDB | undefined;
+    let plot: StagePlotDB | undefined;
+    let stage: StageDB | undefined;
+
+    await db.transaction(async trx => {
+      [project] = await trx('project_prj').insert(defaultProjectDb).returning('*');
+      [stage] = await trx('stage_stg').insert(defaultStageDb).returning('*');
+      [plot] = await trx('stage_plot_stp')
+        .insert({
+          ...defaultPlotDb,
+          id_prj_stp: project!.id_prj,
+          id_stg_stp: stage!.id_stg,
+        })
+        .returning('*');
+    });
+
+    if (!project || !plot || !stage) throw new Error('transaction failed');
+
+    const projectApi = dbProjectToApi(project);
+    const stageApi = dbStageToApi(stage);
+    const plotApi = dbStagePlotToApi(plot);
+
+    res.status(200).json({
+      stage: stageApi,
+      project: projectApi,
+      stagePlot: plotApi,
+    });
+  } catch (err) {
+    console.error('unable to create default plot and project', err);
+    res.status(500).json({
+      message: 'unable to create default plot and project',
+      error: err,
+    });
+  }
 };

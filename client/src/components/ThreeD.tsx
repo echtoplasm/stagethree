@@ -25,11 +25,9 @@ export function StageScene() {
   const selectedObjectRef = useRef<THREE.Mesh | null>(null);
   const offsetRef = useRef(new THREE.Vector3());
 
-
   const { elementPlacements, stage } = useStageContext();
-  const { isAuthenticated} = useAuth();
+  const { isAuthenticated } = useAuth();
   const isSandbox = !isAuthenticated;
-
 
   /** 
    * Mouse up event helper function for setting position state 
@@ -98,7 +96,7 @@ export function StageScene() {
     scene.add(directionalLight);
 
     // Stage floor (grid)
-    console.log('stage state:',  stage);
+    console.log('stage state:', stage);
     const gridHelper = new THREE.GridHelper(stage?.width ?? 20, stage?.depth ?? 20, 0x444444, 0x222222);
     scene.add(gridHelper);
 
@@ -251,6 +249,7 @@ export function StageScene() {
           ))}
         </ul>
       </div>
+
     </div>
   );
 }

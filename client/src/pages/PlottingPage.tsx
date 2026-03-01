@@ -7,12 +7,17 @@ import { useEffect } from 'react';
 import { InputChannelDrawer } from '../components/inputChannels/inputChannelDrawer';
 import { InputChannelModal } from '../components/inputChannels/inputChannelsModal';
 import { ElementsDrawer } from '../components/elements/elementsDrawer';
+import { useAuth } from '../contexts/AuthContext';
+import { useStageContext } from '../contexts/StageContext';
+
 
 export function PlottingPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<string | null>(null);
   const [elementTypes, setElementTypes] = useState<ElementType[]>([]);
   const [inputChannelModal, setInputChannelModal] = useState(false);
+  const { setIsSandbox } = useStageContext();
+  const { isAuthenticated } = useAuth();
 
   const fetchElementTypes = async () => {
     const data = await fetchAllElementTypes();
@@ -26,7 +31,8 @@ export function PlottingPage() {
 
   useEffect(() => {
     fetchElementTypes();
-  }, []);
+    if(isAuthenticated) setIsSandbox(false);
+  }, [isAuthenticated]);
 
 
   return (
@@ -113,6 +119,8 @@ export function PlottingPage() {
         {inputChannelModal && (
           <InputChannelModal onClose={() => setInputChannelModal(false)} />
         )}
+
+
       </div>
     </div>
   );

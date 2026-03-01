@@ -258,8 +258,6 @@ nav ul button:hover::after {
    LANDING PAGE
    ========================================== */
 
-
-
 .landing {
   position: relative;
   min-height: 100vh;
@@ -290,7 +288,9 @@ nav ul button:hover::after {
   text-align: center;
   opacity: 0;
   transform: translateY(24px);
-  transition: opacity 0.8s ease, transform 0.8s ease;
+  transition:
+    opacity 0.8s ease,
+    transform 0.8s ease;
 }
 
 .landing-hero.landing-visible {
@@ -323,8 +323,15 @@ nav ul button:hover::after {
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.4; transform: scale(0.8); }
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.8);
+  }
 }
 
 .landing-title {
@@ -417,7 +424,9 @@ nav ul button:hover::after {
   overflow: hidden;
   opacity: 0;
   transform: translateY(24px);
-  transition: opacity 0.8s ease 0.2s, transform 0.8s ease 0.2s;
+  transition:
+    opacity 0.8s ease 0.2s,
+    transform 0.8s ease 0.2s;
 }
 
 .landing-features.landing-visible {
@@ -473,7 +482,9 @@ nav ul button:hover::after {
   text-align: center;
   opacity: 0;
   transform: translateY(24px);
-  transition: opacity 0.8s ease 0.4s, transform 0.8s ease 0.4s;
+  transition:
+    opacity 0.8s ease 0.4s,
+    transform 0.8s ease 0.4s;
 }
 
 .landing-bottom.landing-visible {
@@ -510,6 +521,74 @@ nav ul button:hover::after {
     grid-template-columns: 1fr;
   }
 }
+
+/* ==========================================
+   SANDBOX TOOLBAR
+   ========================================== */
+
+.sandbox-toolbar {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background: var(--bg-overlay);
+  border-bottom: 1px solid var(--border);
+  z-index: 200;
+  left: 400px;
+  top: 50px;
+}
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown-trigger {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.dropdown-trigger:hover {
+  background: var(--bg-overlay);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 0.25rem);
+  left: 0;
+  min-width: 160px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  z-index: 100;
+}
+
+.dropdown-item {
+  width: 100%;
+  padding: 0.625rem 1rem;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.dropdown-item:hover {
+  background: var(--bg-overlay);
+}
+
 /* ==========================================
    SIDEBAR
    ========================================== */
@@ -572,8 +651,9 @@ nav ul button:hover::after {
 
 .sidebar-toggle:hover {
   transform: translateY(-50%) translateX(4px);
-  background: linear-gradient(135deg, 
-    color-mix(in srgb, var(--accent) 35%, transparent) 0%, 
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--accent) 35%, transparent) 0%,
     color-mix(in srgb, var(--accent) 15%, transparent) 100%
   );
   border-color: var(--border-accent);

@@ -3,6 +3,7 @@ import { type ElementPlacement } from './elementPlacement';
 import { type InputChannel } from './inputChannel';
 import type { Project } from './projects';
 import {type Stage} from './stages'
+
 export interface StagePlot {
   id: number;
   projectId: number;

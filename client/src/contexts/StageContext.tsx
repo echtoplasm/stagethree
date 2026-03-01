@@ -1,8 +1,8 @@
-import { createContext, useContext, useState} from 'react';
+import { createContext, useContext, useState } from 'react';
 import { type Project } from '../api/projects';
 import { type InputChannel } from '../api/inputChannel';
 import { type Stage } from '../api/stages';
-import {type ElementPlacement} from '../api/elementPlacement';
+import { type ElementPlacement } from '../api/elementPlacement';
 import type { StagePlot } from 'src/api/stagePlots';
 
 interface StageContextType {
@@ -16,6 +16,8 @@ interface StageContextType {
   setStage: (stage: Stage | null) => void;
   stagePlot: StagePlot | null;
   setStagePlot: (stageplot: StagePlot | null) => void;
+  isSandbox: boolean;
+  setIsSandbox: (value: boolean) => void;
 }
 
 const StageContext = createContext<StageContextType | undefined>(undefined);
@@ -27,7 +29,7 @@ export function StageProvider({ children }: { children: React.ReactNode }) {
   const [inputChannels, setInputChannels] = useState<InputChannel[]>([]);
   const [stage, setStage] = useState<Stage | null>(null);
   const [stagePlot, setStagePlot] = useState<StagePlot | null>(null);
-
+  const [isSandbox, setIsSandbox] = useState(true);
   return (
     <StageContext.Provider value={{
       elementPlacements,
@@ -39,7 +41,9 @@ export function StageProvider({ children }: { children: React.ReactNode }) {
       stage,
       setStage,
       stagePlot,
-      setStagePlot
+      setStagePlot,
+      isSandbox,
+      setIsSandbox 
     }}>
       {children}
     </StageContext.Provider>
