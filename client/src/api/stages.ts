@@ -6,6 +6,7 @@ export interface Stage {
   width: number;
   depth: number;
   height: number;
+  createdBy: string;
 }
 
 /**
@@ -54,5 +55,14 @@ export const updateStage = async (
   return apiFetch(`/api/stages/${stageId}`, {
     method: 'PUT',
     body: stageData,
+  });
+};
+
+/**
+ *
+ */
+export const getStagesByUserId = async (userId: number): Promise<Stage[]> => {
+  return apiFetch(`/api/stages/user/${userId}`, {
+    method: 'GET',
   });
 };

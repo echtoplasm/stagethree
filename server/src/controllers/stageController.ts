@@ -160,3 +160,30 @@ export const updateStage = async (req: Request, res: Response): Promise<void> =>
     });
   }
 };
+
+/**
+ * GET /api/stages/user/:userId
+ * get all stages by created_by in order to populate userPortal
+ */
+
+export const getAllStagesByCreatedBy = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { userId } = req.params;
+    const results: StageDB[] = await db(stageTable)
+      .select()
+      .where({
+        created_by_stg: userId,
+      })
+      .returning('*');
+
+    const apiResults = results.map(dbStageToApi);
+
+    res.json(apiResults);
+  } catch (err) {
+    console.error('Error in get all stages by created by ', err);
+    res.status(500).json({
+      message: 'unable to getAllStagesByCreatedBy',
+      error: err,
+    });
+  }
+};

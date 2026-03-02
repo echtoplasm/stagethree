@@ -5,6 +5,7 @@ import {
   deleteStage,
   updateStage,
   createStage,
+  getAllStagesByCreatedBy,
 } from '../controllers/stageController';
 
 const stageRouter = Router();
@@ -14,4 +15,5 @@ stageRouter.get('/:id', getStageById);
 stageRouter.delete('/:id', deleteStage);
 stageRouter.put('/:id', updateStage);
 stageRouter.post('/', createStage);
+stageRouter.get('/user/:userId', getAllStagesByCreatedBy);
 export default stageRouter;

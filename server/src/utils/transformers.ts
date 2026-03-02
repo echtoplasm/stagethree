@@ -190,6 +190,7 @@ export interface StageDB {
   width_stg: number;
   depth_stg: number;
   height_stg: number | null;
+  created_by_stg: string;
   created_at_stg: Date | string;
 }
 
@@ -200,6 +201,7 @@ export interface StageAPI {
   width: number;
   depth: number;
   height?: number;
+  createdBy: string;
   createdAt: string;
 }
 
@@ -216,6 +218,7 @@ export const dbStageToApi = (dbStage: StageDB): StageAPI => ({
   width: dbStage.width_stg,
   depth: dbStage.depth_stg,
   height: dbStage.height_stg || undefined,
+  createdBy: dbStage.created_by_stg,
   createdAt:
     typeof dbStage.created_at_stg === 'string'
       ? dbStage.created_at_stg
@@ -233,6 +236,7 @@ export const apiStageToDb = (apiStage: Partial<StageAPI>): Partial<StageDB> => (
   ...(apiStage.name && { name_stg: apiStage.name }),
   ...(apiStage.width && { width_stg: apiStage.width }),
   ...(apiStage.depth && { depth_stg: apiStage.depth }),
+  ...(apiStage.createdBy && { created_by_stg: apiStage.createdBy}),
   ...(apiStage.height && { height_stg: apiStage.height }),
 });
 
