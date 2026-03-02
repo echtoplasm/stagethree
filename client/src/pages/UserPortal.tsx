@@ -24,6 +24,11 @@ export const UserPortal = () => {
           <span className='text-secondary text-small'>Stay awhile</span>
         </div>
         <div>
+          <h2>Change options</h2>
+          <p>So here I am thinking about adding the option for a user to see what venues they've uploaded</p>
+          <p>This would require updating my schema, and adding the option for users to upload their own venues/stages</p>
+        </div>
+        <div>
           {projects.map((proj) => (
             <div className="card">
               <p>{proj.name}</p>
