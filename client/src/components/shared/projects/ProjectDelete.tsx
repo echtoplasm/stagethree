@@ -1,4 +1,4 @@
-import { deleteProject } from '../../api/projects';
+import { deleteProject } from '../../../api/projects';
 import { createPortal } from 'react-dom';
 
 interface ProjectDeleteProps {
@@ -8,7 +8,7 @@ interface ProjectDeleteProps {
 }
 
 
-export function ProjectDelete({ projectId, onSuccess, onClose }: ProjectDeleteProps) {
+export function ProjectDeletePortal({ projectId, onSuccess, onClose }: ProjectDeleteProps) {
 
   if (!projectId) return null;
 
