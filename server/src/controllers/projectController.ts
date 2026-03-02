@@ -11,7 +11,6 @@ import {
   apiStageToDb,
   dbStagePlotToApi,
 } from '../utils/transformers';
-import { asyncWrapProviders } from 'node:async_hooks';
 
 const projectTable = 'project_prj';
 
@@ -42,7 +41,7 @@ export const getProjectById = async (req: Request, res: Response): Promise<void>
     res.json(project);
   } catch (error) {
     console.error('error fetching project by id', error);
-    res.status(500).json({ error: 'Failed to fetch project by id' });
+    res.status(500).json({ message: 'Failed to fetch project by id', error: error });
   }
 };
 
@@ -58,7 +57,10 @@ export const createProject = async (req: Request, res: Response): Promise<void> 
     res.json(project);
   } catch (error) {
     console.error('error creating project', error);
-    res.status(500).json({ error: 'Failed to create project' });
+    res.status(500).json({
+      message: 'Failed to create project',
+      error: error,
+    });
   }
 };
 

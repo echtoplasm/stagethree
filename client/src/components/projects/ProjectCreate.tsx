@@ -1,21 +1,22 @@
-import {useState} from "react";
+import { useState } from "react";
 import { createNewProject } from "../../api/projects";
 import { useAuth } from "../../contexts/AuthContext";
 import { type Project } from "../../api/projects";
-import {X} from 'lucide-react';
+import { X } from 'lucide-react';
+import { createPortal } from 'react-dom';
 
 interface ProjectCreateProps {
   onClose: () => void;
   onSuccess: () => void;
 }
 
-export const ProjectCreate = ({onClose, onSuccess}: ProjectCreateProps) => {
-  const {user} = useAuth();
-  if(!user) return null;
+export const ProjectCreate = ({ onClose, onSuccess }: ProjectCreateProps) => {
+  const { user } = useAuth();
+  if (!user) return null;
   const [projectForm, setProjectForm] = useState<Omit<Project, 'id'>>({
     name: '',
     userId: user.id,
-    description: '', 
+    description: '',
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -24,8 +25,8 @@ export const ProjectCreate = ({onClose, onSuccess}: ProjectCreateProps) => {
     onSuccess();
   }
 
-return(
-   <>
+  return createPortal(
+    <>
       <div className="modal-backdrop" onClick={onClose} />
       <div className="modal">
         <div className="modal-header">
@@ -57,6 +58,7 @@ return(
           </div>
         </form>
       </div>
-    </>
+    </>,
+    document.body
   )
 }

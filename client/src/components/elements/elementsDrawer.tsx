@@ -9,13 +9,15 @@ export const ElementsDrawer = () => {
   const [elementTypes, setElementTypes] = useState<ElementType[]>([]);
   const {
     isSandbox,
+    setIsSandbox,
     stagePlot,
     setStagePlot,
     stage,
     setStage,
     setElementPlacements,
     elementPlacements,
-    setActiveProject } = useStageContext();
+    setActiveProject,
+    refreshProjects } = useStageContext();
 
   const { user, isAuthenticated } = useAuth();
 
@@ -25,7 +27,6 @@ export const ElementsDrawer = () => {
     console.log(elementTypes);
   }
 
-  console.log(isSandbox);
 
 
   /**
@@ -36,7 +37,6 @@ export const ElementsDrawer = () => {
    * @param elt - the element type to be passed to be formatted and setup for db insertion 
    */
   const handleElementClick = async (elt: ElementType) => {
-    if (!stagePlot && !isAuthenticated) return null;
 
     if (isSandbox) {
       const data: ElementPlacement = {
@@ -64,6 +64,7 @@ export const ElementsDrawer = () => {
         setStage(defaults.stage);
         setStagePlot(defaults.stagePlot);
         setActiveProject(defaults.project);
+        refreshProjects();
         currentStagePlot = defaults.stagePlot;
         console.log('currentStagePlot', currentStagePlot);
       }
@@ -88,7 +89,8 @@ export const ElementsDrawer = () => {
   }
   useEffect(() => {
     fetchElementTypes();
-  }, [])
+    if (!isAuthenticated) setIsSandbox(true);
+  }, [isAuthenticated])
 
 
   return (

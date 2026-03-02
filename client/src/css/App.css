@@ -1216,6 +1216,50 @@ nav ul button:hover::after {
   transform: translateX(4px);
 }
 
+.plot-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  margin: 0.15rem 0.5rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border-radius: var(--radius-xs);
+  transition: all var(--transition);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.plot-row:hover {
+  background: var(--accent-muted);
+  color: var(--accent);
+  transform: translateX(4px);
+}
+
+.plot-delete {
+  opacity: 0;
+  transition: opacity var(--transition);
+  color: var(--error);
+  border-color: var(--error);
+}
+
+.plot-row:hover .plot-delete {
+  opacity: 1;
+}
+
+.create-plot-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin: 0.25rem 0.5rem;
+  font-size: 0.8rem;
+  color: var(--text-tertiary);
+}
+
+.create-plot-btn:hover {
+  color: var(--accent);
+}
+
 /* ==========================================
    PLOTTING PAGE
    ========================================== */

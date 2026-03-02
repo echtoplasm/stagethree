@@ -21,9 +21,8 @@ export function ProjectCard() {
   const [createPlot, setCreatePlot] = useState(false);
   const [plotToDelete, setPlotToDelete] = useState<number | null>(null);
   const [plotDelete, setPlotDelete] = useState(false);
-
   const { user } = useAuth();
-  const { setActiveProject, setElementPlacements, setInputChannels, setStage, setStagePlot } = useStageContext();
+  const { setActiveProject, setElementPlacements, projectsVersion, setInputChannels, setStage, setStagePlot } = useStageContext();
 
 
   /** 
@@ -109,7 +108,7 @@ export function ProjectCard() {
    * */
   useEffect(() => {
     fetchProjects();
-  }, [user]);
+  }, [user, projectsVersion]);
 
 
 
@@ -144,26 +143,26 @@ export function ProjectCard() {
               {selectedProjectId === project.id && (
                 <div className="stage-plots-dropdown">
                   {plots.map((plot) => (
-                    <div key={plot.id} onClick={() => handleStagePlotClick(plot.id)}>
-                      {plot.name}
-                      <button onClick={(e) => {
+                    <div key={plot.id} className="plot-row" onClick={() => handleStagePlotClick(plot.id)}>
+                      <span className="plot-name">{plot.name}</span>
+                      <button className="btn btn-danger btn-sm plot-delete" onClick={(e) => {
                         e.stopPropagation()
                         handlePlotDeleteClick(plot.id);
                       }}>
-                        <Trash size={18} />
+                        <Trash size={14} />
                       </button>
                     </div>
                   ))}
                   <button
-                    className="btn-small"
+                    className="btn btn-ghost btn-sm create-plot-btn"
                     onClick={() => {
                       setCreatePlot(true);
                       setSelectedProjectId(project.id);
                     }}
                   >
-                    <span><PlusCircle size={18} /> Create new plot</span>
-                  </button>
-                </div>
+                    <PlusCircle size={14} />
+                    Create new plot
+                  </button>                </div>
               )}
             </div>
           ))}

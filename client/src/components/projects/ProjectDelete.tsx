@@ -1,5 +1,5 @@
 import { deleteProject } from '../../api/projects';
-
+import { createPortal } from 'react-dom';
 interface ProjectDeleteProps {
   projectId: number | null;
   onSuccess: () => void;
@@ -18,7 +18,7 @@ export function ProjectDelete({ projectId, onSuccess, onClose }: ProjectDeletePr
   }
 
 
-  return (
+  return createPortal(
     <>
       {/* Backdrop */}
       <div
@@ -39,6 +39,6 @@ export function ProjectDelete({ projectId, onSuccess, onClose }: ProjectDeletePr
           <button className="btn btn-danger btn-sm" onClick={handleSubmit}>Yes, Delete</button>
         </div>
       </div>
-    </>
+    </>, document.body
   );
 }

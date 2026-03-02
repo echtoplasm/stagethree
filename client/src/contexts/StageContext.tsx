@@ -18,6 +18,9 @@ interface StageContextType {
   setStagePlot: (stageplot: StagePlot | null) => void;
   isSandbox: boolean;
   setIsSandbox: (value: boolean) => void;
+  projectsVersion: number;
+  setProjectsVersion: (value: number) => void;
+  refreshProjects: () => void;
 }
 
 const StageContext = createContext<StageContextType | undefined>(undefined);
@@ -30,6 +33,10 @@ export function StageProvider({ children }: { children: React.ReactNode }) {
   const [stage, setStage] = useState<Stage | null>(null);
   const [stagePlot, setStagePlot] = useState<StagePlot | null>(null);
   const [isSandbox, setIsSandbox] = useState(true);
+  const [projectsVersion, setProjectsVersion] = useState(0);
+
+  const refreshProjects = () => setProjectsVersion(prev => prev + 1);
+
   return (
     <StageContext.Provider value={{
       elementPlacements,
@@ -43,7 +50,10 @@ export function StageProvider({ children }: { children: React.ReactNode }) {
       stagePlot,
       setStagePlot,
       isSandbox,
-      setIsSandbox 
+      setIsSandbox,
+      projectsVersion,
+      setProjectsVersion,
+      refreshProjects
     }}>
       {children}
     </StageContext.Provider>
