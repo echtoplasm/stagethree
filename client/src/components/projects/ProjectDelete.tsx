@@ -2,7 +2,7 @@ import { deleteProject } from '../../api/projects';
 import { createPortal } from 'react-dom';
 
 interface ProjectDeleteProps {
-  projectId: number;
+  projectId: number | null;
   onSuccess: () => void;
   onClose: () => void;
 }
