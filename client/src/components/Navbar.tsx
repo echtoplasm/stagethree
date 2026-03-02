@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { UserPlus, Boxes, LogIn, UserMinus, ShieldUser, Sun, Moon, Rotate3d } from 'lucide-react';
+import { UserPlus, UserRoundCog, Boxes, LogIn, UserMinus, ShieldUser, Sun, Moon, Rotate3d } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { logoutUser } from '../api/auth';
 import { useAuth } from '../contexts/AuthContext';
@@ -7,13 +7,14 @@ import { Login } from './shared/navAuth/Login';
 import { SignUp } from './shared/navAuth/Signup';
 import { useState } from 'react';
 
+
 interface NavbarProps {
   onThemeToggle: () => void;
   theme: string;
 }
 
 
-export function Navbar({ onThemeToggle, theme}: NavbarProps) {
+export function Navbar({ onThemeToggle, theme }: NavbarProps) {
   const navigate = useNavigate();
   const { isAuthenticated, user, login, logout } = useAuth();
   const [showLogin, setShowLogin] = useState(false);
@@ -50,7 +51,7 @@ export function Navbar({ onThemeToggle, theme}: NavbarProps) {
                 App
               </Link>
             </li>
-          
+
             {!isAuthenticated && (
               <li>
                 <button onClick={() => setShowSignUp(true)} className='btn'>
@@ -60,12 +61,20 @@ export function Navbar({ onThemeToggle, theme}: NavbarProps) {
               </li>
             )}
             {isAuthenticated ? (
-              <li>
-                <button onClick={handleLogOut} className='btn'>
-                  <UserMinus size={18} />
-                  Logout {user?.firstName}
-                </button>
-              </li>
+              <>
+                <li>
+                  <button onClick={handleLogOut} className='btn'>
+                    <UserMinus size={18} />
+                    Logout {user?.firstName}
+                  </button>
+                </li>
+                <li>
+                  <Link to="/portal">
+                    <UserRoundCog size={18} />
+                    Portal
+                  </Link>
+                </li>
+              </>
             ) : (
               <li>
                 <button className="btn" onClick={() => setShowLogin(true)}>
@@ -83,7 +92,7 @@ export function Navbar({ onThemeToggle, theme}: NavbarProps) {
             )}
             <div>
               <button onClick={onThemeToggle}>
-                {theme === 'dark' ? <Moon/> : <Sun />}
+                {theme === 'dark' ? <Moon /> : <Sun />}
               </button>
             </div>
           </ul>

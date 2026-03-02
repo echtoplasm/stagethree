@@ -9,7 +9,7 @@ import { LandingPage } from './pages/LandingPage';
 import { AuthProvider } from './contexts/AuthContext';
 import { StageProvider } from './contexts/StageContext';
 import { useAuth } from './contexts/AuthContext';
-
+import { UserPortal } from './pages/UserPortal';
 
 
 function AppRoutes() {
@@ -25,7 +25,7 @@ function AppRoutes() {
       <Route path="/" element={<LandingPage />} />
       <Route path="/stages" element={<StageRead />} />
       <Route path="/app" element={<PlottingPage />} />
-
+      <Route path="/portal" element={<UserPortal />} />
       <Route
         path="/admin"
         element={(user?.roleId ?? 0) >= 2 ? <AdminPage /> : <Navigate to="/" />}
