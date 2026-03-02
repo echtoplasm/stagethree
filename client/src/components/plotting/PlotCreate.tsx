@@ -4,6 +4,7 @@ import { type StagePlot } from "../../api/stagePlots";
 import { type Stage } from "../../api/stages";
 import { X } from 'lucide-react';
 import { fetchAllStages } from "../../api/stages";
+import { createPortal } from "react-dom";
 
 interface PlotCreateProps {
   onClose: () => void;
@@ -12,8 +13,6 @@ interface PlotCreateProps {
 }
 
 export const PlotCreate = ({ onClose, onSuccess, projectId }: PlotCreateProps) => {
-  
-
 
   const [stages, setStages] = useState<Stage[]>([]);
   const [stagePlotForm, setStagePlotForm] = useState<Omit<StagePlot, 'id' | 'createdAt'>>({
@@ -38,7 +37,7 @@ export const PlotCreate = ({ onClose, onSuccess, projectId }: PlotCreateProps) =
   }, [])
 
 
-  return (
+  return createPortal(
     <>
       <div className="modal-backdrop" onClick={onClose} />
       <div className="modal">
@@ -55,27 +54,29 @@ export const PlotCreate = ({ onClose, onSuccess, projectId }: PlotCreateProps) =
         <form onSubmit={handleSubmit} className="modal-body">
           <select onChange={(e) => setStagePlotForm({
             ...stagePlotForm,
-            stageId:  e.target.value ? parseInt(e.target.value) : undefined })}>
-          <option value="">Select a stage</option>
-          {stages.map((stage) => (
-            <option key={stage.id} value={stage.id}>
-              {stage.name}
-            </option>
-          ))}
-        </select>
-        <div className="form-group">
-          <label className="form-label" htmlFor="description">Description</label>
-          <input id="description" className="form-input" type="text" value={stagePlotForm.name}
-            onChange={(e) => setStagePlotForm({ ...stagePlotForm, name: e.target.value })} />
-        </div>
+            stageId: e.target.value ? parseInt(e.target.value) : undefined
+          })} className="mb-8">
+            <option value="" className="text-secondary">Select a stage</option>
+            {/*** TODO add the ability for user to make their own stageplot ***/}
+            {stages.map((stage) => (
+              <option key={stage.id} value={stage.id} className="text-secondary">
+                {stage.name}
+              </option>
+            ))}
+          </select>
+          <div className="form-group">
+            <label className="form-label" htmlFor="plot-name">Stage Plot Name</label>
+            <input id="plot-name" className="form-input" type="text" value={stagePlotForm.name}
+              onChange={(e) => setStagePlotForm({ ...stagePlotForm, name: e.target.value })} />
+          </div>
 
 
-        <div className="modal-footer">
-          <button type="button" className="btn btn-ghost" onClick={onClose}>Cancel</button>
-          <button type="submit" className="btn btn-primary">Create StagePlot</button>
-        </div>
-      </form>
-    </div >
-    </>
+          <div className="modal-footer">
+            <button type="button" className="btn btn-ghost" onClick={onClose}>Cancel</button>
+            <button type="submit" className="btn btn-primary">Create StagePlot</button>
+          </div>
+        </form>
+      </div >
+    </>, document.body
   )
 }

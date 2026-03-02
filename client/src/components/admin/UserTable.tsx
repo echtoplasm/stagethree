@@ -42,7 +42,7 @@ export const UserTable = () => {
   if (error) {
     return (
       <div>
-        <div className="page-container flex-center">
+        <div className= "flex-center">
           <div className="text-center">
             <h2 className="text-danger">Error</h2>
           </div>
@@ -53,7 +53,7 @@ export const UserTable = () => {
 
   if (loading && users.length === 0) {
     return (
-      <div className="page-container flex-center">
+      <div className="flex-center">
         <div className="text-center">
           <div className="spinner" style={{ width: '48px', height: '48px', margin: '0 auto 1rem' }} />
           <p className="text-secondary">Loading users...</p>
@@ -63,7 +63,7 @@ export const UserTable = () => {
   }
 
   return (
-    <div className="page-container">
+    <div>
       <div className="content-wrapper">
         <header className="admin-header mb-8">
           <div>

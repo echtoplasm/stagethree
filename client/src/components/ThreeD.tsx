@@ -25,7 +25,7 @@ export function StageScene() {
   const selectedObjectRef = useRef<THREE.Mesh | null>(null);
   const offsetRef = useRef(new THREE.Vector3());
 
-  const { elementPlacements, stage } = useStageContext();
+  const { elementPlacements, stage, activeProject } = useStageContext();
   const { isAuthenticated } = useAuth();
   const isSandbox = !isAuthenticated;
 
@@ -244,11 +244,18 @@ export function StageScene() {
         <ul>
           {objects.map(obj => (
             <li key={obj.id}>
-              {obj.name} - x: {Number(obj.position.x.toFixed(2))} , z: {Number(obj.position.z.toFixed(2))})
+              {obj.name} - ( x: {Number(obj.position.x.toFixed(2))} , z: {Number(obj.position.z.toFixed(2))} )
             </li>
           ))}
         </ul>
       </div>
+      {stage && activeProject && (
+        <div className='stageinfo-overlay'>
+          <h3>Current Stage</h3>
+          <p>stage: {stage?.name}</p>
+          <p>project: {activeProject?.name}</p>
+        </div>
+      )}
 
     </div>
   );

@@ -1295,6 +1295,20 @@ nav ul button:hover::after {
   font-size: 0.875rem;
 }
 
+.stageinfo-overlay {
+  position: absolute;
+  top: 20px;
+  right: 25%;
+  background: var(--bg-surface);
+  backdrop-filter: blur(8px);
+  color: var(--text-primary);
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  z-index: 500;
+  font-size: 0.875rem;
+}
+
 /* ==========================================
    TAB BAR
    ========================================== */

@@ -54,10 +54,10 @@ export function StageTable() {
   }
 
   return (
-    <div className="page-container">
+    <div>
       <div className="content-wrapper">
         <header className="mb-8">
-          <h1>Delete Stage</h1>
+          <h1>Manage Stages</h1>
           <p className="text-secondary">Select a stage to delete</p>
           <button className="btn btn-primary" onClick={() => setStageCreate(true)}>
             <Plus size={18} />

@@ -4,12 +4,11 @@ export const AdminPage = () => {
 
 
   return (
-    <div>
-      <section>
+    <div className="page-container">
+      <section className="mb-2">
         <UserTable />
       </section>
-      <section>
-        <h2>Stage Section</h2>
+      <section className="mt-2">
         <StageTable />
 
       </section>
