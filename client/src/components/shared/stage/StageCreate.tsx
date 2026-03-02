@@ -1,18 +1,21 @@
 import { useState } from 'react';
 import { X } from 'lucide-react';
 import { createStage, type Stage } from '../../../api/stages';
-
+import { useAuth } from '../../../contexts/AuthContext';
 interface StageCreateProps {
   onClose: () => void;
   onSuccess: () => void;
 }
 
 export function StageCreate({ onClose, onSuccess }: StageCreateProps) {
+  const {user} = useAuth();
+  if(!user) return null
   const [stageForm, setStageForm] = useState<Omit<Stage, 'id'>>({
     name: '',
     width: 0,
     depth: 0,
-    height: 0
+    height: 0,
+    createdBy: user.id, 
   });
 
   const handleSubmit = async (e: React.FormEvent) => {

@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { X } from 'lucide-react';
 import { type Stage, updateStage } from '../../../api/stages';
-
 interface StageUpdateProps {
   stage: Stage;
   onClose: () => void;
@@ -14,7 +13,8 @@ export function StageUpdate({ stage, onClose }: StageUpdateProps) {
     name: stage.name,
     width: stage.width,
     depth: stage.depth,
-    height: stage.height
+    height: stage.height,
+    createdBy: stage.createdBy
   });
 
 

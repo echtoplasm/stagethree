@@ -6,7 +6,7 @@ export interface Stage {
   width: number;
   depth: number;
   height: number;
-  createdBy: string;
+  createdBy: number;
 }
 
 /**

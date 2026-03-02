@@ -46,6 +46,7 @@ export const createDefaultProjectAndPlot = async (user: User): Promise<FullStage
     width: 20,
     depth: 20,
     height: 5,
+    createdBy: user.id,
   };
 
   const defaultStagePlot: Omit<StagePlot, 'id' | 'projectId' | 'stageId' | 'createdAt'> = {

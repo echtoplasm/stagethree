@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Box, Trash, Plus } from 'lucide-react';
 import type { Stage } from '../../../api/stages';
-import { fetchAllStages } from '../../../api/stages';
+import { fetchAllStages, getStagesByUserId } from '../../../api/stages';
 import { StageUpdate } from './StageUpdate';
 import { StageDelete } from './StageDelete';
 import { StageCreate } from './StageCreate';
-
+import { useAuth } from '../../../contexts/AuthContext';
 export function StageTable() {
   const [stages, setStages] = useState<Stage[]>([]);
   const [loading, setLoading] = useState(true);
@@ -14,13 +14,14 @@ export function StageTable() {
   const [deleteStage, setStageDelete] = useState(false);
   const [selectedStage, setSelectedStage] = useState<Stage | null>(null)
   const [stageCreate, setStageCreate] = useState(false);
-
+  const { user } = useAuth();
+  if (!user) return null;
 
   useEffect(() => {
     const loadStages = async () => {
       try {
         setLoading(true);
-        const data = await fetchAllStages();
+        const data = await getStagesByUserId(user.id);
         setStages(data);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to fetch stages');
@@ -30,7 +31,7 @@ export function StageTable() {
     };
 
     loadStages();
-  }, []);
+  }, [user]);
 
   if (loading) {
     return (
