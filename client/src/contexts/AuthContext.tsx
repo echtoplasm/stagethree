@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { fetchAuthMe } from '../api/auth';
+import { fetchAuthMe, logoutUser } from '../api/auth';
 import { type User } from '../types/api';
 interface AuthContextType {
   user: User | null;
@@ -11,7 +11,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export function AuthProvider({ children } : {children: React.ReactNode}) {
+export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -25,7 +25,14 @@ export function AuthProvider({ children } : {children: React.ReactNode}) {
   }, []);
 
   const login = (user: User) => setUser(user);
-  const logout = () => setUser(null);
+  const logout = async () => {
+    try {
+      await logoutUser()
+    } finally {
+      setUser(null);
+      window.location.href = '/';
+    }
+  };
 
   return (
     <AuthContext.Provider value={{
@@ -43,5 +50,5 @@ export function AuthProvider({ children } : {children: React.ReactNode}) {
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) throw new Error('useAuth must be used within AuthProvider');
-return context;
+  return context;
 }

@@ -5,6 +5,7 @@ export const fetchAuthMe = async () => {
   return apiFetch('/api/auth/me', {
     credentials: 'include',
     method: 'POST',
+    skipAuthRedirect: true,
   });
 };
 
