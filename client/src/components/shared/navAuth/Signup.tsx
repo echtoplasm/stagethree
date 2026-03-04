@@ -7,6 +7,7 @@ interface SignUpProps {
   onSuccess: () => void;
 }
 
+/**NEED TO IMPLEMENT CAPTCHA**/
 export function SignUp({ onClose, onSuccess }: SignUpProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
