@@ -9,7 +9,8 @@ import { InputChannelModal } from '../components/inputChannels/inputChannelsModa
 import { ElementsDrawer } from '../components/elements/elementsDrawer';
 import { useAuth } from '../contexts/AuthContext';
 import { useStageContext } from '../contexts/StageContext';
-
+import { useWindowSize } from '../hooks/useWindowSize';
+import { ScreenSizeModal } from '../components/userUI/ScreenSizeModal';
 
 export function PlottingPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -19,6 +20,9 @@ export function PlottingPage() {
   const { setIsSandbox } = useStageContext();
   const { isAuthenticated } = useAuth();
 
+
+  const { width } = useWindowSize();
+ 
   const fetchElementTypes = async () => {
     const data = await fetchAllElementTypes();
     setElementTypes(data);
@@ -31,12 +35,14 @@ export function PlottingPage() {
 
   useEffect(() => {
     fetchElementTypes();
-    if(isAuthenticated) setIsSandbox(false);
+    if (isAuthenticated) setIsSandbox(false);
   }, [isAuthenticated]);
+
 
 
   return (
     <div className="plotting-layout">
+      {width <= 768 && <ScreenSizeModal />}
       {/* Overlay */}
       {sidebarOpen && (
         <div className="overlay" onClick={() => setSidebarOpen(false)} />
