@@ -6,7 +6,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { Login } from './shared/navAuth/Login';
 import { SignUp } from './shared/navAuth/Signup';
 import { useState } from 'react';
-
+import { type User } from '../types/api';
 
 interface NavbarProps {
   onThemeToggle: () => void;
@@ -29,6 +29,13 @@ export function Navbar({ onThemeToggle, theme }: NavbarProps) {
       console.error('Logout failed', err);
     }
   };
+
+  const evaluateUser = (user: User) => {
+    login(user);
+    user.roleId >= 2 ? navigate('/admin') : navigate('/portal')
+    setShowLogin(false);
+  }
+
 
   return (
     <>
@@ -101,10 +108,7 @@ export function Navbar({ onThemeToggle, theme }: NavbarProps) {
       {showLogin && (
         <Login
           onClose={() => setShowLogin(false)}
-          onSuccess={(user) => {
-            login(user);
-            setShowLogin(false);
-          }}
+          onSuccess={(user) => { evaluateUser(user) }}
         />
       )}
       {showSignUp && (

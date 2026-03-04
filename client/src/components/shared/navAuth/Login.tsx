@@ -2,12 +2,13 @@ import { useState } from "react";
 import { X, LogIn } from "lucide-react";
 import { loginUser } from "../../../api/auth";
 import { type User } from "../../../types/api";
+
 interface LoginProps {
   onClose: () => void;
   onSuccess: (user: User) => void;
 }
 
-  
+
 export function Login({ onClose, onSuccess }: LoginProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
