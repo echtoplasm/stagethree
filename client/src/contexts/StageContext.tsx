@@ -21,6 +21,9 @@ interface StageContextType {
   projectsVersion: number;
   setProjectsVersion: (value: number) => void;
   refreshProjects: () => void;
+  inputChannelsVersion: number;
+  setInputChannelsVersion: (value: number) => void;
+  refreshInputChannels: () => void;
 }
 
 const StageContext = createContext<StageContextType | undefined>(undefined);
@@ -34,9 +37,10 @@ export function StageProvider({ children }: { children: React.ReactNode }) {
   const [stagePlot, setStagePlot] = useState<StagePlot | null>(null);
   const [isSandbox, setIsSandbox] = useState(true);
   const [projectsVersion, setProjectsVersion] = useState(0);
+  const [inputChannelsVersion, setInputChannelsVersion] = useState(0);
 
   const refreshProjects = () => setProjectsVersion(prev => prev + 1);
-
+  const refreshInputChannels = () => setInputChannelsVersion(prev => prev + 1);
   return (
     <StageContext.Provider value={{
       elementPlacements,
@@ -53,7 +57,10 @@ export function StageProvider({ children }: { children: React.ReactNode }) {
       setIsSandbox,
       projectsVersion,
       setProjectsVersion,
-      refreshProjects
+      refreshProjects,
+      inputChannelsVersion,
+      setInputChannelsVersion,
+      refreshInputChannels
     }}>
       {children}
     </StageContext.Provider>

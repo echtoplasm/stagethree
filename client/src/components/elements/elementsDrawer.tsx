@@ -4,6 +4,7 @@ import { fetchAllElementTypes, type ElementType } from "../../api/element";
 import { createNewElementPlacement, type ElementPlacement } from "../../api/elementPlacement";
 import { createDefaultProjectAndPlot } from "../../api/projects";
 import { useAuth } from "../../contexts/AuthContext";
+import { addInputChannel, type InputChannel } from "../../api/inputChannel";
 
 export const ElementsDrawer = () => {
   const [elementTypes, setElementTypes] = useState<ElementType[]>([]);
@@ -17,7 +18,11 @@ export const ElementsDrawer = () => {
     setElementPlacements,
     elementPlacements,
     setActiveProject,
-    refreshProjects } = useStageContext();
+    refreshProjects,
+    inputChannels,
+    setInputChannels,
+    refreshInputChannels
+  } = useStageContext();
 
   const { user, isAuthenticated } = useAuth();
 
@@ -83,10 +88,28 @@ export const ElementsDrawer = () => {
         scaleY: 1,
         scaleZ: 1
       }
+
       const newPlacement = await createNewElementPlacement(data);
+
+
       setElementPlacements([...elementPlacements, { ...newPlacement, name: elt.name }]);
+
+
+
+      if (!data.stagePlotId) return null;
+      const inputChannel: Omit<InputChannel, 'id' | 'micType' | 'notes' | 'createdAt'> = {
+        stagePlotId: data.stagePlotId,
+        channelNumber: elementPlacements.length + 1,
+        instrumentName: data.name,
+      }
+
+      const newInputChannel = await addInputChannel(inputChannel);
+      setInputChannels([...inputChannels, { ...newInputChannel }]);
+      refreshInputChannels();
+      console.log(inputChannels);
     }
   }
+
   useEffect(() => {
     fetchElementTypes();
     if (!isAuthenticated) setIsSandbox(true);

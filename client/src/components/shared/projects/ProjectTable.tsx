@@ -60,8 +60,8 @@ export function ProjectTable() {
     <div>
       <div className="content-wrapper">
         <header className="mb-8">
-          <h1>Manage Projects</h1>
-          <p className="text-secondary">Select a project to delete</p>
+          <h1>Manage Your Projects</h1>
+          <p className="text-secondary mb-4">Here are all of the projects associated with your account</p>
           <button className="btn btn-primary" onClick={() => setProjectCreate(true)}>
             <Plus size={18} />
             Create New Project
@@ -81,7 +81,7 @@ export function ProjectTable() {
                   <th>Name</th>
                   <th>Description</th>
                   <th>Created At</th>
-                  <th>Actions</th>
+                  <th colSpan={2}>Actions</th>
                 </tr>
               </thead>
               <tbody>

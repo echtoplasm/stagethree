@@ -58,8 +58,8 @@ export function StageTable() {
     <div>
       <div className="content-wrapper">
         <header className="mb-8">
-          <h1>Manage Stages</h1>
-          <p className="text-secondary">Select a stage to delete</p>
+          <h1>Manage Your Stages</h1>
+          <p className="text-secondary mb-4">Here are all of the stages associated with your account</p>
           <button className="btn btn-primary" onClick={() => setStageCreate(true)}>
             <Plus size={18} />
             Create New Stage
@@ -80,7 +80,7 @@ export function StageTable() {
                   <th>Width</th>
                   <th>Depth</th>
                   <th>Height</th>
-                  <th>Actions</th>
+                  <th colSpan={2}>Actions</th>
                 </tr>
               </thead>
               <tbody>
