@@ -67,9 +67,6 @@ export const createInputChannel = async (req: Request, res: Response): Promise<v
   }
 };
 
-
-
-
 /**
  * PUT /api/inputchannels/:id
  * updated inputChannel by id
@@ -147,6 +144,40 @@ export const getInputChannelByStagePlotId = async (req: Request, res: Response):
     console.error('Unable to get inc by stage plot id', err);
     res.status(500).json({
       message: 'unable to get inc by stage plot id',
+    });
+  }
+};
+
+/**
+ * PATCH /api/inputchannels/:inputChannelId
+ * partial update to inputchannels for changing the inputchannelnumber
+ */
+
+export const partialUpdateInputChannel = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+
+    const dbData = incToDb(req.body);
+
+    const [result]: InputChannelDB[] = await db(incTable)
+      .where('id_inc', id)
+      .update(dbData)
+      .returning('*');
+
+    if (!result) {
+      res.status(404).json({
+        error: 'input channel not found',
+      });
+      return;
+    }
+
+    const apiResult = incToApi(result);
+    res.status(200).json(apiResult);
+  } catch (err) {
+    console.error('unable to partially update input channel', err);
+    res.status(500).json({
+      message: 'unable to partially update input channel',
+      error: err,
     });
   }
 };

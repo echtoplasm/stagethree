@@ -18,3 +18,10 @@ export const addInputChannel = async (
     body: data,
   });
 };
+
+export const updateInputChannel = async(inputChannelId: number, data: Partial<InputChannel>): Promise<InputChannel> => {
+  return apiFetch(`/api/inputchannels/${inputChannelId}`, {
+    method: 'PATCH', 
+    body: data,
+  })
+}

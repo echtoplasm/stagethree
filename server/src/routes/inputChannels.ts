@@ -6,6 +6,7 @@ import {
   updateInputChannel,
   deleteInputChannel,
   getInputChannelByStagePlotId,
+  partialUpdateInputChannel,
 } from '../controllers/inputChannelController';
 
 const inputChannelRouter = Router();
@@ -18,7 +19,7 @@ inputChannelRouter.post('/', createInputChannel);
 inputChannelRouter.put('/:id', updateInputChannel);
 inputChannelRouter.delete('/:id', deleteInputChannel);
 inputChannelRouter.get('/stageplots/:id', getInputChannelByStagePlotId);
-
 inputChannelRouter.post('/', createInputChannel);
+inputChannelRouter.patch('/:id', partialUpdateInputChannel);
 
 export default inputChannelRouter;
