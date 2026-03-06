@@ -42,7 +42,7 @@ export const InputChannelModal = ({ onClose }: InputChannelModalProps) => {
   return createPortal(
     <>
       <div className="modal-backdrop" onClick={onClose} />
-      <div className="modal">
+      <div className="modal modal-scrollable">
         <div className="modal-header">
           <div>
             <h2>Input Channels</h2>

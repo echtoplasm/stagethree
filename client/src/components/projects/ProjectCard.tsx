@@ -115,7 +115,7 @@ export function ProjectCard() {
   return (
     <div className="projects-list">
       {!user ? (
-        <span>sign in to save projects</span>
+        <p className='alert'>sign in to save projects</p>
       ) : (
         <>
           <button className="btn btn-primary" onClick={() => setProjectCreate(true)}>

@@ -113,8 +113,8 @@ export function PlottingPage() {
           </div>
         )}
         {activeTab === 'inputs' && (
-          <div className="drawer-content">
-            <button onClick={() => setInputChannelModal(true)}>
+          <div className="drawer-content pb-8">
+            <button className='btn-sm btn-ghost mb-4' onClick={() => setInputChannelModal(true)}>
               <Maximize2 />
             </button>
             <h3>Input Channels</h3>
