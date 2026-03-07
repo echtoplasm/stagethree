@@ -47,7 +47,22 @@ export const getUserById = async (req: Request, res: Response): Promise<void> =>
  */
 export const createUser = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { email, password, firstName, lastName } = req.body;
+    const { email, password, firstName, lastName, turnstileToken } = req.body;
+
+    const verifyRes = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+      method: 'POST',
+      body: new URLSearchParams({
+        secret: process.env.TURNSTILE_SECRET!,
+        response: turnstileToken,
+      }),
+    });
+
+    const { success } = await verifyRes.json();
+
+    if (!success) {
+      res.status(400).json({ error: 'Captcha verification failed' });
+      return;
+    }
 
     // Validate required fields
     if (!email || !password || !firstName || !lastName) {
@@ -167,13 +182,11 @@ export const deleteUser = async (req: Request, res: Response): Promise<void> => 
     }
 
     res.status(200).json({
-      message: "User successfully deleted", 
-      userDeleted: `${deleted}`
+      message: 'User successfully deleted',
+      userDeleted: `${deleted}`,
     });
   } catch (error) {
     console.error('Error deleting user:', error);
     res.status(500).json({ error: 'Failed to delete user' });
   }
 };
-
-

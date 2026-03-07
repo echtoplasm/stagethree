@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { X, LogIn } from "lucide-react";
 import { createUser } from "../../../api/users";
+import { Turnstile } from '@marsidev/react-turnstile'
 
 interface SignUpProps {
   onClose: () => void;
@@ -13,16 +14,19 @@ export function SignUp({ onClose, onSuccess }: SignUpProps) {
   const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-
+  const [turnstileToken, setTurnstileToken] = useState('');
+  
+  console.log(import.meta.env.VITE_TURNSTILE_SITE_KEY)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await createUser({ email, password, firstName, lastName });
+      await createUser({ email, password, firstName, lastName, turnstileToken });
       onSuccess();
     } catch (err) {
       console.error(err);
     }
   };
+
 
   return (
     <>
@@ -86,7 +90,17 @@ export function SignUp({ onClose, onSuccess }: SignUpProps) {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
+           <Turnstile
+              siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY}
+              onSuccess={(token) => setTurnstileToken(token)}
+              className="turnstile"
+              options={{
+                theme: 'dark',
+                size: 'normal'
+              }}
+            />
           </div>
+
           <div className="modal-footer">
             <button type="button" className="btn btn-ghost" onClick={onClose}>
               Cancel

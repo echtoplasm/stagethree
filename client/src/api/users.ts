@@ -16,6 +16,7 @@ export const createUser = async (userData: {
   password: string;
   firstName: string;
   lastName: string;
+  turnstileToken?: string;
 }): Promise<User> => {
   return apiFetch<User>('/api/users/register', {
     method: 'POST',

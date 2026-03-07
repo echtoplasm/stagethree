@@ -28,5 +28,5 @@ export interface User {
   lastName: string;
   isActive?: boolean;
   roleId: number;
-  createdAt?: string; 
+  createdAt?: string;
 }
