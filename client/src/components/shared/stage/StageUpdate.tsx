@@ -21,7 +21,8 @@ export function StageUpdate({ stage, onClose }: StageUpdateProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    updateStage(stageForm.id, stageForm);
+    await updateStage(stageForm.id, stageForm);
+    onClose();
   }
 
 

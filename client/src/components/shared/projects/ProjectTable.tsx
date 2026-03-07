@@ -19,6 +19,7 @@ export function ProjectTable() {
   const { user } = useAuth();
   if (!user) return null;
 
+
   useEffect(() => {
     const loadProjects = async () => {
       try {
@@ -34,6 +35,12 @@ export function ProjectTable() {
 
     loadProjects();
   }, [user]);
+
+  const updateProjectState = async () => {
+    const data = await fetchAllProjectByUserId(user.id);
+    setProjects(data);
+  }
+
 
   if (loading) {
     return (
@@ -125,6 +132,7 @@ export function ProjectTable() {
         <ProjectUpdate
           project={selectedProject}
           onClose={() => {
+            updateProjectState();
             setUpdate(false);
             setSelectedProject(null);
           }}
@@ -135,8 +143,7 @@ export function ProjectTable() {
         <ProjectDeletePortal
           projectId={selectedProject.id}
           onSuccess={async () => {
-            const data = await fetchAllProjectByUserId(user.id);
-            setProjects(data);
+            updateProjectState();
             setProjectDelete(false);
           }}
           onClose={() => {
@@ -150,8 +157,7 @@ export function ProjectTable() {
       {projectCreate && (
         <ProjectCreate
           onSuccess={async () => {
-            const data = await fetchAllProjectByUserId(user.id);
-            setProjects(data);
+            updateProjectState();
             setProjectCreate(false);
           }}
           onClose={() => setProjectCreate(false)}

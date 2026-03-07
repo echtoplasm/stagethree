@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Box, Trash, Plus } from 'lucide-react';
 import type { Stage } from '../../../api/stages';
-import { fetchAllStages, getStagesByUserId } from '../../../api/stages';
+import { getStagesByUserId } from '../../../api/stages';
 import { StageUpdate } from './StageUpdate';
 import { StageDelete } from './StageDelete';
 import { StageCreate } from './StageCreate';
@@ -32,6 +32,11 @@ export function StageTable() {
 
     loadStages();
   }, [user]);
+
+  const resetStageState = async () => {
+    const data = await getStagesByUserId(user.id);
+    setStages(data);
+  }
 
   if (loading) {
     return (
@@ -125,6 +130,7 @@ export function StageTable() {
         <StageUpdate
           stage={selectedStage}
           onClose={() => {
+            resetStageState();
             setUpdate(false);
             setSelectedStage(null);
           }}
@@ -134,7 +140,8 @@ export function StageTable() {
       {deleteStage && selectedStage && (
         <StageDelete
           stage={selectedStage}
-          onClose={() => {
+          onClose={async () => {
+            resetStageState();
             setStageDelete(false);
             setSelectedStage(null);
           }}
@@ -144,7 +151,11 @@ export function StageTable() {
 
       {stageCreate && (
         <StageCreate
-          onSuccess={() => fetchAllStages()}
+          onSuccess={async () => {
+            resetStageState();
+            setStageCreate(false)
+
+          }}
           onClose={() => setStageCreate(false)}
         />
       )}

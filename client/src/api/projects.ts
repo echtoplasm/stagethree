@@ -14,23 +14,23 @@ export interface Project {
 }
 
 /**
- * @returns 
+ * @returns
  */
 export const fetchAllProjects = async (): Promise<Project[]> => {
   return apiFetch('/api/projects');
 };
 
 /**
- * @param id - 
- * @returns 
+ * @param id -
+ * @returns
  */
 export const fetchAllProjectByUserId = async (id: number): Promise<Project[]> => {
   return apiFetch(`/api/projects/user/${id}`);
 };
 
 /**
- * @param project - 
- * @returns 
+ * @param project -
+ * @returns
  */
 export const createNewProject = async (project: Omit<Project, 'id'>): Promise<Project> => {
   return apiFetch('/api/projects', {
@@ -40,8 +40,8 @@ export const createNewProject = async (project: Omit<Project, 'id'>): Promise<Pr
 };
 
 /**
- * @param projectId - 
- * @returns 
+ * @param projectId -
+ * @returns
  */
 export const deleteProject = async (projectId: number): Promise<Project> => {
   return apiFetch(`/api/projects/${projectId}`, {
@@ -50,8 +50,8 @@ export const deleteProject = async (projectId: number): Promise<Project> => {
 };
 
 /**
- * @param user - 
- * @returns 
+ * @param user -
+ * @returns
  */
 export const createDefaultProjectAndPlot = async (user: User): Promise<FullStagePlotResponse> => {
   const defaultProject: Omit<Project, 'id' | 'createdAt'> = {
@@ -79,9 +79,9 @@ export const createDefaultProjectAndPlot = async (user: User): Promise<FullStage
 };
 
 /**
- * @param projectId - 
- * @param projectData - 
- * @returns 
+ * @param projectId -
+ * @param projectData -
+ * @returns
  */
 export const updateProject = async (
   projectId: number,
@@ -89,6 +89,6 @@ export const updateProject = async (
 ): Promise<Project> => {
   return apiFetch(`/api/projects/${projectId}`, {
     method: 'PATCH',
-    body: { projectData },
+    body: projectData,
   });
 };

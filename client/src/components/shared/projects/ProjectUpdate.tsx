@@ -21,7 +21,7 @@ export function ProjectUpdate({ project, onClose }: ProjectUpdateProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    updateProject(projectForm.id, projectForm);
+    await updateProject(projectForm.id, projectForm);
     onClose();
   }
 

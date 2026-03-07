@@ -14,6 +14,7 @@ export function StageDelete({ stage, onClose }: StageDeleteProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     deleteStage(stage.id);
+    onClose();
   }
 
 
@@ -36,8 +37,8 @@ export function StageDelete({ stage, onClose }: StageDeleteProps) {
         <div className="modal-footer">
           <button className="btn btn-ghost" onClick={onClose}>No, Cancel</button>
           <button className="btn btn-danger btn-sm" onClick={handleSubmit}>Yes, Delete</button>
-        </div>
       </div>
+    </div >
     </>
   );
 }
