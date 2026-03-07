@@ -1,28 +1,44 @@
 import { useState, useEffect } from 'react';
 import { fetchAllProjectByUserId, type Project } from "../../api/projects";
 import { fetchAllStagePlots, fetchFullStagePlotConfig, fetchStagePlotsByProjectId, type StagePlot } from "../../api/stagePlots";
-import { Folder, Plus, PlusCircle, Trash } from 'lucide-react';
+import { Folder, Plus, PlusCircle, Trash, Pencil } from 'lucide-react';
 import { ProjectCreate } from './ProjectCreate'
 import { ProjectDelete } from './ProjectDelete';
+import { ProjectUpdate } from '../shared/projects/ProjectUpdate.tsx';
 import { useAuth } from '../../contexts/AuthContext';
 import { PlotCreate } from '../plotting/PlotCreate';
 import { PlotDelete } from '../plotting/PlotDelete.tsx'
 import { useStageContext } from '../../contexts/StageContext.tsx';
 import { type FullStagePlotResponse } from '../../api/stagePlots';
 
+interface ProjectCardProps {
+  onStageSelect: () => void;
+}
 
-export function ProjectCard() {
+
+
+export function ProjectCard({onStageSelect} : ProjectCardProps) {
   const [projects, setProjects] = useState<Project[]>([]);
   const [plots, setPlots] = useState<StagePlot[]>([]);
   const [selectedProjectId, setSelectedProjectId] = useState<number | null>(null);
   const [projectCreate, setProjectCreate] = useState(false);
   const [projectDelete, setProjectDelete] = useState(false);
   const [projectIdToDelete, setProjectIdToDelete] = useState<number | null>(null);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [createPlot, setCreatePlot] = useState(false);
   const [plotToDelete, setPlotToDelete] = useState<number | null>(null);
   const [plotDelete, setPlotDelete] = useState(false);
+  const [projectUpdate, setProjectUpdate] = useState(false);
+
   const { user } = useAuth();
-  const { setActiveProject, setElementPlacements, projectsVersion, setInputChannels, setStage, setStagePlot } = useStageContext();
+  const {
+    setActiveProject,
+    setElementPlacements,
+    projectsVersion,
+    setInputChannels,
+    setStage,
+    setStagePlot
+  } = useStageContext();
 
 
   /** 
@@ -51,6 +67,9 @@ export function ProjectCard() {
   }
 
 
+
+
+
   //============= FUNCTIONS FOR PASSING DATA TO THREEJS SCENE ===============//
   /**
    * helper function for handleStagePlotClick that sets stage context provider
@@ -64,6 +83,7 @@ export function ProjectCard() {
     setStage(data.stage)
     setActiveProject(data.project);
     setStagePlot(data.stagePlot);
+
   }
 
   /**
@@ -73,6 +93,7 @@ export function ProjectCard() {
   const handleStagePlotClick = async (plotId: number) => {
     const fullPlotInfo = await fetchFullStagePlotConfig(plotId);
     onPlotSelect(fullPlotInfo);
+    onStageSelect();
     console.log(fullPlotInfo);
   }
   //==================================================================//
@@ -101,7 +122,15 @@ export function ProjectCard() {
 
 
 
-  /** 
+
+  const projectStateUpdate = async () => {
+    await fetchProjects();
+    setProjectUpdate(false);
+  }
+
+
+
+  /**; 
    * Use effect to fetch projects on page load
    * dependency array: user - ensures no projects are rendered
    * if user is not truthy
@@ -139,6 +168,17 @@ export function ProjectCard() {
                 >
                   <Trash size={18} />
                 </button>
+                <button className='btn btn-update btn-small'
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedProject(project);
+                    setProjectUpdate(true);
+                    console.log('selected project', selectedProject);
+                    console.log('project update', projectUpdate);
+                  }}>
+
+                  <Pencil size={18} />
+                </button>
               </div>
               {selectedProjectId === project.id && (
                 <div className="stage-plots-dropdown">
@@ -162,7 +202,8 @@ export function ProjectCard() {
                   >
                     <PlusCircle size={14} />
                     Create new plot
-                  </button>                </div>
+                  </button>
+                </div>
               )}
             </div>
           ))}
@@ -208,6 +249,16 @@ export function ProjectCard() {
               }}
             />
           )}
+
+          {projectUpdate && selectedProject && (
+            <ProjectUpdate
+              project={selectedProject}
+              onClose={() => {
+                projectStateUpdate();
+              }}
+            />
+          )}
+
         </>
       )}
     </div>

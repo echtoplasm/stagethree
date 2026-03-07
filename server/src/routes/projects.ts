@@ -15,7 +15,7 @@ projectRouter.get('/', authenticateToken, getAllProjects);
 projectRouter.get('/:id', authenticateToken, getProjectById);
 projectRouter.post('/', authenticateToken, createProject);
 projectRouter.delete('/:id', authenticateToken, deleteProject);
-projectRouter.put('/:id', authenticateToken, updateProject);
+projectRouter.patch('/:id', authenticateToken, updateProject);
 projectRouter.get('/user/:id', authenticateToken, getProjectByUserId);
 projectRouter.post('/default', authenticateToken, createDefaultPlotAndProject);
 

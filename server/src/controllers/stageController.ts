@@ -63,9 +63,9 @@ export const getStageById = async (req: Request, res: Response): Promise<void> =
 
 export const createStage = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { name, width, depth, height } = req.body;
+    const { name, width, depth, height, createdBy } = req.body;
 
-    const data = { name, width, depth, height };
+    const data = { name, width, depth, height, createdBy };
 
     const dbdata = apiStageToDb(data);
 

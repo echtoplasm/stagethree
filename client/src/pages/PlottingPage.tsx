@@ -17,8 +17,10 @@ export function PlottingPage() {
   const [activeTab, setActiveTab] = useState<string | null>(null);
   const [elementTypes, setElementTypes] = useState<ElementType[]>([]);
   const [inputChannelModal, setInputChannelModal] = useState(false);
-  const { setIsSandbox } = useStageContext();
+  const { setIsSandbox} = useStageContext();
   const { isAuthenticated } = useAuth();
+
+  
 
 
   const { width } = useWindowSize();
@@ -39,7 +41,6 @@ export function PlottingPage() {
   }, [isAuthenticated]);
 
 
-
   return (
     <div className="plotting-layout">
       {width <= 768 && <ScreenSizeModal />}
@@ -56,7 +57,7 @@ export function PlottingPage() {
             <CircleX />
           </button>
         </div>
-        <ProjectCard />
+        <ProjectCard onStageSelect={() => setSidebarOpen(false)} />
       </aside>
 
       {/* Sidebar Toggle */}

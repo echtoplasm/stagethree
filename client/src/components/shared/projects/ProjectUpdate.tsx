@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { X } from 'lucide-react';
 import { type Project, updateProject } from '../../../api/projects';
-
+import { createPortal } from 'react-dom';
 interface ProjectUpdateProps {
   project: Project;
   onClose: () => void;
@@ -26,7 +26,7 @@ export function ProjectUpdate({ project, onClose }: ProjectUpdateProps) {
   }
 
 
-  return (
+  return createPortal(
     <>
       {/* Backdrop */}
       <div
@@ -79,6 +79,6 @@ export function ProjectUpdate({ project, onClose }: ProjectUpdateProps) {
           </div>
         </form>
       </div>
-    </>
+    </>, document.body
   );
 }

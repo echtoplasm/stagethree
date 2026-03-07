@@ -859,6 +859,18 @@ nav ul button:hover::after {
   border-color: var(--border-strong);
 }
 
+.btn-update {
+  background: transparent;
+  color: var(--accent);
+}
+
+.btn-update:hover {
+  background: var(--accent-muted);
+  color: var(--accent-hover);
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+
 /* ==========================================
    TURNSTILE
    ========================================== */
