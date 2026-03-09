@@ -290,3 +290,23 @@ export const getFullStagePlotInfo = async (req: Request, res: Response): Promise
     console.error(err);
   }
 };
+
+export const getAllStagePlotsByUserId = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+
+    const stagePlots = await db('stage_plot_stp as stp')
+      .join('project_prj as prj', 'prj.id_prj', 'stp.id_prj_stp')
+      .select('stp.*')
+      .where('prj.id_usr_prj', id);
+
+    const stagePlotsApi = stagePlots.map(dbStagePlotToApi);
+
+    res.status(200).json(stagePlotsApi);
+  } catch (err) {
+    console.log('error in getAllStagePlotsByUserId', err);
+    res.status(500).json({
+      error: err,
+    });
+  }
+};
