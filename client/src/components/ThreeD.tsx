@@ -56,6 +56,7 @@ export function StageScene() {
   }
 
 
+
   useEffect(() => {
     if (!mountRef.current) return;
 
