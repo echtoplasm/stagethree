@@ -779,15 +779,18 @@ nav ul button:hover::after {
   background: var(--bg-elevated);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  box-shadow: var(--shadow-sm);
   padding: 1.5rem;
   transition: all var(--transition);
 }
 
 .card:hover {
-  border-color: var(--border-strong);
-  box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
+  border-color: var(--border-accent);
+  box-shadow: var(--shadow-sm), var(--shadow-glow);
+  background: linear-gradient(
+    135deg,
+    var(--bg-elevated) 0%,
+    var(--bg-overlay) 100%
+  );
 }
 
 .card-header {
@@ -868,7 +871,18 @@ nav ul button:hover::after {
   background: var(--accent-muted);
   color: var(--accent-hover);
   border-color: var(--accent);
-  transform: translateY(-1px);
+}
+
+
+.btn-expand {
+  background: transparent;
+  color: var(--text-primary);
+}
+
+.btn-expand:hover {
+  background: var(--accent-muted);
+  color: var(--accent-hover);
+  border-color: var(--accent);
 }
 
 /* ==========================================
@@ -878,8 +892,6 @@ nav ul button:hover::after {
 .turnstile {
   margin-top: 25px;
 }
-
-
 
 /* ==========================================
    FORMS
@@ -1394,7 +1406,7 @@ nav ul button:hover::after {
 }
 
 .drawer.open {
-  height: 300px;
+  height: 25%;
 }
 
 .drawer-content {
@@ -1523,6 +1535,19 @@ nav ul button:hover::after {
 }
 .mb-8 {
   margin-bottom: 2rem;
+}
+
+.mt-2 {
+  margin-top: 0.5rem;
+}
+.mt-4 {
+  margin-top: 1rem;
+}
+.mt-6 {
+  margin-top: 1.5rem;
+}
+.mt-8 {
+  margin-top: 2rem;
 }
 
 .list {

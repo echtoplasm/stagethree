@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Box, Trash, Plus } from 'lucide-react';
+import { Box, Trash, Plus, ExpandIcon, Pencil } from 'lucide-react';
 import { type Project } from '../../../api/projects';
 import { fetchAllProjectByUserId } from '../../../api/projects';
 import { ProjectUpdate } from './ProjectUpdate';
 import { ProjectDeletePortal } from './ProjectDelete';
 import { ProjectCreate } from './ProjectCreate';
 import { useAuth } from '../../../contexts/AuthContext';
+import { PlotTable } from '../../plotting/PlotTable'
 
 export function ProjectTable() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -15,6 +16,7 @@ export function ProjectTable() {
   const [deleteProject, setProjectDelete] = useState(false);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
   const [projectCreate, setProjectCreate] = useState(false);
+  const [renderPlots, setRenderPlots] = useState(false);
 
   const { user } = useAuth();
   if (!user) return null;
@@ -88,7 +90,7 @@ export function ProjectTable() {
                   <th>Name</th>
                   <th>Description</th>
                   <th>Created At</th>
-                  <th colSpan={2}>Actions</th>
+                  <th colSpan={3}>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -112,13 +114,26 @@ export function ProjectTable() {
                     </td>
                     <td>
                       <button
-                        className='btn btn-sm'
+                        className='btn btn-update btn-sm'
                         onClick={() => {
                           setSelectedProject(project)
                           setUpdate(true)
                         }}
                       >
+                        <Pencil size={16} />
                         Update
+                      </button>
+                    </td>
+                    <td>
+                      <button
+                        className='btn btn-expand btn-sm'
+                        onClick={() => {
+                          setSelectedProject(project)
+                          setRenderPlots(true)
+                        }}
+                      >
+                        <ExpandIcon size={18} />
+                        Plots
                       </button>
                     </td>
                   </tr>
@@ -128,41 +143,58 @@ export function ProjectTable() {
           </div>
         )}
       </div>
-      {update && selectedProject && (
-        <ProjectUpdate
-          project={selectedProject}
-          onClose={() => {
-            updateProjectState();
-            setUpdate(false);
-            setSelectedProject(null);
-          }}
-        />
-      )}
+      {
+        update && selectedProject && (
+          <ProjectUpdate
+            project={selectedProject}
+            onClose={() => {
+              updateProjectState();
+              setUpdate(false);
+              setSelectedProject(null);
+            }}
+          />
+        )
+      }
 
-      {deleteProject && selectedProject && (
-        <ProjectDeletePortal
-          projectId={selectedProject.id}
-          onSuccess={async () => {
-            updateProjectState();
-            setProjectDelete(false);
-          }}
-          onClose={() => {
-            setProjectDelete(false);
-            setSelectedProject(null);
-          }}
+      {
+        deleteProject && selectedProject && (
+          <ProjectDeletePortal
+            projectId={selectedProject.id}
+            onSuccess={async () => {
+              updateProjectState();
+              setProjectDelete(false);
+            }}
+            onClose={() => {
+              setProjectDelete(false);
+              setSelectedProject(null);
+            }}
 
-        />
-      )}
+          />
+        )
+      }
 
-      {projectCreate && (
-        <ProjectCreate
-          onSuccess={async () => {
-            updateProjectState();
-            setProjectCreate(false);
-          }}
-          onClose={() => setProjectCreate(false)}
-        />
-      )}
+      {
+        projectCreate && (
+          <ProjectCreate
+            onSuccess={async () => {
+              updateProjectState();
+              setProjectCreate(false);
+            }}
+            onClose={() => setProjectCreate(false)}
+          />
+        )
+      }
+
+      {
+        renderPlots && selectedProject && (
+          <PlotTable
+            selectedProject={selectedProject}
+            onClose={() => setRenderPlots(false)}
+          />
+        )
+      }
+
+
     </div >
   );
 }

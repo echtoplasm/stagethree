@@ -19,10 +19,7 @@ export function PlottingPage() {
   const [inputChannelModal, setInputChannelModal] = useState(false);
   const { setIsSandbox} = useStageContext();
   const { isAuthenticated } = useAuth();
-
-  
-
-
+ 
   const { width } = useWindowSize();
  
   const fetchElementTypes = async () => {
@@ -118,6 +115,7 @@ export function PlottingPage() {
             <button className='btn-sm btn-ghost mb-4' onClick={() => setInputChannelModal(true)}>
               <Maximize2 />
             </button>
+            <span className='text-secondary'> expand to edit</span>
             <h3>Input Channels</h3>
             <InputChannelDrawer />
           </div>

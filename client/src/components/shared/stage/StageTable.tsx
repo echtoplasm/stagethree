@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Box, Trash, Plus } from 'lucide-react';
+import { Box, Trash, Plus, Pencil } from 'lucide-react';
 import type { Stage } from '../../../api/stages';
 import { getStagesByUserId } from '../../../api/stages';
 import { StageUpdate } from './StageUpdate';
@@ -110,12 +110,13 @@ export function StageTable() {
                     </td>
                     <td>
                       <button
-                        className='btn btn-sm'
+                        className='btn btn-update btn-sm'
                         onClick={() => {
                           setSelectedStage(stage)
                           setUpdate(true)
                         }}
                       >
+                        <Pencil size={16} />
                         Update
                       </button>
                     </td>

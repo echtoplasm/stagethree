@@ -2,7 +2,7 @@ import { apiFetch } from '../utils/api';
 import { type ElementPlacement } from './elementPlacement';
 import { type InputChannel } from './inputChannel';
 import type { Project } from './projects';
-import {type Stage} from './stages'
+import { type Stage } from './stages';
 
 export interface StagePlot {
   id: number;
@@ -28,7 +28,7 @@ export const fetchStagePlotsByProjectId = async (projectId: number): Promise<Sta
   return apiFetch(`/api/stageplots/projects/${projectId}`);
 };
 
-export const fetchFullStagePlotConfig = async (plotId: number) : Promise<FullStagePlotResponse> => {
+export const fetchFullStagePlotConfig = async (plotId: number): Promise<FullStagePlotResponse> => {
   return apiFetch(`/api/stageplots/full/${plotId}`);
 };
 
@@ -44,5 +44,18 @@ export const createStagePlot = async (
 export const deleteStagePlot = async (plotId: number): Promise<void> => {
   return apiFetch(`/api/stageplots/${plotId}`, {
     method: 'DELETE',
+  });
+};
+
+export const fetchStagePlotsByUserId = async (userId: number): Promise<StagePlot[]> => {
+  return apiFetch(`/api/stageplots/user/${userId}`, {
+    method: 'GET',
+  });
+};
+
+export const updatePlot = async (plotId: number, data: Partial<StagePlot>): Promise<StagePlot> => {
+  return apiFetch(`/api/stageplots/${plotId}`, {
+    method: 'PUT',
+    body: JSON.stringify(data),
   });
 };
