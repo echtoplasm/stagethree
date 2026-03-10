@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { X, LogIn } from "lucide-react";
-import { createUser } from "../../../api/users";
 import { Turnstile } from '@marsidev/react-turnstile'
-
+import { createUser } from '../../../api/users'
+import { loginUser } from "../../../api/auth";
+import { type User } from "../../../types/api";
 interface SignUpProps {
   onClose: () => void;
-  onSuccess: () => void;
+  onSuccess: (user: User) => void;
 }
 
 /**NEED TO IMPLEMENT CAPTCHA**/
@@ -17,11 +18,11 @@ export function SignUp({ onClose, onSuccess }: SignUpProps) {
   const [turnstileToken, setTurnstileToken] = useState('');
   const [error, setError] = useState('');
 
+
   const SPECIAL_CHARS = ['!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '_', '+', '=', '[', ']', '{', '}', '|', ';', ':', ',', '.', '?'];
 
   const hasSpecialChar = (password: string) => SPECIAL_CHARS.some(char => password.includes(char));
 
-  console.log(import.meta.env.VITE_TURNSTILE_SITE_KEY)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -29,9 +30,10 @@ export function SignUp({ onClose, onSuccess }: SignUpProps) {
         setError('password must contain more than 8 characters, and contain at least one special character');
       } else {
         await createUser({ email, password, firstName, lastName, turnstileToken });
-        onSuccess();
+        const res = await loginUser(email, password);
+        onSuccess(res.user);
       }
-    } catch (err) {
+   } catch (err) {
       console.error(err);
     }
   };
@@ -115,6 +117,7 @@ export function SignUp({ onClose, onSuccess }: SignUpProps) {
             </button>
             <button type="submit" className="btn btn-primary">
               <LogIn size={18} />
+￼
               Sign Up
             </button>
           </div>

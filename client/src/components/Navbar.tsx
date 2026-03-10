@@ -112,7 +112,7 @@ export function Navbar({ onThemeToggle, theme }: NavbarProps) {
         />
       )}
       {showSignUp && (
-        <SignUp onClose={() => setShowSignUp(false)} onSuccess={() => setShowSignUp(false)} />
+        <SignUp onClose={() => setShowSignUp(false)} onSuccess={(user) => { evaluateUser(user); setShowSignUp(false) }} />
       )}
     </>
   );
