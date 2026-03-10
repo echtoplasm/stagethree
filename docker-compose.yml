@@ -18,6 +18,9 @@ services:
     environment:
       DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@postgres:5432/stagethree
       NODE_ENV: production
+      JWT_SECRET: ${JWT_SECRET}
+      R2_PUBLIC_URL: ${R2_PUBLIC_URL}
+      TURNSTILE_SECRET: ${TURNSTILE_SECRET}
     restart: unless-stopped
 
   frontend:
