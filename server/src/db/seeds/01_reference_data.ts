@@ -1,13 +1,9 @@
 import { Knex } from 'knex';
 import dotenv from 'dotenv';
 import path from 'path';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 
-dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
+dotenv.config({ path: path.resolve(process.cwd(), '.env') });
 const r2 = process.env.R2_PUBLIC_URL;
 export async function seed(knex: Knex): Promise<void> {
   // ============================================
