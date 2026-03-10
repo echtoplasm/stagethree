@@ -117,7 +117,6 @@ export function SignUp({ onClose, onSuccess }: SignUpProps) {
             </button>
             <button type="submit" className="btn btn-primary">
               <LogIn size={18} />
-￼
               Sign Up
             </button>
           </div>
