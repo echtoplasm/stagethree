@@ -4,14 +4,19 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { useStageContext } from '../contexts/StageContext';
 import { type ElementPlacement, updateElementPlacement } from '../api/elementPlacement';
 import { useAuth } from '../contexts/AuthContext';
+import { GLTFLoader } from 'three/examples/jsm/Addons.js';
 
 interface StageObject {
   id: string;
   placementId: number;
   name: string;
   position: THREE.Vector3;
-  mesh: THREE.Mesh;
+  mesh: THREE.Mesh | THREE.Group;
+  modelPath?: string;
 }
+
+const modelCache = new Map<string, THREE.Group>();
+const loader = new GLTFLoader();
 
 export function StageScene() {
   const mountRef = useRef<HTMLDivElement>(null);
@@ -28,6 +33,50 @@ export function StageScene() {
   const { elementPlacements, stage, activeProject } = useStageContext();
   const { isAuthenticated } = useAuth();
   const isSandbox = !isAuthenticated;
+
+
+
+  const loadModel = (modelPath: string): Promise<THREE.Group> => {
+    if (modelCache.has(modelPath)) {
+      return Promise.resolve(modelCache.get(modelPath)!.clone());
+    }
+
+    return new Promise((resolve) => {
+      loader.load(modelPath, (gltf) => {
+        modelCache.set(modelPath, gltf.scene)
+        resolve(gltf.scene.clone());
+      })
+    })
+  }
+
+  const addInstrument = async (placement: ElementPlacement) => {
+    if (!sceneRef.current) return;
+
+    let object: THREE.Mesh | THREE.Group;
+
+    if (placement.filePathImg) {
+      object = await loadModel(placement.filePathImg);
+      object.position.set(placement.positionX, placement.positionY, placement.positionZ);
+    } else {
+      const geometry = new THREE.BoxGeometry(placement.scaleX, placement.scaleZ, placement.scaleY);
+      const material = new THREE.MeshStandardMaterial({ color: 0x4a90d9 });
+      object = new THREE.Mesh(geometry, material);
+      object.position.set(placement.positionX, placement.positionY + 0.5, placement.positionZ);
+    }
+
+    object.rotation.set(placement.rotationX, placement.rotationY, placement.rotationZ);
+    object.name = `instrument-${placement.id}`;
+    sceneRef.current.add(object);
+
+    setObjects(prev => [...prev, {
+      id: `scene-element-id-${placement.id}`,
+      placementId: placement.id!,
+      name: placement.name,
+      position: object.position.clone(),
+      mesh: object,
+      modelPath: placement.filePathImg,
+    }]);
+  };
 
   /** 
    * Mouse up event helper function for setting position state 
@@ -140,14 +189,17 @@ export function StageScene() {
       raycasterRef.current.setFromCamera(mouseRef.current, camera);
 
       const intersects = raycasterRef.current.intersectObjects(
-        scene.children.filter(child => child.name.startsWith('instrument-'))
+        scene.children.filter(child => child.name.startsWith('instrument-')),
+        true
       );
 
       if (intersects.length > 0) {
-        selectedObjectRef.current = intersects[0].object as THREE.Mesh;
-        controlsRef.current!.enabled = false; // Disable orbit controls while dragging
-
-        // Calculate offset from object center to click point
+        let target: THREE.Object3D = intersects[0].object;
+        while (target.parent && !target.name.startsWith('instrument-')) {
+          target = target.parent;
+        }
+        selectedObjectRef.current = target as THREE.Mesh;
+        controlsRef.current!.enabled = false;
         const intersectPoint = intersects[0].point;
         offsetRef.current.copy(intersectPoint).sub(selectedObjectRef.current.position);
       }
@@ -205,30 +257,7 @@ export function StageScene() {
     });
   }, [elementPlacements]);
 
-  const addInstrument = (placement: ElementPlacement) => {
-    if (!sceneRef.current) return;
 
-    const geometry = new THREE.BoxGeometry(
-      placement.scaleX,
-      placement.scaleZ,
-      placement.scaleY
-    );
-    const material = new THREE.MeshStandardMaterial({ color: 0x4a90d9 });
-    const mesh = new THREE.Mesh(geometry, material);
-
-    mesh.position.set(placement.positionX, placement.positionY + 0.5, placement.positionZ);
-    mesh.rotation.set(placement.rotationX, placement.rotationY, placement.rotationZ);
-    mesh.name = `instrument-${placement.id}`;
-    sceneRef.current.add(mesh);
-    console.log('adding to objects state', placement.name)
-    setObjects(prev => [...prev, {
-      id: `scene-element-id-${placement.id}`,
-      placementId: placement.id!,
-      name: placement.name,
-      position: mesh.position.clone(),
-      mesh
-    }]);
-  };
 
   return (
     <div style={{ width: '100%', height: '100%' }}>

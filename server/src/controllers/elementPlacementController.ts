@@ -49,7 +49,7 @@ export const getElpById = async (req: Request, res: Response): Promise<void> => 
   }
 };
 
-/**
+/**elementPla
  * POST /api/elp
  * Create element placement
  */

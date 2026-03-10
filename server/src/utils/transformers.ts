@@ -569,6 +569,7 @@ export interface ElementTypeDB {
   name_elt: string;
   description_elt: string | null;
   id_img_elt: number | null;
+  file_path_img: string;
   default_color_elt: string | null;
 }
 
@@ -577,6 +578,7 @@ export interface ElementTypeAPI {
   name: string;
   description?: string;
   imageId?: number;
+  filePathImg?: string;
   defaultColor?: string;
 }
 
@@ -591,6 +593,7 @@ export const dbElementTypeToApi = (dbElementType: ElementTypeDB): ElementTypeAPI
   name: dbElementType.name_elt,
   description: dbElementType.description_elt || undefined,
   imageId: dbElementType.id_img_elt || undefined,
+  filePathImg: dbElementType.file_path_img || undefined,
   defaultColor: dbElementType.default_color_elt || undefined,
 });
 
@@ -606,6 +609,7 @@ export const apiElementTypeToDb = (
   ...(apiElementType.name && { name_elt: apiElementType.name }),
   ...(apiElementType.description && { description_elt: apiElementType.description }),
   ...(apiElementType.imageId && { id_img_elt: apiElementType.imageId }),
+  ...(apiElementType.filePathImg && { file_path_img: apiElementType.filePathImg}),
   ...(apiElementType.defaultColor && { default_color_elt: apiElementType.defaultColor }),
 });
 

@@ -12,6 +12,7 @@ import {
   StageDB,
   StageAPI,
   ProjectAPI,
+  ImageDB,
 } from '../utils/transformers';
 
 const plotTable = 'stage_plot_stp';
@@ -205,6 +206,7 @@ export const getFullStagePlotInfo = async (req: Request, res: Response): Promise
       id_elt_elp: number;
       id_stp_elp: number;
       name_elt: string;
+      file_path_img: string;
       position_x_elp: string;
       position_y_elp: string;
       position_z_elp: string;
@@ -222,6 +224,7 @@ export const getFullStagePlotInfo = async (req: Request, res: Response): Promise
       elementTypeId: number;
       stagePlotId: number;
       name: string;
+      filePathImg: string;
       positionX: number;
       positionY: number;
       positionZ: number;
@@ -239,6 +242,7 @@ export const getFullStagePlotInfo = async (req: Request, res: Response): Promise
       elementTypeId: dbel.id_elt_elp,
       stagePlotId: dbel.id_stp_elp,
       name: dbel.name_elt,
+      filePathImg: dbel.file_path_img,
       positionX: parseFloat(dbel.position_x_elp),
       positionY: parseFloat(dbel.position_y_elp),
       positionZ: parseFloat(dbel.position_z_elp),
@@ -266,8 +270,9 @@ export const getFullStagePlotInfo = async (req: Request, res: Response): Promise
     //endpoint specific elements to api
     const elements: dbElement[] = await db('element_placement_elp')
       .leftJoin('element_type_elt', 'element_placement_elp.id_elt_elp', 'element_type_elt.id_elt')
+      .leftJoin('image_img', 'element_type_elt.id_img_elt', 'image_img.id_img')
       .where('element_placement_elp.id_stp_elp', id)
-      .select('element_placement_elp.*', 'element_type_elt.name_elt');
+      .select('element_placement_elp.*', 'element_type_elt.name_elt', 'image_img.file_path_img');
 
     const apiElements = elements.map(dbElementToApi);
 

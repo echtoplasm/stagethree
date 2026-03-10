@@ -6,6 +6,7 @@ export interface ElementPlacement {
   elementTypeId: number;
   stagePlotId?: number;
   name: string;
+  filePathImg?: string;
   positionX: number;
   positionY: number;
   positionZ: number;
@@ -17,7 +18,9 @@ export interface ElementPlacement {
   scaleZ: number;
 }
 
-export const createNewElementPlacement = async (data: ElementPlacement): Promise<ElementPlacement> => {
+export const createNewElementPlacement = async (
+  data: ElementPlacement
+): Promise<ElementPlacement> => {
   const newPlacement = await apiFetch('/api/elp', {
     method: 'POST',
     body: data,
@@ -26,14 +29,17 @@ export const createNewElementPlacement = async (data: ElementPlacement): Promise
   return newPlacement.newPlacement;
 };
 
-export const updateElementPlacement = async (id: number, data: Partial<ElementPlacement>): Promise<ElementPlacement> => {
+export const updateElementPlacement = async (
+  id: number,
+  data: Partial<ElementPlacement>
+): Promise<ElementPlacement> => {
   const updatedElp = await apiFetch(`/api/elp/${id}`, {
     method: 'PATCH',
     body: {
       positionX: data.positionX,
       positionY: data.positionY,
       positionZ: data.positionZ,
-    }
-  })
+    },
+  });
   return updatedElp;
-}
+};

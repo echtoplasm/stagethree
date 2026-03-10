@@ -48,6 +48,7 @@ export const ElementsDrawer = () => {
         elementTypeId: elt.id,
         stagePlotId: stagePlot?.id,
         name: elt.name,
+        filePathImg: elt.filePathImg,
         positionX: 0,
         positionY: 0,
         positionZ: 0,
@@ -78,6 +79,7 @@ export const ElementsDrawer = () => {
         elementTypeId: elt.id,
         stagePlotId: currentStagePlot?.id,
         name: elt.name,
+        filePathImg: elt.filePathImg,
         positionX: 0,
         positionY: 0,
         positionZ: 0,
@@ -91,9 +93,10 @@ export const ElementsDrawer = () => {
 
       const newPlacement = await createNewElementPlacement(data);
 
-
-      setElementPlacements([...elementPlacements, { ...newPlacement, name: elt.name }]);
-
+      
+      setElementPlacements([...elementPlacements, { ...newPlacement, name: elt.name, filePathImg: elt.filePathImg }]);
+      
+      console.log('elementPlacements::::', elementPlacements);
 
 
       if (!data.stagePlotId) return null;

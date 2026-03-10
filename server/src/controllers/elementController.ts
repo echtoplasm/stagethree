@@ -1,12 +1,8 @@
 import { Request, Response } from 'express';
 import db from '../db/knex';
-import {
-  dbElementTypeToApi as elementToApi,
-  ElementTypeDB
-} from '../utils/transformers';
+import { dbElementTypeToApi as elementToApi, ElementTypeDB } from '../utils/transformers';
 
 const elemTable = 'element_type_elt';
-
 
 /**
  * GET /api/elements/
@@ -15,7 +11,9 @@ const elemTable = 'element_type_elt';
 export const getAllElements = async (req: Request, res: Response): Promise<void> => {
   console.log('getAllElements called');
   try {
-    const rows: ElementTypeDB[] = await db(elemTable).select('*');
+    const rows = await db('element_type_elt')
+      .leftJoin('image_img', 'element_type_elt.id_img_elt', 'image_img.id_img')
+      .select('element_type_elt.*', 'image_img.file_path_img');
     console.log('element result', rows);
 
     const elements = rows.map(elementToApi);
@@ -33,9 +31,7 @@ export const getAllElements = async (req: Request, res: Response): Promise<void>
 export const getElementById = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
-    const equipment: ElementTypeDB | undefined = await db(elemTable)
-      .where({ id_elt: id })
-      .first();
+    const equipment: ElementTypeDB | undefined = await db(elemTable).where({ id_elt: id }).first();
 
     if (!equipment) {
       res.status(404).json({ error: 'equipment not found' });
@@ -56,5 +52,3 @@ export const getElementById = async (req: Request, res: Response): Promise<void>
  * a user needs
  *
  ===================================*/
-
-

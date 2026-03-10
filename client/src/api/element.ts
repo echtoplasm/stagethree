@@ -5,6 +5,7 @@ export interface ElementType {
   name: string;
   description?: string;
   imageId?: number;
+  filePathImg?: string;
   defaultColor?: string;
 }
 
