@@ -1575,6 +1575,10 @@ nav ul button:hover::after {
   background: var(--bg-elevated);
 }
 
+.text-center {
+  text-align: center;
+}
+
 /* ==========================================
    ANIMATIONS
    ========================================== */

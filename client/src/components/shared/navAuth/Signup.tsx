@@ -15,18 +15,26 @@ export function SignUp({ onClose, onSuccess }: SignUpProps) {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [turnstileToken, setTurnstileToken] = useState('');
-  
+  const [error, setError] = useState('');
+
+  const SPECIAL_CHARS = ['!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '_', '+', '=', '[', ']', '{', '}', '|', ';', ':', ',', '.', '?'];
+
+  const hasSpecialChar = (password: string) => SPECIAL_CHARS.some(char => password.includes(char));
+
   console.log(import.meta.env.VITE_TURNSTILE_SITE_KEY)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await createUser({ email, password, firstName, lastName, turnstileToken });
-      onSuccess();
+      if (password.length < 8 || !hasSpecialChar(password)) {
+        setError('password must contain more than 8 characters, and contain at least one special character');
+      } else {
+        await createUser({ email, password, firstName, lastName, turnstileToken });
+        onSuccess();
+      }
     } catch (err) {
       console.error(err);
     }
   };
-
 
   return (
     <>
@@ -90,7 +98,7 @@ export function SignUp({ onClose, onSuccess }: SignUpProps) {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-           <Turnstile
+            <Turnstile
               siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY}
               onSuccess={(token) => setTurnstileToken(token)}
               className="turnstile"
@@ -111,6 +119,11 @@ export function SignUp({ onClose, onSuccess }: SignUpProps) {
             </button>
           </div>
         </form>
+        {error && (
+          <div className="text-center">
+            <span className="alert-error">{error}</span>
+          </div>
+        )}
       </div>
     </>
   );
