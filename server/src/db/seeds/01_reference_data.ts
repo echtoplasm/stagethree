@@ -2,9 +2,10 @@ import { Knex } from 'knex';
 import dotenv from 'dotenv';
 import path from 'path';
 
-
 dotenv.config({ path: path.resolve(process.cwd(), '.env') });
-const r2 = process.env.R2_PUBLIC_URL;
+
+const r2 = 'https://pub-69909cf75f764e599dc141922a0696eb.r2.dev';
+
 export async function seed(knex: Knex): Promise<void> {
   // ============================================
   // CLEAR ALL DATA
@@ -104,7 +105,6 @@ export async function seed(knex: Knex): Promise<void> {
     { name_sta: 'Wyoming', abbreviation_sta: 'WY' },
   ]);
 
-
   // ============================================
   // IMAGE CATEGORIES
   // ============================================
@@ -114,7 +114,6 @@ export async function seed(knex: Knex): Promise<void> {
     { name_imc: 'Venue' },
     { name_imc: 'Other' },
   ]);
- 
 
   // ============================================
   // IMAGE FILES
@@ -139,7 +138,7 @@ export async function seed(knex: Knex): Promise<void> {
       name_img: 'Mic Stand',
       file_path_img: `${r2}/micstand.glb`,
       file_type_img: 'glb',
-      category_img: 2, 
+      category_img: 2,
       id_imc_img: 2,
     },
     {
@@ -150,7 +149,6 @@ export async function seed(knex: Knex): Promise<void> {
       id_imc_img: 1,
     },
   ]);
-
 
   // ============================================
   // EQUIPMENT TYPES
@@ -236,7 +234,7 @@ export async function seed(knex: Knex): Promise<void> {
       default_color_elt: '#3C3C3C',
       id_img_elt: 4,
     },
-  ]); 
+  ]);
 
   // ============================================
   // STAGE TEMPLATES
