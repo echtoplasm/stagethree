@@ -36,18 +36,27 @@ export function StageScene() {
 
 
 
-  const loadModel = (modelPath: string): Promise<THREE.Group> => {
-    if (modelCache.has(modelPath)) {
-      return Promise.resolve(modelCache.get(modelPath)!.clone());
-    }
-
-    return new Promise((resolve) => {
-      loader.load(modelPath, (gltf) => {
-        modelCache.set(modelPath, gltf.scene)
-        resolve(gltf.scene.clone());
-      })
-    })
+const loadModel = (modelPath: string): Promise<THREE.Group> => {
+  if (modelCache.has(modelPath)) {
+    return Promise.resolve(modelCache.get(modelPath)!.clone());
   }
+
+  return new Promise((resolve) => {
+    loader.load(modelPath, (gltf) => {
+      const model = gltf.scene;
+      
+      // Normalize to a target size
+      const box = new THREE.Box3().setFromObject(model);
+      const size = box.getSize(new THREE.Vector3());
+      const maxDim = Math.max(size.x, size.y, size.z);
+      const targetSize = 2; // adjust this
+      model.scale.setScalar(targetSize / maxDim);
+
+      modelCache.set(modelPath, model);
+      resolve(model.clone());
+    });
+  });
+};
 
   const addInstrument = async (placement: ElementPlacement) => {
     if (!sceneRef.current) return;
