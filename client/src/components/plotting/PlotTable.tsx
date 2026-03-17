@@ -31,7 +31,7 @@ export function PlotTable({ selectedProject, onClose }: PlotTableProps) {
     const loadPlots = async () => {
       try {
         setLoading(true);
-        const data = await fetchStagePlotsByProjectId(user.id);
+        const data = await fetchStagePlotsByProjectId(selectedProject.id);
         setPlots(data);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to fetch plots for user');
@@ -41,10 +41,10 @@ export function PlotTable({ selectedProject, onClose }: PlotTableProps) {
     };
 
     loadPlots();
-  }, [user]);
+  }, [selectedProject.id]);
 
   const updatePlotState = async () => {
-    const data = await fetchStagePlotsByProjectId(user.id);
+    const data = await fetchStagePlotsByProjectId(selectedProject.id);
     setPlots(data);
   }
 
