@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useStageContext } from "../../contexts/StageContext";
 import { updateInputChannel } from "../../api/inputChannel";
-import { X, Plus, Minus } from "lucide-react";
+import { X, Plus, Minus, ArrowUpNarrowWide, ArrowDownWideNarrow } from "lucide-react";
 import { createPortal } from "react-dom";
 import { type InputChannel } from "../../api/inputChannel";
 
@@ -13,6 +13,7 @@ export const InputChannelModal = ({ onClose }: InputChannelModalProps) => {
   const { inputChannels, setInputChannels } = useStageContext();
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editData, setEditData] = useState<Partial<InputChannel>>({});
+  const [sortAsc, setSortAsc] = useState(true);
 
   const handleEdit = (ic: typeof inputChannels[0]) => {
     setEditingId(ic.id);
@@ -39,24 +40,34 @@ export const InputChannelModal = ({ onClose }: InputChannelModalProps) => {
     setInputChannels(inputChannels.map((c: InputChannel) => c.id === ic.id ? updated : c));
   };
 
+  const sortedChannels = [...inputChannels].sort((a, b) => sortAsc ? a.channelNumber - b.channelNumber : b.channelNumber - a.channelNumber)
+
   return createPortal(
     <>
       <div className="modal-backdrop" onClick={onClose} />
-      <div className="modal modal-scrollable">
+      <div className="modal modal-scrollable modal-wide">
         <div className="modal-header">
           <div>
             <h2>Input Channels</h2>
             <p className="text-secondary">Adjust your input channels</p>
           </div>
-          <button className="btn btn-ghost btn-sm" onClick={onClose}>
-            <X size={18} />
-          </button>
+          <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+            <button
+              className="btn btn-ghost btn-sm"
+              onClick={() => setSortAsc(prev => !prev)}>
+              {sortAsc ? <ArrowUpNarrowWide size={16} /> : <ArrowDownWideNarrow size={16} />}
+              Ch. {sortAsc ? 'Asc' : 'Desc'}
+            </button>
+            <button className="btn btn-ghost btn-sm" onClick={onClose}>
+              <X size={18} />
+            </button>
+          </div>
         </div>
         <div className="input-channel-drawer">
           <table className="table">
             <thead>
               <tr>
-                <th>#</th>
+                <th>Channel Number</th>
                 <th>Instrument</th>
                 <th>Mic / DI</th>
                 <th>Notes</th>
@@ -64,35 +75,58 @@ export const InputChannelModal = ({ onClose }: InputChannelModalProps) => {
               </tr>
             </thead>
             <tbody>
-              {inputChannels.map((ic) => (
+              {sortedChannels.map((ic) => (
                 <tr key={ic.id} onClick={() => handleEdit(ic)}>
                   <td>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                      <button className="btn btn-ghost btn-sm" onClick={(e) => { e.stopPropagation(); decrementChannel(ic); }}>
+                      <button
+                        className="btn btn-ghost btn-sm"
+                        onClick={(e) => { e.stopPropagation(); decrementChannel(ic); }}
+                      >
                         <Minus size={12} />
                       </button>
-                      {editingId === ic.id
-                        ? <input type="number" value={editData.channelNumber} onChange={e => handleChange('channelNumber', +e.target.value)} style={{ width: '48px' }} />
+                      {editingId === ic.id ?
+                        <input
+                          type="number"
+                          className="form-input"
+                          value={editData.channelNumber}
+                          onChange={e => handleChange('channelNumber', +e.target.value)}
+                          style={{ width: '48px', MozAppearance: 'textfield' }} />
+
                         : ic.channelNumber
                       }
-                      <button className="btn btn-ghost btn-sm" onClick={(e) => { e.stopPropagation(); incrementChannel(ic); }}>
+                      <button
+                        className="btn btn-ghost btn-sm"
+                        onClick={(e) => { e.stopPropagation(); incrementChannel(ic); }}>
                         <Plus size={12} />
                       </button>
                     </div>
                   </td>
                   <td>
                     {editingId === ic.id
-                      ? <input value={editData.instrumentName} onChange={e => handleChange('instrumentName', e.target.value)} />
+                      ? <input
+                        className="form-input"
+                        value={editData.instrumentName}
+                        onChange={e => handleChange('instrumentName', e.target.value)}
+                      />
                       : ic.instrumentName}
                   </td>
                   <td>
                     {editingId === ic.id
-                      ? <input value={editData.micType ?? ''} onChange={e => handleChange('micType', e.target.value)} />
+                      ? <input
+                        className="form-input"
+                        value={editData.micType ?? ''}
+                        onChange={e => handleChange('micType', e.target.value)}
+                      />
                       : ic.micType}
                   </td>
                   <td>
                     {editingId === ic.id
-                      ? <input value={editData.notes ?? ''} onChange={e => handleChange('notes', e.target.value)} />
+                      ? <input
+                        className="form-input"
+                        value={editData.notes ?? ''}
+                        onChange={e => handleChange('notes', e.target.value)}
+                      />
                       : ic.notes ?? '—'}
                   </td>
                   <td>

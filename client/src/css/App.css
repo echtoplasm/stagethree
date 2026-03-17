@@ -744,6 +744,11 @@ nav ul button:hover::after {
   animation: modalIn 0.2s ease;
 }
 
+.modal-wide {
+  max-width: 90vw;
+  width: 90vw;
+}
+
 .modal-header {
   display: flex;
   align-items: flex-start;
@@ -793,11 +798,7 @@ nav ul button:hover::after {
 .card:hover {
   border-color: var(--border-accent);
   box-shadow: var(--shadow-sm), var(--shadow-glow);
-  background: linear-gradient(
-    135deg,
-    var(--bg-elevated) 0%,
-    var(--bg-overlay) 100%
-  );
+  background: linear-gradient(135deg, var(--bg-elevated) 0%, var(--bg-overlay) 100%);
 }
 
 .card-header {
@@ -880,7 +881,6 @@ nav ul button:hover::after {
   border-color: var(--accent);
 }
 
-
 .btn-expand {
   background: transparent;
   color: var(--text-primary);
@@ -907,15 +907,6 @@ nav ul button:hover::after {
   margin-bottom: 1.5rem;
 }
 
-.form-label {
-  display: block;
-  font-size: 0.8125rem;
-  font-weight: 500;
-  margin-bottom: 0.5rem;
-  color: var(--text-secondary);
-  letter-spacing: 0.02em;
-}
-
 .form-input,
 .form-select,
 .form-textarea {
@@ -926,15 +917,29 @@ nav ul button:hover::after {
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-sm);
   transition: all var(--transition);
-  background: var(--bg-surface);
+
+  background: var(--bg-base);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3); 
 }
 
 .form-input:focus,
 .form-select:focus,
 .form-textarea:focus {
   outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-muted);
+  border-color: var(--border-accent);
+  box-shadow: 
+    inset 0 1px 3px rgba(0, 0, 0, 0.3),
+    0 0 0 3px var(--accent-muted);
+}
+
+.form-label {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .form-input::placeholder,
@@ -945,6 +950,12 @@ nav ul button:hover::after {
 .form-textarea {
   resize: vertical;
   min-height: 100px;
+}
+
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 /* ==========================================
@@ -1475,7 +1486,7 @@ nav ul button:hover::after {
   border-color: var(--border-accent);
   color: var(--accent);
 }
-
+css
 /* ==========================================
    TYPOGRAPHY HELPERS
    ========================================== */
