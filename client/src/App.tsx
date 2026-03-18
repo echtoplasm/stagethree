@@ -10,6 +10,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import { StageProvider } from './contexts/StageContext';
 import { useAuth } from './contexts/AuthContext';
 import { UserPortal } from './pages/UserPortal';
+import { Documentation } from './components/documentation/Documentation';
 
 
 function AppRoutes() {
@@ -26,6 +27,7 @@ function AppRoutes() {
       <Route path="/stages" element={<StageRead />} />
       <Route path="/app" element={<PlottingPage />} />
       <Route path="/portal" element={<UserPortal />} />
+      <Route path="/docs" element={<Documentation />} />
       <Route
         path="/admin"
         element={(user?.roleId ?? 0) >= 2 ? <AdminPage /> : <Navigate to="/" />}

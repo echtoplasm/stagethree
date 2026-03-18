@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { UserPlus, UserRoundCog, Boxes, LogIn, UserMinus, ShieldUser, Sun, Moon, Rotate3d } from 'lucide-react';
+import { UserPlus, UserRoundCog, Boxes, LogIn, UserMinus, ShieldUser, Sun, Moon, Rotate3d, Paperclip } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { logoutUser } from '../api/auth';
 import { useAuth } from '../contexts/AuthContext';
@@ -56,6 +56,12 @@ export function Navbar({ onThemeToggle, theme }: NavbarProps) {
               <Link to="/app">
                 <Rotate3d size={18} />
                 App
+              </Link>
+            </li>
+            <li>
+              <Link to="/docs">
+                <Paperclip size={18} />
+                Docs
               </Link>
             </li>
 
