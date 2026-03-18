@@ -23,6 +23,30 @@ export const getAllStages = async (req: Request, res: Response): Promise<void> =
     res.status(500).json({ message: 'Unable to fetch all stages' });
   }
 };
+
+/**
+ * GET /api/stages/public
+ *  get all publically available stages
+ *
+ */
+
+export const getAllPublicStages = async (req: Request, res: Response): Promise<void> => {
+  console.log('getAllPublicStages called');
+  try {
+    const rows: StageDB[] = await db(stageTable).select('*').where({
+      is_public_stg: 't',
+    });
+
+    const publicStages = rows.map(dbStageToApi);
+    res.json(publicStages);
+  } catch (err) {
+    console.error('error in getAllPublicStages', err);
+    res.status(500).json({
+      message: 'unable to get all publically availabe stages',
+    });
+  }
+};
+
 /**
  * GET /api/stages/:id
  * Get stage by ID

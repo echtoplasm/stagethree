@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Box, Ruler, Layers } from 'lucide-react';
-import { fetchAllStages, type Stage } from '../../../api/stages';
+import { fetchAllPublicStages, type Stage } from '../../../api/stages';
 
 export function StageRead() {
   const [stages, setStages] = useState<Stage[]>([]);
@@ -12,7 +12,8 @@ export function StageRead() {
     const loadStages = async () => {
       try {
         setLoading(true);
-        const data = await fetchAllStages();
+        const data = await fetchAllPublicStages();
+        console.log(data);
         setStages(data);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to fetch stages');
@@ -93,6 +94,7 @@ export function StageRead() {
                 <div className="stage-card-footer">
                   <span className="text-muted">ID: {stage.id}</span>
                   <button className="btn btn-ghost btn-sm">View Details</button>
+                  <span className='text-muted'>Public?: </span>  
                 </div>
               </article>
             ))}

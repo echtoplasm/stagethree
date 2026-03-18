@@ -8,14 +8,15 @@ interface StageCreateProps {
 }
 
 export function StageCreate({ onClose, onSuccess }: StageCreateProps) {
-  const {user} = useAuth();
-  if(!user) return null
+  const { user } = useAuth();
+  if (!user) return null
   const [stageForm, setStageForm] = useState<Omit<Stage, 'id'>>({
     name: '',
     width: 0,
     depth: 0,
     height: 0,
-    createdBy: user.id, 
+    createdBy: user.id,
+    isPublic: false,
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -58,6 +59,31 @@ export function StageCreate({ onClose, onSuccess }: StageCreateProps) {
             <label className="form-label" htmlFor="height">Height (ft)</label>
             <input id="height" className="form-input" type="number" value={stageForm.height}
               onChange={(e) => setStageForm({ ...stageForm, height: Number(e.target.value) })} />
+          </div>
+          <div className="form-group">
+            <label className="form-label">Visibility</label>
+            <div className="flex gap-4">
+              <label className="flex gap-2 font-medium" style={{ cursor: 'pointer' }}>
+                <input
+                  type="radio"
+                  name="isPublic"
+                  value="true"
+                  checked={stageForm.isPublic === true}
+                  onChange={() => setStageForm({ ...stageForm, isPublic: true })}
+                />
+                Public
+              </label>
+              <label className="flex gap-2 font-medium" style={{ cursor: 'pointer' }}>
+                <input
+                  type="radio"
+                  name="isPublic"
+                  value="false"
+                  checked={stageForm.isPublic === false}
+                  onChange={() => setStageForm({ ...stageForm, isPublic: false })}
+                />
+                Private
+              </label>
+            </div>
           </div>
 
           <div className="modal-footer">

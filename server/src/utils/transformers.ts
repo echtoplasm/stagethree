@@ -190,6 +190,7 @@ export interface StageDB {
   width_stg: number;
   depth_stg: number;
   height_stg: number | null;
+  is_public_stg: boolean;
   created_by_stg: string;
   created_at_stg: Date | string;
 }
@@ -201,6 +202,7 @@ export interface StageAPI {
   width: number;
   depth: number;
   height?: number;
+  isPublic: boolean;
   createdBy: string;
   createdAt: string;
 }
@@ -218,6 +220,7 @@ export const dbStageToApi = (dbStage: StageDB): StageAPI => ({
   width: dbStage.width_stg,
   depth: dbStage.depth_stg,
   height: dbStage.height_stg || undefined,
+  isPublic: dbStage.is_public_stg,
   createdBy: dbStage.created_by_stg,
   createdAt:
     typeof dbStage.created_at_stg === 'string'
@@ -236,8 +239,9 @@ export const apiStageToDb = (apiStage: Partial<StageAPI>): Partial<StageDB> => (
   ...(apiStage.name && { name_stg: apiStage.name }),
   ...(apiStage.width && { width_stg: apiStage.width }),
   ...(apiStage.depth && { depth_stg: apiStage.depth }),
-  ...(apiStage.createdBy && { created_by_stg: apiStage.createdBy}),
+  ...(apiStage.createdBy && { created_by_stg: apiStage.createdBy }),
   ...(apiStage.height && { height_stg: apiStage.height }),
+  ...(apiStage.isPublic && { is_public_stg: apiStage.isPublic }),
 });
 
 // ============================================
@@ -609,7 +613,7 @@ export const apiElementTypeToDb = (
   ...(apiElementType.name && { name_elt: apiElementType.name }),
   ...(apiElementType.description && { description_elt: apiElementType.description }),
   ...(apiElementType.imageId && { id_img_elt: apiElementType.imageId }),
-  ...(apiElementType.filePathImg && { file_path_img: apiElementType.filePathImg}),
+  ...(apiElementType.filePathImg && { file_path_img: apiElementType.filePathImg }),
   ...(apiElementType.defaultColor && { default_color_elt: apiElementType.defaultColor }),
 });
 
@@ -655,7 +659,6 @@ export interface ElementPlacementAPI {
  * @returns The same ElementPlacement object converted to JavaScript naming conventions
  */
 
-
 export const dbElementPlacementToApi = (
   dbElementPlacement: ElementPlacementDB
 ): ElementPlacementAPI => ({
@@ -676,7 +679,6 @@ export const dbElementPlacementToApi = (
       ? dbElementPlacement.created_at_elp
       : dbElementPlacement.created_at_elp.toISOString(),
 });
-
 
 /**
  * Converts ElementPlacement data from API/JavaScript naming conventions to database naming conventions
@@ -707,9 +709,15 @@ export const apiElementPlacementToDb = (
   ...(apiElementPlacement.rotationZ !== undefined && {
     rotation_z_elp: apiElementPlacement.rotationZ.toString(),
   }),
-  ...(apiElementPlacement.scaleX !== undefined && { scale_x_elp: apiElementPlacement.scaleX.toString() }),
-  ...(apiElementPlacement.scaleY !== undefined && { scale_y_elp: apiElementPlacement.scaleY.toString() }),
-  ...(apiElementPlacement.scaleZ !== undefined && { scale_z_elp: apiElementPlacement.scaleZ.toString() }),
+  ...(apiElementPlacement.scaleX !== undefined && {
+    scale_x_elp: apiElementPlacement.scaleX.toString(),
+  }),
+  ...(apiElementPlacement.scaleY !== undefined && {
+    scale_y_elp: apiElementPlacement.scaleY.toString(),
+  }),
+  ...(apiElementPlacement.scaleZ !== undefined && {
+    scale_z_elp: apiElementPlacement.scaleZ.toString(),
+  }),
 });
 
 // ============================================
