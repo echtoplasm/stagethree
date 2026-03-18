@@ -784,6 +784,11 @@ nav ul button:hover::after {
   overflow-y: auto;
   flex: 1;
 }
+
+.modal-scrollable .modal-body {
+  overflow-y: auto;
+  flex: 1;
+}
 /* ==========================================
    CARDS
    ========================================== */

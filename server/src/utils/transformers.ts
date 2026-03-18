@@ -191,6 +191,7 @@ export interface StageDB {
   depth_stg: number;
   height_stg: number | null;
   is_public_stg: boolean;
+  deleted_at_stg: string | null;
   created_by_stg: string;
   created_at_stg: Date | string;
 }
@@ -203,6 +204,7 @@ export interface StageAPI {
   depth: number;
   height?: number;
   isPublic: boolean;
+  deletedAt: string | null;
   createdBy: string;
   createdAt: string;
 }
@@ -221,6 +223,7 @@ export const dbStageToApi = (dbStage: StageDB): StageAPI => ({
   depth: dbStage.depth_stg,
   height: dbStage.height_stg || undefined,
   isPublic: dbStage.is_public_stg,
+  deletedAt: dbStage.deleted_at_stg || null,
   createdBy: dbStage.created_by_stg,
   createdAt:
     typeof dbStage.created_at_stg === 'string'
@@ -242,6 +245,7 @@ export const apiStageToDb = (apiStage: Partial<StageAPI>): Partial<StageDB> => (
   ...(apiStage.createdBy && { created_by_stg: apiStage.createdBy }),
   ...(apiStage.height && { height_stg: apiStage.height }),
   ...(apiStage.isPublic && { is_public_stg: apiStage.isPublic }),
+  ...(apiStage.deletedAt && { deleted_at_stg: apiStage.deletedAt }),
 });
 
 // ============================================

@@ -13,7 +13,7 @@ export function StageDelete({ stage, onClose }: StageDeleteProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    deleteStage(stage.id);
+    await deleteStage(stage.id);
     onClose();
   }
 

@@ -13,7 +13,7 @@ export const getAllStages = async (req: Request, res: Response): Promise<void> =
   console.log('getAllStages called');
   try {
     // Check which database we're connected to
-    const rows: StageDB[] = await db(stageTable).select('*');
+    const rows: StageDB[] = await db(stageTable).select('*').whereNull('deleted_at_stg');
     console.log('stage result', rows);
 
     const stages = rows.map(dbStageToApi);
@@ -33,9 +33,12 @@ export const getAllStages = async (req: Request, res: Response): Promise<void> =
 export const getAllPublicStages = async (req: Request, res: Response): Promise<void> => {
   console.log('getAllPublicStages called');
   try {
-    const rows: StageDB[] = await db(stageTable).select('*').where({
-      is_public_stg: 't',
-    });
+    const rows: StageDB[] = await db(stageTable)
+      .select('*')
+      .where({
+        is_public_stg: 't',
+      })
+      .whereNull('deleted_at_stg');
 
     const publicStages = rows.map(dbStageToApi);
     res.json(publicStages);
@@ -61,6 +64,7 @@ export const getStageById = async (req: Request, res: Response): Promise<void> =
       .where({
         id_stg: id,
       })
+      .whereNull('deleted_at_stg')
       .first();
 
     if (!exists) {
@@ -114,23 +118,18 @@ export const createStage = async (req: Request, res: Response): Promise<void> =>
 export const deleteStage = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
+    const exists = await db(stageTable).select().where({ id_stg: id }).first();
 
-    const exists = await db(stageTable)
-      .select()
-      .where({
-        id_stg: id,
-      })
-      .first();
     if (!exists) {
-      res.status(500).json({
+      res.status(404).json({
         error: 'Stage with that ID does not exist',
       });
+      return;
     }
+
     const [result]: StageDB[] = await db(stageTable)
-      .delete()
-      .where({
-        id_stg: id,
-      })
+      .where({ id_stg: id })
+      .update({ deleted_at_stg: db.fn.now() })
       .returning('*');
 
     res.json(dbStageToApi(result));
@@ -157,6 +156,7 @@ export const updateStage = async (req: Request, res: Response): Promise<void> =>
         id_stg: id,
       })
       .first();
+
     if (!exists) {
       res.status(500).json({
         error: 'Stage with that ID does not exist',
@@ -198,6 +198,7 @@ export const getAllStagesByCreatedBy = async (req: Request, res: Response): Prom
       .where({
         created_by_stg: userId,
       })
+      .whereNull('deleted_at_stg')
       .returning('*');
 
     const apiResults = results.map(dbStageToApi);
