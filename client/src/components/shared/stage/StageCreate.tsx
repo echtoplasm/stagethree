@@ -2,14 +2,20 @@ import { useState } from 'react';
 import { X } from 'lucide-react';
 import { createStage, type Stage } from '../../../api/stages';
 import { useAuth } from '../../../contexts/AuthContext';
+import { ErrorMessage } from '../../../components/userUI/ErrorMessage';
+
+
 interface StageCreateProps {
   onClose: () => void;
   onSuccess: () => void;
 }
 
 export function StageCreate({ onClose, onSuccess }: StageCreateProps) {
+  //AUTH CHECK
   const { user } = useAuth();
   if (!user) return null
+
+  //STATE MANAGEMENT
   const [stageForm, setStageForm] = useState<Omit<Stage, 'id'>>({
     name: '',
     width: 0,
@@ -19,12 +25,21 @@ export function StageCreate({ onClose, onSuccess }: StageCreateProps) {
     isPublic: false,
   });
 
+  const [error, setError] = useState<string | null>(null);
+
+
+  //submission handler with error state set
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    await createStage(stageForm);
-    onSuccess();
+    try {
+      e.preventDefault();
+      await createStage(stageForm);
+      onSuccess();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Missing One or 2 fields for form submission')
+    }
   };
 
+  //JSX component return
   return (
     <>
       <div className="modal-backdrop" onClick={onClose} />
@@ -38,6 +53,11 @@ export function StageCreate({ onClose, onSuccess }: StageCreateProps) {
             <X size={18} />
           </button>
         </div>
+        
+        {/*error component*/}
+        {error && (
+          <ErrorMessage error={error} />
+        )}
 
         <form onSubmit={handleSubmit} className="modal-body">
           <div className="form-group">

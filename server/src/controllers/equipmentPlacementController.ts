@@ -41,11 +41,13 @@ export const getEqpById = async (req: Request, res: Response): Promise<void> => 
       res.status(404).json({
         error: 'No eqp with that Id',
       });
+      return;
     }
 
     res.json(eqpToApi(placement));
   } catch (error) {
     console.error('Unable to fetch equipment placment', error);
+    res.status(500).json({ message: 'unable to fetch equipment placement' });
   }
 };
 
@@ -59,7 +61,7 @@ export const createEqp = async (req: Request, res: Response): Promise<void> => {
 
     if (!dbData.id_stp_eqp || !dbData.id_eqt_eqp) {
       res.status(400).json({
-        error: 'Missing required fields: stagePlotId and equipmentTypeId',
+        message: 'Missing required fields: stagePlotId and equipmentTypeId',
       });
       return;
     }
@@ -92,7 +94,7 @@ export const updateEqp = async (req: Request, res: Response): Promise<void> => {
     res.json(eqpToApi(updated));
   } catch (error) {
     console.error('Error updating equipment placement:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ message: 'Internal server error' });
   }
 };
 
@@ -116,18 +118,19 @@ export const deleteEqp = async (req: Request, res: Response): Promise<void> => {
       res.status(404).json({
         message: 'There is no equipment placement with that ID',
       });
+      return;
     }
 
     const [results]: EqpDB[] = await db(eqpTable)
       .delete()
       .where({
-        id_stp: id,
+        id_eqp: id,
       })
       .returning('*');
 
-    res.json(eqpToApi(results));
+    res.status(204).send();
   } catch (error) {
     console.error('Error deleting:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ message: 'Internal server error' });
   }
 };

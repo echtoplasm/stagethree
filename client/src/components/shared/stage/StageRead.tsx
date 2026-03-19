@@ -93,8 +93,6 @@ export function StageRead() {
 
                 <div className="stage-card-footer">
                   <span className="text-muted">ID: {stage.id}</span>
-                  <button className="btn btn-ghost btn-sm">View Details</button>
-                  <span className='text-muted'>Public?: </span>  
                 </div>
               </article>
             ))}

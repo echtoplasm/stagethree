@@ -16,7 +16,7 @@ export const getAllUsers = async (req: Request, res: Response): Promise<void> =>
     res.json(users);
   } catch (error) {
     console.error('Error fetching users:', error);
-    res.status(500).json({ error: 'Failed to fetch users' });
+    res.status(500).json({ message: 'Failed to fetch users' });
   }
 };
 
@@ -30,14 +30,14 @@ export const getUserById = async (req: Request, res: Response): Promise<void> =>
     const user: UserDB | undefined = await db('user_usr').where({ id_usr: id }).first();
 
     if (!user) {
-      res.status(404).json({ error: 'User not found' });
+      res.status(404).json({ message: 'User not found' });
       return;
     }
 
     res.json(dbUserToApi(user));
   } catch (error) {
     console.error('Error fetching user:', error);
-    res.status(500).json({ error: 'Failed to fetch user' });
+    res.status(500).json({ message: 'Failed to fetch user' });
   }
 };
 
@@ -60,13 +60,13 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
     const { success } = await verifyRes.json();
 
     if (!success) {
-      res.status(400).json({ error: 'Captcha verification failed' });
+      res.status(400).json({ message: 'Captcha verification failed' });
       return;
     }
 
     // Validate required fields
     if (!email || !password || !firstName || !lastName) {
-      res.status(400).json({ error: 'Email, password, first name, and last name are required' });
+      res.status(400).json({ message: 'Email, password, first name, and last name are required' });
       return;
     }
 
@@ -91,7 +91,7 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
     res.status(201).json(dbUserToApi(result));
   } catch (error) {
     console.error('Error creating user:', error);
-    res.status(500).json({ error: 'Failed to create user' });
+    res.status(500).json({ message: 'Failed to create user' });
   }
 };
 
@@ -107,7 +107,7 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
     // Check if user exists
     const exists = await db('user_usr').where({ id_usr: id }).first();
     if (!exists) {
-      res.status(404).json({ error: 'User not found' });
+      res.status(404).json({ message: 'User not found' });
       return;
     }
 
@@ -116,7 +116,7 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
 
     // Only update if there are fields to update
     if (Object.keys(updates).length === 0) {
-      res.status(400).json({ error: 'No valid fields to update' });
+      res.status(400).json({ message: 'No valid fields to update' });
       return;
     }
 
@@ -128,7 +128,7 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
     res.json(dbUserToApi(result));
   } catch (error) {
     console.error('Error updating user:', error);
-    res.status(500).json({ error: 'Failed to update user' });
+    res.status(500).json({ message: 'Failed to update user' });
   }
 };
 
@@ -143,7 +143,7 @@ export const patchUser = async (req: Request, res: Response): Promise<void> => {
     // Check if user exists
     const exists = await db('user_usr').where({ id_usr: id }).first();
     if (!exists) {
-      res.status(404).json({ error: 'User not found' });
+      res.status(404).json({ message: 'User not found' });
       return;
     }
 
@@ -151,7 +151,7 @@ export const patchUser = async (req: Request, res: Response): Promise<void> => {
     const updates = apiUserToDb(req.body);
 
     if (Object.keys(updates).length === 0) {
-      res.status(400).json({ error: 'No valid fields to update' });
+      res.status(400).json({ message: 'No valid fields to update' });
       return;
     }
 
@@ -163,7 +163,7 @@ export const patchUser = async (req: Request, res: Response): Promise<void> => {
     res.json(dbUserToApi(result));
   } catch (error) {
     console.error('Error patching user:', error);
-    res.status(500).json({ error: 'Failed to update user' });
+    res.status(500).json({ message: 'Failed to update user' });
   }
 };
 

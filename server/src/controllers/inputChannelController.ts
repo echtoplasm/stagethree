@@ -39,13 +39,16 @@ export const getInputChannelById = async (req: Request, res: Response): Promise<
 
     if (!plot) {
       res.status(404).json({
-        error: 'No plot with that Id',
+        message: 'No plot with that Id',
       });
     }
 
     res.json(incToApi(plot));
   } catch (error) {
     console.error('Unable to fetch input channel by id in fetchInputChannelById', error);
+    res.status(500).json({
+      message: 'internal server error',
+    });
   }
 };
 
@@ -64,6 +67,9 @@ export const createInputChannel = async (req: Request, res: Response): Promise<v
     res.json(incToApi(inputChannel));
   } catch (error) {
     console.error('unable to createInputChannel', error);
+    res.status(500).json({
+      message: 'internal server error',
+    });
   }
 };
 
@@ -88,7 +94,7 @@ export const updateInputChannel = async (req: Request, res: Response): Promise<v
   } catch (error) {
     console.error('Unable to updated input channel', error);
     res.status(500).json({
-      error: 'Unable to updated input channel',
+      message: 'Unable to updated input channel',
     });
   }
 };
@@ -123,7 +129,12 @@ export const deleteInputChannel = async (req: Request, res: Response): Promise<v
       .returning('*');
 
     res.json(incToApi(results));
-  } catch (error) {}
+  } catch (error) {
+    console.error('unable to delete input channel');
+    res.status(500).json({
+      message: 'internal server error, unable to delete input channel',
+    });
+  }
 };
 
 /**
@@ -166,7 +177,7 @@ export const partialUpdateInputChannel = async (req: Request, res: Response): Pr
 
     if (!result) {
       res.status(404).json({
-        error: 'input channel not found',
+        message: 'input channel not found',
       });
       return;
     }

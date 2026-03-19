@@ -18,7 +18,7 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
     const user: UserDB | undefined = await db('user_usr').where({ email_usr: email }).first();
 
     if (!user) {
-      res.status(401).json({ error: 'Invalid credentials' });
+      res.status(401).json({ message: 'Invalid credentials' });
       return;
     }
 
@@ -30,7 +30,7 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
     }
 
     if (!isValidPassword) {
-      res.status(401).json({ error: 'Invalid credentials' });
+      res.status(401).json({ message: 'Invalid credentials' });
       return;
     }
 
@@ -64,7 +64,7 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
     });
   } catch (error) {
     console.error('Error during login:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ message: 'Internal server error' });
   }
 };
 

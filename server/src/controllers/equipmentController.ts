@@ -39,14 +39,14 @@ export const getEquipmentById = async (req: Request, res: Response): Promise<voi
       .first();
 
     if (!equipment) {
-      res.status(404).json({ error: 'equipment not found' });
+      res.status(404).json({ message: 'equipment not found' });
       return;
     }
 
     res.json(equipToApi(equipment));
   } catch (error) {
     console.error('Error fetching equipment by id:', error);
-    res.status(500).json({ error: 'Failed to fetch equipment' });
+    res.status(500).json({ message: 'Failed to fetch equipment' });
   }
 };
 

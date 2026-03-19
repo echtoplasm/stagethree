@@ -5,7 +5,7 @@ import { type Stage } from "../../api/stages";
 import { X } from 'lucide-react';
 import { fetchAllStages } from "../../api/stages";
 import { createPortal } from "react-dom";
-
+import { ErrorMessage } from "../userUI/ErrorMessage";
 interface PlotCreateProps {
   onClose: () => void;
   onSuccess: () => void;
@@ -56,7 +56,7 @@ export const PlotCreate = ({ onClose, onSuccess, projectId }: PlotCreateProps) =
         </div>
 
         {error && (
-          <span className="error">{error}</span>
+          <ErrorMessage error={error} />
         )}
 
         <form onSubmit={handleSubmit} className="modal-body">

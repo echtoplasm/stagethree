@@ -4,25 +4,34 @@ import { useAuth } from "../../contexts/AuthContext";
 import { type Project } from "../../api/projects";
 import { X } from 'lucide-react';
 import { createPortal } from 'react-dom';
-
+import { ErrorMessage } from "../userUI/ErrorMessage";
 interface ProjectCreateProps {
   onClose: () => void;
   onSuccess: () => void;
 }
 
 export const ProjectCreate = ({ onClose, onSuccess }: ProjectCreateProps) => {
+  //Auth check
   const { user } = useAuth();
   if (!user) return null;
+
+  //State management 
   const [projectForm, setProjectForm] = useState<Omit<Project, 'id'>>({
     name: '',
     userId: user.id,
     description: '',
   });
 
+  const [error, setError] = useState<string | null>(null);
+
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    await createNewProject(projectForm);
-    onSuccess();
+    try {
+      e.preventDefault();
+      await createNewProject(projectForm);
+      onSuccess();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Missing One or 2 fields for form submission');
+    }
   }
 
   return createPortal(
@@ -38,6 +47,10 @@ export const ProjectCreate = ({ onClose, onSuccess }: ProjectCreateProps) => {
             <X size={18} />
           </button>
         </div>
+
+        {error && (
+          <ErrorMessage error={error} />
+        )}
 
         <form onSubmit={handleSubmit} className="modal-body">
           <div className="form-group">

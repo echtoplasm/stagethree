@@ -93,6 +93,12 @@ export const createStage = async (req: Request, res: Response): Promise<void> =>
   try {
     const { name, width, depth, height, createdBy } = req.body;
 
+    if (!name || !width || !depth || !height || !createdBy) {
+      res.status(400).json({
+        message: 'missing one of required fields',
+      });
+    }
+
     const data = { name, width, depth, height, createdBy };
 
     const dbdata = apiStageToDb(data);
@@ -103,7 +109,7 @@ export const createStage = async (req: Request, res: Response): Promise<void> =>
   } catch (err) {
     console.error('unable to post create stage');
     res.status(500).json({
-      message: 'unable to post create stage',
+      message: 'unable to create stage',
       error: err,
     });
   }

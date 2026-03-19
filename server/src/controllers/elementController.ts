@@ -34,14 +34,14 @@ export const getElementById = async (req: Request, res: Response): Promise<void>
     const equipment: ElementTypeDB | undefined = await db(elemTable).where({ id_elt: id }).first();
 
     if (!equipment) {
-      res.status(404).json({ error: 'equipment not found' });
+      res.status(404).json({ message: 'equipment not found' });
       return;
     }
 
     res.json(elementToApi(equipment));
   } catch (error) {
     console.error('Error fetching element by id:', error);
-    res.status(500).json({ error: 'Failed to fetch element' });
+    res.status(500).json({ message: 'Failed to fetch element' });
   }
 };
 

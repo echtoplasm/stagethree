@@ -25,7 +25,7 @@ export const getAllProjects = async (req: Request, res: Response): Promise<void>
     res.json(projects);
   } catch (error) {
     console.error('Error fetching all projects:', error);
-    res.status(500).json({ error: 'Failed to fetch all projects' });
+    res.status(500).json({ message: 'Failed to fetch all projects' });
   }
 };
 
@@ -51,6 +51,13 @@ export const getProjectById = async (req: Request, res: Response): Promise<void>
  */
 export const createProject = async (req: Request, res: Response): Promise<void> => {
   try {
+    const {userId, name} = req.body
+    if(!userId || !name){
+      res.status(400).json({
+        message: "Fields cannot be empty",
+      })
+      return;
+    }
     const dbData = apiProjectToDb(req.body);
     const [row]: ProjectDB[] = await db(projectTable).insert(dbData).returning('*');
     const project = dbProjectToApi(row);
@@ -80,8 +87,9 @@ export const updateProject = async (req: Request, res: Response): Promise<void> 
 
     if (!exists) {
       res.status(404).json({
-        error: 'user does not exists',
+        message: 'project does not exists',
       });
+      return;
     }
 
     const updates = apiProjectToDb({ name, description });
@@ -99,7 +107,7 @@ export const updateProject = async (req: Request, res: Response): Promise<void> 
     res.json(dbProjectToApi(result));
   } catch (error) {
     console.error('Unable to update project', error);
-    res.status(404).json({ error: 'unable to update project' });
+    res.status(404).json({ message: 'unable to update project' });
   }
 };
 
@@ -122,7 +130,7 @@ export const deleteProject = async (req: Request, res: Response): Promise<void> 
     res.json(dbProjectToApi(result));
   } catch (error) {
     console.error('unable to delete project', error);
-    res.status(404).json({ error: 'unable to delete project' });
+    res.status(404).json({ message: 'unable to delete project' });
   }
 };
 
@@ -133,15 +141,22 @@ export const deleteProject = async (req: Request, res: Response): Promise<void> 
  */
 
 export const getProjectByUserId = async (req: Request, res: Response): Promise<void> => {
-  const { id } = req.params;
+  try {
+    const { id } = req.params;
 
-  const projects: ProjectDB[] = await db(projectTable).select('*').where({
-    id_usr_prj: id,
-  });
+    const projects: ProjectDB[] = await db(projectTable).select('*').where({
+      id_usr_prj: id,
+    });
 
-  const apiProjects = projects.map(dbProjectToApi);
+    const apiProjects = projects.map(dbProjectToApi);
 
-  res.status(200).json(apiProjects);
+    res.status(200).json(apiProjects);
+  } catch (err) {
+    console.error('unable to get projects by user id');
+    res.status(500).json({
+      message: 'internal server error, unable to get projects by user id',
+    });
+  }
 };
 
 /**
