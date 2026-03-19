@@ -66,15 +66,6 @@ export const getAllStagePlotsByProjectId = async (req: Request, res: Response): 
   try {
     const { id } = req.params;
     const plots: StagePlotDB[] = await db(plotTable).select('*').where({ id_prj_stp: id });
-
-    if (plots.length === 0) {
-      res.status(404).json({
-        message: 'no plots associated with that project id',
-        error: 'No plots associated with that project id',
-      });
-      return;
-    }
-
     const apiPlots = plots.map(dbStagePlotToApi);
     res.json(apiPlots);
   } catch (error) {

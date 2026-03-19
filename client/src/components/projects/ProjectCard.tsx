@@ -8,6 +8,7 @@ import { ProjectUpdate } from '../shared/projects/ProjectUpdate.tsx';
 import { useAuth } from '../../contexts/AuthContext';
 import { PlotCreate } from '../plotting/PlotCreate';
 import { PlotDelete } from '../plotting/PlotDelete.tsx'
+import { PlotUpdate } from '../plotting/PlotUpdate.tsx'
 import { useStageContext } from '../../contexts/StageContext.tsx';
 import { type FullStagePlotResponse } from '../../api/stagePlots';
 
@@ -17,7 +18,7 @@ interface ProjectCardProps {
 
 
 
-export function ProjectCard({onStageSelect} : ProjectCardProps) {
+export function ProjectCard({ onStageSelect }: ProjectCardProps) {
   const [projects, setProjects] = useState<Project[]>([]);
   const [plots, setPlots] = useState<StagePlot[]>([]);
   const [selectedProjectId, setSelectedProjectId] = useState<number | null>(null);
@@ -29,6 +30,8 @@ export function ProjectCard({onStageSelect} : ProjectCardProps) {
   const [plotToDelete, setPlotToDelete] = useState<number | null>(null);
   const [plotDelete, setPlotDelete] = useState(false);
   const [projectUpdate, setProjectUpdate] = useState(false);
+  const [plotUpdate, setPlotUpdate] = useState(false);
+  const [selectedPlot, setSelectedPlot] = useState<StagePlot | null>(null);
 
   const { user } = useAuth();
   const {
@@ -95,6 +98,11 @@ export function ProjectCard({onStageSelect} : ProjectCardProps) {
     onPlotSelect(fullPlotInfo);
     onStageSelect();
     console.log(fullPlotInfo);
+  }
+
+  const handlePlotUpdateClick = async (plot: StagePlot) => {
+    setPlotUpdate(true);
+    setSelectedPlot(plot);
   }
   //==================================================================//
 
@@ -191,6 +199,12 @@ export function ProjectCard({onStageSelect} : ProjectCardProps) {
                       }}>
                         <Trash size={14} />
                       </button>
+                      <button className='btn btn-sm btn-update plot-update' onClick={(e) => {
+                        e.stopPropagation();
+                        handlePlotUpdateClick(plot)
+                      }}>
+                        <Pencil size={14} />
+                      </button>
                     </div>
                   ))}
                   <button
@@ -256,6 +270,13 @@ export function ProjectCard({onStageSelect} : ProjectCardProps) {
               onClose={() => {
                 projectStateUpdate();
               }}
+            />
+          )}
+
+          {plotUpdate && selectedPlot && (
+            <PlotUpdate
+              plot={selectedPlot}
+              onClose={() => { setPlotUpdate(false) }}
             />
           )}
 

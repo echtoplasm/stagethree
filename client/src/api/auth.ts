@@ -13,6 +13,7 @@ export const loginUser = async (email: string, password: string): Promise<LoginR
   return apiFetch<LoginResponse>('/api/auth/login', {
     method: 'POST',
     body: requestBody,
+    skipAuthRedirect: true,
   });
 
 };
