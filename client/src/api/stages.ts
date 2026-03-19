@@ -27,11 +27,11 @@ export const fetchAllStages = async (): Promise<Stage[]> => {
  * fetch all publically available stages
  */
 
-export const fetchAllPublicStages = async(): Promise<Stage[]> => {
+export const fetchAllPublicStages = async (): Promise<Stage[]> => {
   return apiFetch('/api/stages/public', {
     method: 'GET',
-  })
-} 
+  });
+};
 
 /**
  * @param stageData -
@@ -74,6 +74,16 @@ export const updateStage = async (
  */
 export const getStagesByUserId = async (userId: number): Promise<Stage[]> => {
   return apiFetch(`/api/stages/user/${userId}`, {
+    method: 'GET',
+  });
+};
+
+/**
+ *
+ */
+
+export const getStagesByVenueId = async (venueId: number): Promise<Stage[]> => {
+  return apiFetch(`/api/stages/venue/${venueId}`, {
     method: 'GET',
   });
 };

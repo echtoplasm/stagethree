@@ -218,3 +218,29 @@ export const getAllStagesByCreatedBy = async (req: Request, res: Response): Prom
     });
   }
 };
+
+/**
+ * get /api/stages/venue/:venueId
+ * get stages by venue id
+ */
+
+export const getStagesByVenueId = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { venueId } = req.params;
+    const results: StageDB[] = await db(stageTable)
+      .select()
+      .where({
+        id_ven_stg: venueId,
+      })
+      .returning('*');
+
+    const apiResults = results.map(dbStageToApi);
+
+    res.json(apiResults);
+  } catch (err) {
+    console.error('unable to fetch stages by venue id', err);
+    res.status(500).json({
+      message: 'unable to fetch stages by venue id',
+    });
+  }
+};

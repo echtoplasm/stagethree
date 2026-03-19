@@ -129,6 +129,7 @@ export function PlotTable({ selectedProject, onClose }: PlotTableProps) {
                         className='btn btn-sm'
                         onClick={() => {
                           setSelectedPlot(plot)
+                          console.log(selectedPlot);
                           setUpdate(true)
                         }}
                       >
@@ -144,6 +145,7 @@ export function PlotTable({ selectedProject, onClose }: PlotTableProps) {
         )}
       </div>
       {update && selectedPlot && (
+
         <PlotUpdate
           plot={selectedPlot}
           onClose={() => {

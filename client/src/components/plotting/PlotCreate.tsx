@@ -3,9 +3,12 @@ import { createStagePlot } from "../../api/stagePlots";
 import { type StagePlot } from "../../api/stagePlots";
 import { type Stage } from "../../api/stages";
 import { X } from 'lucide-react';
-import { fetchAllStages } from "../../api/stages";
+import { getStagesByVenueId } from "../../api/stages";
 import { createPortal } from "react-dom";
 import { ErrorMessage } from "../userUI/ErrorMessage";
+import { fetchAllVenues, type Venue } from "../../api/venues";
+
+
 interface PlotCreateProps {
   onClose: () => void;
   onSuccess: () => void;
@@ -15,6 +18,8 @@ interface PlotCreateProps {
 export const PlotCreate = ({ onClose, onSuccess, projectId }: PlotCreateProps) => {
   const [error, setError] = useState<string | null>(null);
   const [stages, setStages] = useState<Stage[]>([]);
+  const [venues, setVenues] = useState<Venue[]>([]);
+  const [selectedVenueId, setSelectedVenueId] = useState<number | null>(null);
   const [stagePlotForm, setStagePlotForm] = useState<Omit<StagePlot, 'id' | 'createdAt'>>({
     projectId: projectId,
     stageId: 0,
@@ -31,14 +36,26 @@ export const PlotCreate = ({ onClose, onSuccess, projectId }: PlotCreateProps) =
     }
   }
 
+  const fetchVenues = async () => {
+    const venArr = await fetchAllVenues();
+    setVenues(venArr);
+  }
+
   useEffect(() => {
+    fetchVenues();
+  }, []);
+
+
+  useEffect(() => {
+    if (!selectedVenueId) return;
     const fetchStages = async () => {
-      const stageArr = await fetchAllStages();
+      const stageArr = await getStagesByVenueId(selectedVenueId);
       setStages(stageArr);
     }
 
+
     fetchStages();
-  }, [])
+  }, [selectedVenueId])
 
 
   return createPortal(
@@ -60,12 +77,20 @@ export const PlotCreate = ({ onClose, onSuccess, projectId }: PlotCreateProps) =
         )}
 
         <form onSubmit={handleSubmit} className="modal-body">
+          <select onChange={(e) => {
+            setSelectedVenueId(parseInt(e.target.value))
+            setStagePlotForm(prev => ({ ...prev, stageId: 0 }))
+          }}>
+            <option value="">Select a venue</option>
+            {venues.map((v) => (
+              <option key={v.id} value={v.id}>{v.name}</option>
+            ))}
+          </select>
           <select onChange={(e) => setStagePlotForm({
             ...stagePlotForm,
             stageId: e.target.value ? parseInt(e.target.value) : undefined
           })} className="mb-8">
             <option value="" className="text-secondary">Select a stage</option>
-            {/*** TODO add the ability for user to make their own stageplot ***/}
             {stages.map((stage) => (
               <option key={stage.id} value={stage.id} className="text-secondary">
                 {stage.name}

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { X } from 'lucide-react';
 import { type StagePlot, updatePlot } from '../../api/stagePlots';
 import { createPortal } from 'react-dom';
+import { ErrorMessage } from '../userUI/ErrorMessage';
 
 interface PlotUpdateProps {
   plot: StagePlot;
@@ -10,6 +11,7 @@ interface PlotUpdateProps {
 
 
 export function PlotUpdate({ plot, onClose }: PlotUpdateProps) {
+  //state management
   const [plotForm, setPlotForm] = useState<StagePlot>({
     id: plot.id,
     name: plot.name,
@@ -17,11 +19,17 @@ export function PlotUpdate({ plot, onClose }: PlotUpdateProps) {
     createdAt: plot.createdAt,
   });
 
+  const [error, setError] = useState<string | null>(null);
 
+  //submit handler
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    await updatePlot(plotForm.id, plotForm);
-    onClose();
+    try {
+      e.preventDefault();
+      await updatePlot(plotForm.id, plotForm);
+      onClose();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Missing One or 2 fields for form submission')
+    }
   }
 
 
@@ -44,7 +52,9 @@ export function PlotUpdate({ plot, onClose }: PlotUpdateProps) {
             <X size={18} />
           </button>
         </div>
-
+        {error && (
+          <ErrorMessage error={error} />
+        )}
         <form onSubmit={handleSubmit} className="modal-body">
           {/* plot NAME */}
           <div className="form-group">

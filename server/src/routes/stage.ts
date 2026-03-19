@@ -7,6 +7,7 @@ import {
   createStage,
   getAllStagesByCreatedBy,
   getAllPublicStages,
+  getStagesByVenueId,
 } from '../controllers/stageController';
 
 const stageRouter = Router();
@@ -18,5 +19,6 @@ stageRouter.delete('/:id', deleteStage);
 stageRouter.put('/:id', updateStage);
 stageRouter.post('/', createStage);
 stageRouter.get('/user/:userId', getAllStagesByCreatedBy);
+stageRouter.get('/venue/:venueId', getStagesByVenueId);
 
 export default stageRouter;

@@ -235,6 +235,7 @@ const loadModel = (modelPath: string): Promise<THREE.Group> => {
       }
     };
 
+    
 
 
     renderer.domElement.addEventListener('mousedown', handleMouseDown);
