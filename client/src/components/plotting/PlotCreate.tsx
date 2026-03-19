@@ -7,13 +7,14 @@ import { getStagesByVenueId } from "../../api/stages";
 import { createPortal } from "react-dom";
 import { ErrorMessage } from "../userUI/ErrorMessage";
 import { fetchAllVenues, type Venue } from "../../api/venues";
-
+import { useNavigate } from "react-router-dom";
 
 interface PlotCreateProps {
   onClose: () => void;
   onSuccess: () => void;
   projectId: number;
 }
+
 
 export const PlotCreate = ({ onClose, onSuccess, projectId }: PlotCreateProps) => {
   const [error, setError] = useState<string | null>(null);
@@ -25,6 +26,8 @@ export const PlotCreate = ({ onClose, onSuccess, projectId }: PlotCreateProps) =
     stageId: 0,
     name: '',
   });
+
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -64,52 +67,73 @@ export const PlotCreate = ({ onClose, onSuccess, projectId }: PlotCreateProps) =
       <div className="modal">
         <div className="modal-header">
           <div>
-            <h2>Create StagePlot</h2>
-            <p className="text-secondary">Fill out the form below to create a StagePlot</p>
+            <h2>Create Stage Plot</h2>
+            <p className="text-secondary">Fill out the form below to create a stage plot</p>
           </div>
           <button className="btn btn-ghost btn-sm" onClick={onClose}>
             <X size={18} />
           </button>
         </div>
 
-        {error && (
-          <ErrorMessage error={error} />
-        )}
+        {error && <ErrorMessage error={error} />}
 
         <form onSubmit={handleSubmit} className="modal-body">
-          <select onChange={(e) => {
-            setSelectedVenueId(parseInt(e.target.value))
-            setStagePlotForm(prev => ({ ...prev, stageId: 0 }))
-          }}>
-            <option value="">Select a venue</option>
-            {venues.map((v) => (
-              <option key={v.id} value={v.id}>{v.name}</option>
-            ))}
-          </select>
-          <select onChange={(e) => setStagePlotForm({
-            ...stagePlotForm,
-            stageId: e.target.value ? parseInt(e.target.value) : undefined
-          })} className="mb-8">
-            <option value="" className="text-secondary">Select a stage</option>
-            {stages.map((stage) => (
-              <option key={stage.id} value={stage.id} className="text-secondary">
-                {stage.name}
-              </option>
-            ))}
-          </select>
           <div className="form-group">
-            <label className="form-label" htmlFor="plot-name">Stage Plot Name</label>
-            <input id="plot-name" className="form-input" type="text" value={stagePlotForm.name}
-              onChange={(e) => setStagePlotForm({ ...stagePlotForm, name: e.target.value })} />
+            <label className="form-label">Venue</label>
+            <select
+              className="form-input"
+              onChange={(e) => {
+                setSelectedVenueId(parseInt(e.target.value));
+                setStagePlotForm(prev => ({ ...prev, stageId: 0 }));
+              }}
+            >
+              <option value="">Select a venue</option>
+              {venues.map((v) => (
+                <option key={v.id} value={v.id}>{v.name}</option>
+              ))}
+            </select>
           </div>
 
+          <div className="form-group">
+            <label className="form-label">Stage</label>
+            <select
+              className="form-input"
+              disabled={!selectedVenueId}
+              onChange={(e) => setStagePlotForm(prev => ({
+                ...prev,
+                stageId: e.target.value ? parseInt(e.target.value) : 0
+              }))}
+            >
+              <option value="">{selectedVenueId ? 'Select a stage' : 'Select a venue first'}</option>
+              {stages.map((stage) => (
+                <option key={stage.id} value={stage.id}>{stage.name}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="form-group">
+            <label className="form-label" htmlFor="plot-name">Plot Name</label>
+            <input
+              id="plot-name"
+              className="form-input"
+              type="text"
+              value={stagePlotForm.name}
+              onChange={(e) => setStagePlotForm(prev => ({ ...prev, name: e.target.value }))}
+            />
+          </div>
 
           <div className="modal-footer">
+            <p className="text-secondary" style={{ fontSize: '0.8rem', marginTop: '0.5rem' }}>
+              Not seeing your venue or stage?{' '}
+              <button type="button" className="btn-link" onClick={() => { onClose(); navigate('/portal'); }}>
+                Manage venues & stages
+              </button>
+            </p>
             <button type="button" className="btn btn-ghost" onClick={onClose}>Cancel</button>
-            <button type="submit" className="btn btn-primary">Create StagePlot</button>
+            <button type="submit" className="btn btn-primary">Create Stage Plot</button>
           </div>
         </form>
-      </div >
+      </div>
     </>, document.body
-  )
+  );
 }

@@ -897,6 +897,19 @@ nav ul button:hover::after {
   border-color: var(--accent);
 }
 
+.btn-link {
+  background: none;
+  border: none;
+  color: var(--accent);
+  cursor: pointer;
+  padding: 0;
+  font-size: inherit;
+  text-decoration: underline;
+}
+.btn-link:hover {
+  color: var(--accent-hover);
+}
+
 /* ==========================================
    TURNSTILE
    ========================================== */
