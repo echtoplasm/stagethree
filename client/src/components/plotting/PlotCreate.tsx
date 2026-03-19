@@ -13,7 +13,7 @@ interface PlotCreateProps {
 }
 
 export const PlotCreate = ({ onClose, onSuccess, projectId }: PlotCreateProps) => {
-
+  const [error, setError] = useState<string | null>(null);
   const [stages, setStages] = useState<Stage[]>([]);
   const [stagePlotForm, setStagePlotForm] = useState<Omit<StagePlot, 'id' | 'createdAt'>>({
     projectId: projectId,
@@ -23,8 +23,12 @@ export const PlotCreate = ({ onClose, onSuccess, projectId }: PlotCreateProps) =
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await createStagePlot(stagePlotForm);
-    onSuccess();
+    try {
+      await createStagePlot(stagePlotForm);
+      onSuccess();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Missing One or 2 fields for form submission');
+    }
   }
 
   useEffect(() => {
@@ -50,6 +54,10 @@ export const PlotCreate = ({ onClose, onSuccess, projectId }: PlotCreateProps) =
             <X size={18} />
           </button>
         </div>
+
+        {error && (
+          <span className="error">{error}</span>
+        )}
 
         <form onSubmit={handleSubmit} className="modal-body">
           <select onChange={(e) => setStagePlotForm({

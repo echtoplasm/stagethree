@@ -34,7 +34,8 @@ export const apiFetch = async <T = any>(
     throw new Error('Unauthorized');
   }
   if (!response.ok) {
-    throw new Error(`API Error: ${response.status} ${response.statusText}`);
+    const errorBody = await response.json().catch(() => null);
+    throw new Error(errorBody?.message ?? `API Error: ${response.status} ${response.statusText}`);
   }
 
   return response.json() as Promise<T>;

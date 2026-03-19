@@ -84,7 +84,8 @@ export const createStagePlot = async (req: Request, res: Response): Promise<void
     const { projectId, stageId, name } = req.body;
 
     if (!projectId || !stageId || !name) {
-      res.status(404).json({ error: 'Missing one or more required fields' });
+      res.status(400).json({ message: 'Missing one or more required fields' });
+      return;
     }
 
     const plotDbData = apiStagePlotToDb({
