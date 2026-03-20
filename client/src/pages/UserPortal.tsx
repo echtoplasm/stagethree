@@ -20,10 +20,10 @@ export const UserPortal = () => {
           </div>
         </div>
         <div className='mb-8 card'>
-          <StageTable />
+          <ProjectTable />
         </div>
         <div className='mb-8 card'>
-          <ProjectTable />
+          <StageTable />
         </div>
       </div>
     </div>

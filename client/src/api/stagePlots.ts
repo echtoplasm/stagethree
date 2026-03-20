@@ -20,11 +20,15 @@ export interface FullStagePlotResponse {
   project: Project;
 }
 
+export interface StagePlotWithStageName extends StagePlot {
+  stageName: string;
+}
+
 export const fetchAllStagePlots = async (): Promise<StagePlot[]> => {
   return apiFetch('/api/stageplots');
 };
 
-export const fetchStagePlotsByProjectId = async (projectId: number): Promise<StagePlot[]> => {
+export const fetchStagePlotsByProjectId = async (projectId: number): Promise<StagePlotWithStageName[]> => {
   return apiFetch(`/api/stageplots/projects/${projectId}`);
 };
 

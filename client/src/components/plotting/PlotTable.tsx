@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Box, Trash, Plus, Pencil } from 'lucide-react';
-import { type StagePlot } from '../../api/stagePlots';
+import { type StagePlot, type StagePlotWithStageName } from '../../api/stagePlots';
 import { fetchStagePlotsByProjectId } from '../../api/stagePlots';
 import { PlotCreate } from './PlotCreate';
 import { PlotDelete } from './PlotDelete';
@@ -8,6 +8,7 @@ import { PlotUpdate } from './PlotUpdate';
 import { type Project } from '../../api/projects';
 import { useAuth } from '../../contexts/AuthContext';
 import { X } from 'lucide-react'
+
 interface PlotTableProps {
   selectedProject: Project;
   onClose: () => void;
@@ -15,7 +16,7 @@ interface PlotTableProps {
 
 
 export function PlotTable({ selectedProject, onClose }: PlotTableProps) {
-  const [plots, setPlots] = useState<StagePlot[]>([]);
+  const [plots, setPlots] = useState<StagePlotWithStageName[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [update, setUpdate] = useState(false);
@@ -100,6 +101,7 @@ export function PlotTable({ selectedProject, onClose }: PlotTableProps) {
                   <th>Name</th>
                   <th>ID</th>
                   <th>Project ID</th>
+                  <th>Stage Name</th>
                   <th>Created At</th>
                   <th colSpan={2}>Actions</th>
                 </tr>
@@ -110,6 +112,7 @@ export function PlotTable({ selectedProject, onClose }: PlotTableProps) {
                     <td>{plot.name}</td>
                     <td>{plot.stageId}</td>
                     <td>{plot.projectId}</td>
+                    <td>{plot.stageName}</td>
                     <td>{plot.createdAt}</td>
                     <td>
                       <button

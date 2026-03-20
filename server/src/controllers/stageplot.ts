@@ -65,12 +65,22 @@ export const getStagePlotById = async (req: Request, res: Response): Promise<voi
 export const getAllStagePlotsByProjectId = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
-    const plots: StagePlotDB[] = await db(plotTable).select('*').where({ id_prj_stp: id });
-    const apiPlots = plots.map(dbStagePlotToApi);
+    const plots = await db(plotTable)
+      .select('stage_plot_stp.*', 'stage_stg.name_stg as stage_name')
+      .join('stage_stg', 'stage_plot_stp.id_stg_stp', 'stage_stg.id_stg')
+      .where({ id_prj_stp: id });
+
+    const apiPlots = plots.map(plot => ({
+      ...dbStagePlotToApi(plot),
+      stageName: plot.stage_name,
+    }));
+
+    console.log(apiPlots);
+
     res.json(apiPlots);
   } catch (error) {
     console.error('unable to retrieve stage plots with that project ID', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ message: 'Internal server error' });
   }
 };
 
