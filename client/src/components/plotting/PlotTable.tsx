@@ -9,6 +9,7 @@ import { type Project } from '../../api/projects';
 import { useAuth } from '../../contexts/AuthContext';
 import { X } from 'lucide-react'
 
+//PROPS for PlotTable
 interface PlotTableProps {
   selectedProject: Project;
   onClose: () => void;

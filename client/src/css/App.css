@@ -757,6 +757,12 @@ nav ul button:hover::after {
   border-bottom: 1px solid var(--border);
 }
 
+.modal-header-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
 .modal-header h2 {
   font-size: 1.125rem;
   margin-bottom: 0.25rem;
@@ -788,6 +794,17 @@ nav ul button:hover::after {
 .modal-scrollable .modal-body {
   overflow-y: auto;
   flex: 1;
+}
+
+
+.channel-number-cell {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.input-narrow {
+  width: 48px;
 }
 /* ==========================================
    CARDS
@@ -1013,6 +1030,27 @@ input[type='number']::-webkit-inner-spin-button {
 
 .table tbody tr:hover td {
   background: var(--bg-elevated);
+}
+
+
+.table-row-editable {
+  cursor: pointer;
+  transition: background var(--transition);
+}
+
+.table-row-editable:hover {
+  background: var(--bg-overlay);
+}
+
+.table-row-editing {
+  background: var(--accent-muted);
+  border-left: 2px solid var(--accent);
+}
+
+.table-row-action {
+  color: var(--text-tertiary);
+  width: 48px;
+  text-align: center;
 }
 
 /* ==========================================
