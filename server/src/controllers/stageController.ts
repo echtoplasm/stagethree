@@ -205,7 +205,7 @@ export const getAllStagesByCreatedBy = async (req: Request, res: Response): Prom
         created_by_stg: userId,
       })
       .whereNull('deleted_at_stg')
-      .returning('*');
+      
 
     const apiResults = results.map(dbStageToApi);
 
