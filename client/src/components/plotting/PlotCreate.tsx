@@ -21,10 +21,12 @@ export const PlotCreate = ({ onClose, onSuccess, projectId }: PlotCreateProps) =
   const [stages, setStages] = useState<Stage[]>([]);
   const [venues, setVenues] = useState<Venue[]>([]);
   const [selectedVenueId, setSelectedVenueId] = useState<number | null>(null);
+  const [gigDateBool, setGigDateBool] = useState(false);
   const [stagePlotForm, setStagePlotForm] = useState<Omit<StagePlot, 'id' | 'createdAt'>>({
     projectId: projectId,
     stageId: 0,
     name: '',
+    gigDate: '',
   });
 
   const navigate = useNavigate();
@@ -121,6 +123,30 @@ export const PlotCreate = ({ onClose, onSuccess, projectId }: PlotCreateProps) =
               onChange={(e) => setStagePlotForm(prev => ({ ...prev, name: e.target.value }))}
             />
           </div>
+
+          <div className="form-group">
+            <label className="form-label" htmlFor="bool-gig-date">Add Gig Date?</label>
+            <input
+              id="bool-gig-date"
+              className="form-input"
+              type="checkbox"
+              checked={gigDateBool}
+              onChange={(e) => setGigDateBool(e.target.checked)}
+            />
+          </div>
+
+          {gigDateBool && (
+            <div className="form-group">
+              <label className="form-label" htmlFor="gig-date">Gig Date</label>
+              <input
+                id="gig-date"
+                className="form-input"
+                type="date"
+                value={stagePlotForm.gigDate ?? ''}
+                onChange={(e) => setStagePlotForm({ ...stagePlotForm, gigDate: e.target.value })}
+              />
+            </div>
+          )}
 
           <div className="modal-footer">
             <p className="text-secondary" style={{ fontSize: '0.8rem', marginTop: '0.5rem' }}>

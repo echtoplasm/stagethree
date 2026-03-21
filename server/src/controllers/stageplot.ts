@@ -91,7 +91,7 @@ export const getAllStagePlotsByProjectId = async (req: Request, res: Response): 
 
 export const createStagePlot = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { projectId, stageId, name } = req.body;
+    const { projectId, stageId, name, gigDate } = req.body;
 
     if (!projectId || !stageId || !name) {
       res.status(400).json({ message: 'Missing one or more required fields' });
@@ -102,6 +102,7 @@ export const createStagePlot = async (req: Request, res: Response): Promise<void
       projectId,
       stageId,
       name,
+      gigDate,
     });
 
     const [plots]: StagePlotDB[] = await db(plotTable).insert(plotDbData).returning('*');

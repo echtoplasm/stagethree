@@ -256,6 +256,7 @@ export interface StagePlotDB {
   id_prj_stp: number;
   id_stg_stp: number | null;
   name_stp: string;
+  gig_date_stp: Date | string | null;
   created_at_stp: Date | string;
 }
 
@@ -264,6 +265,7 @@ export interface StagePlotAPI {
   projectId: number;
   stageId?: number;
   name: string;
+  gigDate: string | null;
   createdAt: string;
 }
 
@@ -278,6 +280,12 @@ export const dbStagePlotToApi = (dbStagePlot: StagePlotDB): StagePlotAPI => ({
   projectId: dbStagePlot.id_prj_stp,
   stageId: dbStagePlot.id_stg_stp || undefined,
   name: dbStagePlot.name_stp,
+  gigDate:
+    dbStagePlot.gig_date_stp === null
+      ? null
+      : typeof dbStagePlot.gig_date_stp === 'string'
+        ? dbStagePlot.gig_date_stp
+        : dbStagePlot.gig_date_stp.toISOString(),
   createdAt:
     typeof dbStagePlot.created_at_stp === 'string'
       ? dbStagePlot.created_at_stp
@@ -294,6 +302,7 @@ export const apiStagePlotToDb = (apiStagePlot: Partial<StagePlotAPI>): Partial<S
   ...(apiStagePlot.projectId && { id_prj_stp: apiStagePlot.projectId }),
   ...(apiStagePlot.stageId && { id_stg_stp: apiStagePlot.stageId }),
   ...(apiStagePlot.name && { name_stp: apiStagePlot.name }),
+  ...(apiStagePlot.gigDate && { gig_date_stp: apiStagePlot.gigDate }),
 });
 
 // ============================================

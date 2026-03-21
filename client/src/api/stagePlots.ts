@@ -10,6 +10,7 @@ export interface StagePlot {
   stageId?: number;
   name: string;
   createdAt: string;
+  gigDate: string;
 }
 
 export interface FullStagePlotResponse {
