@@ -364,11 +364,14 @@ export function StageScene() {
       {contextMenu && (
         <div
           className="context-menu"
-          style={{ position: 'fixed', top: contextMenu.y, left: contextMenu.x, zIndex: 1000 }}
+          style={{ position: 'fixed', top: contextMenu.y, left: contextMenu.x }}
           onMouseLeave={() => setContextMenu(null)}
         >
-          <ul>
-            <li onClick={() => handleDeleteObject(contextMenu.object)}>Delete</li>
+          <div className="context-menu__header">{contextMenu.object.name}</div>
+          <ul className="context-menu__list">
+            <li className="context-menu__item context-menu__item--danger" onClick={() => handleDeleteObject(contextMenu.object)}>
+              Delete
+            </li>
           </ul>
         </div>
       )}
