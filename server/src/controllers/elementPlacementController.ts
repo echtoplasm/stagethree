@@ -67,6 +67,16 @@ export const createElp = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
+    if(dbData.id_elt_elp == 2){
+      dbData.scale_x_elp = '0.175',
+      dbData.scale_y_elp = '0.15', 
+      dbData.scale_z_elp = '0.175'
+    }
+
+    if(dbData.id_elt_elp == 1) {
+      dbData.position_y_elp = '0.5'
+    }
+
     const [newPlacement] = await db('element_placement_elp').insert(dbData).returning('*');
 
     res.status(201).json({

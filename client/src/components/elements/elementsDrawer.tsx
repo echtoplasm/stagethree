@@ -93,9 +93,9 @@ export const ElementsDrawer = () => {
 
       const newPlacement = await createNewElementPlacement(data);
 
-      
+
       setElementPlacements([...elementPlacements, { ...newPlacement, name: elt.name, filePathImg: elt.filePathImg }]);
-      
+
       console.log('elementPlacements::::', elementPlacements);
 
 

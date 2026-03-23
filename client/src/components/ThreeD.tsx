@@ -47,24 +47,28 @@ export function StageScene() {
 
 
   //LOAD MODELS WITH CACHE CHECK
-  const loadModel = (modelPath: string): Promise<THREE.Group> => {
-    if (modelCache.has(modelPath)) {
-      return Promise.resolve(modelCache.get(modelPath)!.clone());
-    }
-
+  const loadModel = (modelPath: string, placement: ElementPlacement): Promise<THREE.Group> => {
     return new Promise((resolve) => {
+      if (modelCache.has(modelPath)) {
+        const clone = modelCache.get(modelPath)!.clone();
+        clone.scale.setScalar(placement.scaleX);
+        resolve(clone);
+        return;
+      }
+
       loader.load(modelPath, (gltf) => {
         const model = gltf.scene;
 
-        // Normalize to a target size
         const box = new THREE.Box3().setFromObject(model);
         const size = box.getSize(new THREE.Vector3());
         const maxDim = Math.max(size.x, size.y, size.z);
-        const targetSize = 2; // adjust this
-        model.scale.setScalar(targetSize / maxDim);
+        model.scale.setScalar(1 / maxDim);
 
         modelCache.set(modelPath, model);
-        resolve(model.clone());
+
+        const clone = model.clone();
+        clone.scale.setScalar(placement.scaleX);
+        resolve(clone);
       });
     });
   };
@@ -75,7 +79,7 @@ export function StageScene() {
     let object: THREE.Mesh | THREE.Group;
 
     if (placement.filePathImg) {
-      object = await loadModel(placement.filePathImg);
+      object = await loadModel(placement.filePathImg, placement);
       object.position.set(placement.positionX, placement.positionY, placement.positionZ);
     } else {
       const geometry = new THREE.BoxGeometry(placement.scaleX, placement.scaleZ, placement.scaleY);
@@ -153,6 +157,8 @@ export function StageScene() {
   useEffect(() => {
     if (!mountRef.current) return;
 
+
+    console.log(elementPlacements);
     // Scene setup
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x1a1a1a);
