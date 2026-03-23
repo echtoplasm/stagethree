@@ -73,7 +73,6 @@ export const createElp = async (req: Request, res: Response): Promise<void> => {
       newPlacement: elpToApi(newPlacement),
       message: 'new placement made',
     });
-
   } catch (error) {
     console.error('Error creating element placement:', error);
     res.status(500).json({ message: 'Internal server error' });
@@ -136,7 +135,7 @@ export const deleteElp = async (req: Request, res: Response): Promise<void> => {
       })
       .returning('*');
 
-    res.status(204).send();
+    res.status(200).json({ successfulDelete: true });
   } catch (error) {
     console.error('Error deleting:', error);
     res.status(500).json({ message: 'Internal server error' });
@@ -179,14 +178,12 @@ export const partialUpdateElp = async (req: Request, res: Response): Promise<voi
 
     const apiResult = elpToApi(result);
 
-    
     console.log('successfully updated element placement via paritalUpdateElp');
-    
+
     res.status(200).json({
       message: 'successful element placement update',
       placementUpdate: apiResult,
     });
-
   } catch (err) {
     res.status(500).json({
       message: 'unable to update element placement',

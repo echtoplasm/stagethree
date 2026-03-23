@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { useStageContext } from '../contexts/StageContext';
-import { type ElementPlacement, updateElementPlacement } from '../api/elementPlacement';
+import { type ElementPlacement, updateElementPlacement, deleteElementPlacement } from '../api/elementPlacement';
 import { useAuth } from '../contexts/AuthContext';
 import { GLTFLoader } from 'three/examples/jsm/Addons.js';
 
@@ -19,44 +19,55 @@ const modelCache = new Map<string, THREE.Group>();
 const loader = new GLTFLoader();
 
 export function StageScene() {
+
+  //STATE MANAGEMENT
+  const [contextMenu, setContextMenu] = useState<{
+    x: number;
+    y: number;
+    object: StageObject;
+  } | null>(null);
+  const [objects, setObjects] = useState<StageObject[]>([]);
+
+  //REFS
+  const objectsRef = useRef<StageObject[]>([]);
   const mountRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<THREE.Scene | null>(null);
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
   const controlsRef = useRef<OrbitControls | null>(null);
-  const [objects, setObjects] = useState<StageObject[]>([]);
   const raycasterRef = useRef(new THREE.Raycaster());
   const mouseRef = useRef(new THREE.Vector2());
   const selectedObjectRef = useRef<THREE.Mesh | null>(null);
   const offsetRef = useRef(new THREE.Vector3());
 
-  const { elementPlacements, stage, activeProject } = useStageContext();
+  //CONTEXT PROVIDERS
+  const { elementPlacements, stage, activeProject, setElementPlacements } = useStageContext();
   const { isAuthenticated } = useAuth();
   const isSandbox = !isAuthenticated;
 
 
+  //LOAD MODELS WITH CACHE CHECK
+  const loadModel = (modelPath: string): Promise<THREE.Group> => {
+    if (modelCache.has(modelPath)) {
+      return Promise.resolve(modelCache.get(modelPath)!.clone());
+    }
 
-const loadModel = (modelPath: string): Promise<THREE.Group> => {
-  if (modelCache.has(modelPath)) {
-    return Promise.resolve(modelCache.get(modelPath)!.clone());
-  }
+    return new Promise((resolve) => {
+      loader.load(modelPath, (gltf) => {
+        const model = gltf.scene;
 
-  return new Promise((resolve) => {
-    loader.load(modelPath, (gltf) => {
-      const model = gltf.scene;
-      
-      // Normalize to a target size
-      const box = new THREE.Box3().setFromObject(model);
-      const size = box.getSize(new THREE.Vector3());
-      const maxDim = Math.max(size.x, size.y, size.z);
-      const targetSize = 2; // adjust this
-      model.scale.setScalar(targetSize / maxDim);
+        // Normalize to a target size
+        const box = new THREE.Box3().setFromObject(model);
+        const size = box.getSize(new THREE.Vector3());
+        const maxDim = Math.max(size.x, size.y, size.z);
+        const targetSize = 2; // adjust this
+        model.scale.setScalar(targetSize / maxDim);
 
-      modelCache.set(modelPath, model);
-      resolve(model.clone());
+        modelCache.set(modelPath, model);
+        resolve(model.clone());
+      });
     });
-  });
-};
+  };
 
   const addInstrument = async (placement: ElementPlacement) => {
     if (!sceneRef.current) return;
@@ -77,39 +88,63 @@ const loadModel = (modelPath: string): Promise<THREE.Group> => {
     object.name = `instrument-${placement.id}`;
     sceneRef.current.add(object);
 
-    setObjects(prev => [...prev, {
-      id: `scene-element-id-${placement.id}`,
-      placementId: placement.id!,
-      name: placement.name,
-      position: object.position.clone(),
-      mesh: object,
-      modelPath: placement.filePathImg,
-    }]);
+    setObjects(prev => {
+      const next = [...prev, {
+        id: `scene-element-id-${placement.id}`,
+        placementId: placement.id!,
+        name: placement.name,
+        position: object.position.clone(),
+        mesh: object,
+        modelPath: placement.filePathImg,
+      }];
+      objectsRef.current = next;
+      return next;
+    });
   };
 
-  /** 
-   * Mouse up event helper function for setting position state 
-   *
-   * */
+  const handleDeleteObject = async (stageObj: StageObject) => {
+    if (sceneRef.current) {
+      const mesh = sceneRef.current.getObjectByName(`instrument-${stageObj.placementId}`);
+      if (mesh) sceneRef.current.remove(mesh);
+    }
+    await deleteElementPlacement(stageObj.placementId);
+    setElementPlacements(elementPlacements.filter(p => p.id !== stageObj.placementId));
+    setObjects(prev => {
+      const next = prev.filter(o => o.id !== stageObj.id);
+      objectsRef.current = next;
+      return next;
+    });
+
+    console.log(objects);
+    setContextMenu(null);
+  };
+
+  /**
+   * Mouse up event helper function for setting position state
+   */
   const handleMouseUp = () => {
     const selected = selectedObjectRef.current;
     selectedObjectRef.current = null;
     if (controlsRef.current) controlsRef.current.enabled = true;
     if (selected) {
-      setObjects(prev => prev.map(obj => {
-        console.log(obj.id)
-        if (obj.mesh === selected) {
-          if (!isSandbox) {
-            updateElementPlacement(obj.placementId, {
-              positionX: selected.position.x,
-              positionY: selected.position.y,
-              positionZ: selected.position.z,
-            });
+      setObjects(prev => {
+        const next = prev.map(obj => {
+          console.log(obj.id)
+          if (obj.mesh === selected) {
+            if (!isSandbox) {
+              updateElementPlacement(obj.placementId, {
+                positionX: selected.position.x,
+                positionY: selected.position.y,
+                positionZ: selected.position.z,
+              });
+            }
+            return { ...obj, position: selected.position.clone() }
           }
-          return { ...obj, position: selected.position.clone() }
-        }
-        return obj;
-      }))
+          return obj;
+        });
+        objectsRef.current = next;
+        return next;
+      });
     }
   }
 
@@ -189,6 +224,8 @@ const loadModel = (modelPath: string): Promise<THREE.Group> => {
 
     // Mouse event handlers
     const handleMouseDown = (event: MouseEvent) => {
+      if (event.button !== 0) return;
+
       if (!mountRef.current || !camera || !scene) return;
 
       const rect = mountRef.current.getBoundingClientRect();
@@ -235,12 +272,39 @@ const loadModel = (modelPath: string): Promise<THREE.Group> => {
       }
     };
 
-    
+    const handleContextMenu = (event: MouseEvent) => {
+      event.preventDefault();
+      if (!mountRef.current || !cameraRef.current || !sceneRef.current) return;
 
+      const rect = mountRef.current.getBoundingClientRect();
+      mouseRef.current.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+      mouseRef.current.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+      raycasterRef.current.setFromCamera(mouseRef.current, cameraRef.current);
+
+      const intersects = raycasterRef.current.intersectObjects(
+        sceneRef.current.children.filter(c => c.name.startsWith('instrument-')),
+        true
+      );
+
+      if (intersects.length > 0) {
+        let target: THREE.Object3D = intersects[0].object;
+        while (target.parent && !target.name.startsWith('instrument-')) {
+          target = target.parent;
+        }
+        const stageObj = objectsRef.current.find(o => o.mesh === target);
+        if (stageObj) {
+          setContextMenu({ x: event.clientX, y: event.clientY, object: stageObj });
+        }
+      } else {
+        setContextMenu(null);
+      }
+    };
 
     renderer.domElement.addEventListener('mousedown', handleMouseDown);
     renderer.domElement.addEventListener('mousemove', handleMouseMove);
     renderer.domElement.addEventListener('mouseup', handleMouseUp);
+    renderer.domElement.addEventListener('contextmenu', handleContextMenu);
 
     // Cleanup
     return () => {
@@ -248,11 +312,11 @@ const loadModel = (modelPath: string): Promise<THREE.Group> => {
       renderer.domElement.removeEventListener('mousedown', handleMouseDown);
       renderer.domElement.removeEventListener('mousemove', handleMouseMove);
       renderer.domElement.removeEventListener('mouseup', handleMouseUp);
+      renderer.domElement.removeEventListener('contextmenu', handleContextMenu);
 
       if (mountRef.current && renderer.domElement) {
         mountRef.current.removeChild(renderer.domElement);
       }
-
     };
   }, [stage]);
 
@@ -262,10 +326,10 @@ const loadModel = (modelPath: string): Promise<THREE.Group> => {
     elementPlacements.forEach(placement => {
       const existing = sceneRef.current!.getObjectByName(`instrument-${placement.id}`);
       if (!existing) {
-        addInstrument(placement); // only add if not already in scene
+        addInstrument(placement);
       }
     });
-  }, [elementPlacements]);
+  }, [elementPlacements, objects]);
 
 
 
@@ -297,7 +361,18 @@ const loadModel = (modelPath: string): Promise<THREE.Group> => {
         </div>
       )}
 
+      {contextMenu && (
+        <div
+          className="context-menu"
+          style={{ position: 'fixed', top: contextMenu.y, left: contextMenu.x, zIndex: 1000 }}
+          onMouseLeave={() => setContextMenu(null)}
+        >
+          <ul>
+            <li onClick={() => handleDeleteObject(contextMenu.object)}>Delete</li>
+          </ul>
+        </div>
+      )}
+
     </div>
   );
 }
-

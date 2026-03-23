@@ -69,7 +69,7 @@ export const createDefaultProjectAndPlot = async (user: User): Promise<FullStage
     isPublic: false,
   };
 
-  const defaultStagePlot: Omit<StagePlot, 'id' | 'projectId' | 'stageId' | 'createdAt'> = {
+  const defaultStagePlot: Omit<StagePlot, 'id' | 'projectId' | 'stageId' | 'createdAt' | 'gigDate'> = {
     name: 'Default StagePlot',
   };
 

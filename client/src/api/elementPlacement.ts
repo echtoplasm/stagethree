@@ -43,3 +43,9 @@ export const updateElementPlacement = async (
   });
   return updatedElp;
 };
+
+export const deleteElementPlacement = async (id: number) => {
+  await apiFetch(`/api/elp/${id}`, {
+    method: 'DELETE'
+  })
+}
