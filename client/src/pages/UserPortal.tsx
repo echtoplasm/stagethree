@@ -14,6 +14,7 @@ export const UserPortal = () => {
       navigate('/')
     }
   }, [isAuthenticated])
+
   return (
     <div className='page-container'>
       <div className='content-wrapper'>
