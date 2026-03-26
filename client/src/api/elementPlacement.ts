@@ -49,3 +49,4 @@ export const deleteElementPlacement = async (id: number) => {
     method: 'DELETE'
   })
 }
+

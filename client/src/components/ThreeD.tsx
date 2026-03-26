@@ -5,6 +5,7 @@ import { useStageContext } from '../contexts/StageContext';
 import { type ElementPlacement, updateElementPlacement, deleteElementPlacement } from '../api/elementPlacement';
 import { useAuth } from '../contexts/AuthContext';
 import { GLTFLoader } from 'three/examples/jsm/Addons.js';
+import { ElementPositionModal } from './threeDComponents/ElementPostitionModal';
 
 interface StageObject {
   id: string;
@@ -15,19 +16,24 @@ interface StageObject {
   modelPath?: string;
 }
 
+type ContextMenuState = {
+  x: number;
+  y: number;
+  object: StageObject;
+
+}
+
 const modelCache = new Map<string, THREE.Group>();
 const loader = new GLTFLoader();
 
 export function StageScene() {
 
   //STATE MANAGEMENT
-  const [contextMenu, setContextMenu] = useState<{
-    x: number;
-    y: number;
-    object: StageObject;
-  } | null>(null);
+  const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null);
   const [objects, setObjects] = useState<StageObject[]>([]);
-
+  const [elpContext, setElpContext] = useState(false);
+  const [selectedElementPosition, setSelectedElementPosition] = useState<THREE.Vector3 | null>(null);
+  const [selectedObject, setSelectedObject] = useState<StageObject | null>(null);
   //REFS
   const objectsRef = useRef<StageObject[]>([]);
   const mountRef = useRef<HTMLDivElement>(null);
@@ -154,6 +160,7 @@ export function StageScene() {
 
 
 
+
   useEffect(() => {
     if (!mountRef.current) return;
 
@@ -161,7 +168,7 @@ export function StageScene() {
     console.log(elementPlacements);
     // Scene setup
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x1a1a1a);
+    scene.background = new THREE.Color(0x5a6a9a);
     sceneRef.current = scene;
 
     // Camera setup
@@ -282,6 +289,7 @@ export function StageScene() {
       event.preventDefault();
       if (!mountRef.current || !cameraRef.current || !sceneRef.current) return;
 
+      console.log('current objects ref', objectsRef.current);
       const rect = mountRef.current.getBoundingClientRect();
       mouseRef.current.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
       mouseRef.current.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
@@ -299,6 +307,7 @@ export function StageScene() {
           target = target.parent;
         }
         const stageObj = objectsRef.current.find(o => o.mesh === target);
+
         if (stageObj) {
           setContextMenu({ x: event.clientX, y: event.clientY, object: stageObj });
         }
@@ -335,7 +344,7 @@ export function StageScene() {
         addInstrument(placement);
       }
     });
-  }, [elementPlacements, objects]);
+  }, [elementPlacements]);
 
 
 
@@ -375,13 +384,65 @@ export function StageScene() {
         >
           <div className="context-menu__header">{contextMenu.object.name}</div>
           <ul className="context-menu__list">
-            <li className="context-menu__item context-menu__item--danger" onClick={() => handleDeleteObject(contextMenu.object)}>
+            <li className="context-menu__item context-menu__item--danger" onClick={() => {
+              console.log(contextMenu.object.mesh);
+              console.log(sceneRef.current?.children)
+              if (!isSandbox) {
+                handleDeleteObject(contextMenu.object)
+              } else {
+                contextMenu.object.mesh.removeFromParent();
+                setObjects(prev => {
+                  const next = prev.filter(obj => obj !== contextMenu.object);
+                  objectsRef.current = next;
+                  return next;
+                });
+                setContextMenu(null);
+              }
+            }}>
               Delete
+            </li>
+            <li className='context-menu__item' onClick={() => {
+              setSelectedElementPosition(contextMenu.object.position)
+              setSelectedObject(contextMenu.object);
+              setElpContext(true)
+            }}>
+              Update Position
             </li>
           </ul>
         </div>
       )}
+      {elpContext && (
+        <ElementPositionModal
+          initialPosition={selectedElementPosition}
+          onSuccess={(x, y, z) => {
+            console.log('selected object firing within onsuccess of modal', selectedObject)
+            selectedObject?.mesh.position.set(x, y, z);
+            setObjects(prev => {
+              const next = prev.map(obj =>
+                obj.id === selectedObject?.id
+                  ? { ...obj, position: new THREE.Vector3(x, y, z) }
+                  : obj
+              );
+              objectsRef.current = next;
+              return next;
+            });
 
-    </div>
+            console.log('after set:', selectedObject?.mesh.position);
+            if (!isSandbox && selectedObject?.placementId) {
+              updateElementPlacement(selectedObject?.placementId, {
+                positionX: x,
+                positionY: y,
+                positionZ: z,
+              });
+            }
+            setElpContext(false);
+            setContextMenu(null)
+          }}
+          onClose={() => setElpContext(false)}
+        />
+      )}
+
+    </div >
   );
 }
+
