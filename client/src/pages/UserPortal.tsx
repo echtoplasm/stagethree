@@ -2,9 +2,18 @@ import { useAuth } from '../contexts/AuthContext';
 import { StageTable } from '../components/shared/stage/StageTable';
 import { ProjectTable } from '../components/shared/projects/ProjectTable';
 import { User } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+
 
 export const UserPortal = () => {
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate('/')
+    }
+  }, [isAuthenticated])
   return (
     <div className='page-container'>
       <div className='content-wrapper'>
