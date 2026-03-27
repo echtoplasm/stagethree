@@ -14,7 +14,7 @@ export const fetchAllImages = async (): Promise<Image[]> => {
   return imageData;
 };
 
-export const deleteImageById = async (id: number) : Promise<void> => {
+export const deleteImageById = async (id: number): Promise<void> => {
   const imageDelete = await apiFetch(`/api/images/${id}`, {
     method: 'DELETE',
   });

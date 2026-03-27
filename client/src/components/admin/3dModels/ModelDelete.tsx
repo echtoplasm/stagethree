@@ -11,18 +11,18 @@ interface ImageDeleteProps {
 export function ImageDelete({ selectedImage, onClose, onSuccess }: ImageDeleteProps) {
 
   if (!selectedImage) return null;
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  try {
-    console.log('before delete');
-    await deleteImageById(selectedImage.id);
-    console.log('after delete');
-    onSuccess();
-    console.log('after onSuccess');
-  } catch (err) {
-    console.error('caught error:', err);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      console.log('before delete');
+      await deleteImageById(selectedImage.id);
+      console.log('after delete');
+      onSuccess();
+      console.log('after onSuccess');
+    } catch (err) {
+      console.error('caught error:', err);
+    }
   }
-}
   return (
     <>
       {/* Backdrop */}

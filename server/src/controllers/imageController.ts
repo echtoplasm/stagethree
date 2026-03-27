@@ -3,7 +3,7 @@ import db from '../db/knex';
 import { dbImageToApi, apiImageToDb, ImageDB, ImageAPI } from '../utils/transformers';
 import multer from 'multer';
 import { S3Client } from '@aws-sdk/client-s3';
-import { PutObjectCommand } from '@aws-sdk/client-s3';
+import { PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 
 //S3 client init for r2 communication
 export const s3 = new S3Client({
@@ -35,16 +35,29 @@ export const getAllImages = async (req: Request, res: Response) => {
  * DELETE /api/images/:id
  *
  * delete image by id
- *
+ * adding delete s3 command to delete from r2 bucket
  */
 export const deleteImageById = async (req: Request, res: Response) => {
   try {
+    
     const { id } = req.params;
-    await db('image_img').delete().where({
-      id_img: id,
-    });
+    
+    const image = await db('image_img').where({ id_img: id }).first();
+    
+    if (!image) return res.status(404).json({ message: 'image not found' });
+    
+    const key = image.file_path_img.split('/').pop();
+    
+    await db('image_img').delete().where({ id_img: id });
+    
+    await s3.send(
+      new DeleteObjectCommand({
+        Bucket: process.env.R2_BUCKET_NAME,
+        Key: key,
+      })
+    );
 
-    res.status(200).json({ message: 'deleted'});
+    res.status(200).json({ message: 'deleted' });
   } catch (err) {
     console.error('error in deleteimagebyId', err);
     res.status(500).json({ message: 'unable to delete image by id' });
