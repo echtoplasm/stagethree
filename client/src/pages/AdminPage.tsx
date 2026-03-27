@@ -1,5 +1,6 @@
 import { StageTable } from "../components/shared/stage/StageTable";
 import { UserTable } from "../components/admin/UserTable";
+import { ImageTable } from "../components/admin/3dModels/ModelTable"
 export const AdminPage = () => {
 
 
@@ -13,7 +14,7 @@ export const AdminPage = () => {
 
       </section>
       <section>
-
+        <ImageTable />
       </section>
     </div>
   )

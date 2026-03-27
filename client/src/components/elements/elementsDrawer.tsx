@@ -44,7 +44,6 @@ export const ElementsDrawer = () => {
   const handleElementClick = async (elt: ElementType) => {
 
     if (isSandbox) {
-
       let data: ElementPlacement = {
         elementTypeId: elt.id,
         stagePlotId: stagePlot?.id,
@@ -60,9 +59,7 @@ export const ElementsDrawer = () => {
         scaleY: 1,
         scaleZ: 1
       }
-      
-
-      //stupid hacky way of handling model differences in sandbox mode
+     //stupid hacky way of handling model differences in sandbox mode
       if (data.elementTypeId > 2) {
         setElementPlacements([...elementPlacements, { ...data, id: Date.now() }])
       } else {
@@ -76,6 +73,7 @@ export const ElementsDrawer = () => {
           setElementPlacements([...elementPlacements, { ...data, id: Date.now() }])
         }
       }
+
     } else {
       console.log('stagePlot', stagePlot, 'stage', stage, 'isSandbox', isSandbox)
       if (!user) return null;
