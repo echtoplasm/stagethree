@@ -194,6 +194,14 @@ export function StageScene() {
     controls.dampingFactor = 0.05;
     controlsRef.current = controls;
 
+    const keys = new Set<string>();
+
+    const handleKeyDown = (e: KeyboardEvent) => keys.add(e.key.toLowerCase());
+    const handleKeyUp = (e: KeyboardEvent) => keys.delete(e.key.toLowerCase());
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+
     // Lighting
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
     scene.add(ambientLight);
@@ -220,6 +228,13 @@ export function StageScene() {
     // Animation loop
     const animate = () => {
       requestAnimationFrame(animate);
+
+      const speed = 0.1;
+      if (keys.has('w')) camera.position.z -= speed;
+      if (keys.has('s')) camera.position.z += speed;
+      if (keys.has('a')) camera.position.x -= speed;
+      if (keys.has('d')) camera.position.x += speed;
+
       controls.update();
       renderer.render(scene, camera);
     };

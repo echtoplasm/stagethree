@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import db from '../db/knex';
-import { dbImageToApi, apiImageToDb, ImageDB, ImageAPI } from '../utils/transformers';
+import { dbImageToApi, apiImageToDb, ImageDB, ImageAPI, ImageWithScaleDB, ImageWithScaleAPI, dbImageWithScaleToApi } from '../utils/transformers';
 import multer from 'multer';
 import { S3Client } from '@aws-sdk/client-s3';
 import { PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
@@ -22,8 +22,21 @@ export const s3 = new S3Client({
 
 export const getAllImages = async (req: Request, res: Response) => {
   try {
-    const rows: ImageDB[] = await db('image_img').select('*');
-    const apiImg = rows.map(dbImageToApi);
+    const rows: ImageWithScaleDB[] = await db('image_img')
+      .join('element_type_elt', 'id_img_elt', 'id_img')
+      .select(
+        'id_img',
+        'name_img',
+        'file_path_img',
+        'file_type_img',
+        'category_img',
+        'created_at_img',
+        'default_scale_x_elt',
+        'default_scale_y_elt',
+        'default_scale_z_elt'
+      );
+
+    const apiImg = rows.map(dbImageWithScaleToApi);
     res.json(apiImg);
   } catch (err) {
     console.error('Error in getAllImages', err);
@@ -73,15 +86,15 @@ export const deleteImageById = async (req: Request, res: Response) => {
 export const createNewImage = async (req: Request, res: Response) => {
   try {
     const { name, description } = req.body;
-    
+
     if (!name || !description) {
       return res.status(400).json({ message: 'missing one or more required fields' });
     }
-    
+
     if (!req.file) return res.status(400).json({ error: 'no file provided' });
 
     const key = `${Date.now()}-${req.file.originalname}`;
-    
+
     await s3.send(
       new PutObjectCommand({
         Bucket: process.env.R2_BUCKET_NAME,
@@ -114,5 +127,37 @@ export const createNewImage = async (req: Request, res: Response) => {
   } catch (err) {
     console.error('unable to create new image via createNewImage', err);
     res.status(500).json({ message: 'unable to create new image' });
+  }
+};
+
+/*
+ * CREATE AN IMAGE UPDATE ENDPOINT
+ * PATCH /api/images/:id
+ */
+
+export const updateImageById = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { name, category, fileType, defaultScaleX, defaultScaleY, defaultScaleZ } = req.body;
+
+    await db.transaction(async trx => {
+      await trx('image_img').update({ name_img: name }).where({ id_img: id });
+
+      await trx('element_type_elt')
+        .update({
+          name_elt: name,
+          default_scale_x_elt: defaultScaleX,
+          default_scale_y_elt: defaultScaleY,
+          default_scale_z_elt: defaultScaleZ,
+        })
+        .where({ id_img_elt: id });
+    });
+
+    res.status(200).json({ message: 'updated' });
+  } catch (err) {
+    console.error('error in updatingimagebyid', err);
+    res.status(500).json({
+      message: 'unable to update image by id',
+    });
   }
 };

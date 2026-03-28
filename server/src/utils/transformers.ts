@@ -499,6 +499,26 @@ export interface ImageAPI {
   createdAt: string;
 }
 
+
+export interface ImageWithScaleDB extends ImageDB {
+  default_scale_x_elt: number;
+  default_scale_y_elt: number;
+  default_scale_z_elt: number;
+}
+
+export interface ImageWithScaleAPI extends ImageAPI {
+  defaultScaleX: number;
+  defaultScaleY: number;
+  defaultScaleZ: number;
+}
+
+export const dbImageWithScaleToApi = (db: ImageWithScaleDB): ImageWithScaleAPI => ({
+  ...dbImageToApi(db),
+  defaultScaleX: db.default_scale_x_elt,
+  defaultScaleY: db.default_scale_y_elt,
+  defaultScaleZ: db.default_scale_z_elt,
+});
+
 /**
  * Converts Image data from database naming conventions to API/JavaScript naming conventions
  *
@@ -588,6 +608,9 @@ export interface ElementTypeDB {
   id_img_elt: number | null;
   file_path_img: string;
   default_color_elt: string | null;
+  default_scale_x_elt: number;
+  default_scale_y_elt: number;
+  default_scale_z_elt: number;
 }
 
 export interface ElementTypeAPI {
@@ -597,6 +620,9 @@ export interface ElementTypeAPI {
   imageId?: number;
   filePathImg?: string;
   defaultColor?: string;
+  defaultScaleX: number;
+  defaultScaleY: number;
+  defaultScaleZ: number;
 }
 
 /**
@@ -612,6 +638,9 @@ export const dbElementTypeToApi = (dbElementType: ElementTypeDB): ElementTypeAPI
   imageId: dbElementType.id_img_elt || undefined,
   filePathImg: dbElementType.file_path_img || undefined,
   defaultColor: dbElementType.default_color_elt || undefined,
+  defaultScaleX: dbElementType.default_scale_x_elt,
+  defaultScaleY: dbElementType.default_scale_y_elt,
+  defaultScaleZ: dbElementType.default_scale_z_elt,
 });
 
 /**
@@ -628,6 +657,9 @@ export const apiElementTypeToDb = (
   ...(apiElementType.imageId && { id_img_elt: apiElementType.imageId }),
   ...(apiElementType.filePathImg && { file_path_img: apiElementType.filePathImg }),
   ...(apiElementType.defaultColor && { default_color_elt: apiElementType.defaultColor }),
+  ...(apiElementType.defaultScaleX && { default_scale_x_elt: apiElementType.defaultScaleX }),
+  ...(apiElementType.defaultScaleY && { default_scale_y_elt: apiElementType.defaultScaleY }),
+  ...(apiElementType.defaultScaleZ && { default_scale_z_elt: apiElementType.defaultScaleZ }),
 });
 
 // ============================================

@@ -53,7 +53,7 @@ export function StageCreate({ onClose, onSuccess }: StageCreateProps) {
             <X size={18} />
           </button>
         </div>
-        
+
         {/*error component*/}
         {error && (
           <ErrorMessage error={error} />

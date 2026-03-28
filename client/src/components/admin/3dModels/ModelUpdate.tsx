@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { X } from 'lucide-react';
-import { type Image } from '../../../api/images';
+import { type Image, updateImageById } from '../../../api/images';
 
 export interface ImageDataUpdateProps {
   onClose: () => void;
@@ -16,10 +16,15 @@ export const ImageDataUpdate = ({ onClose, onSuccess, selectedImage }: ImageData
     filePath: selectedImage.filePath,
     fileType: selectedImage.fileType,
     createdAt: selectedImage.createdAt,
+    defaultScaleX: selectedImage.defaultScaleX,
+    defaultScaleY: selectedImage.defaultScaleY,
+    defaultScaleZ: selectedImage.defaultScaleZ
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    await updateImageById(selectedImage.id, imageDataForm)
     onSuccess(imageDataForm);
   };
 
@@ -65,6 +70,36 @@ export const ImageDataUpdate = ({ onClose, onSuccess, selectedImage }: ImageData
               type="text"
               value={imageDataForm.fileType}
               onChange={(e) => setImageDataForm({ ...imageDataForm, fileType: e.target.value })}
+            />
+          </div>
+          <div className="form-group">
+            <label className="form-label" htmlFor="fileType">Model Scale X-axis</label>
+            <input
+              id="defaultScaleX"
+              className="form-input"
+              type="number"
+              value={imageDataForm.defaultScaleX}
+              onChange={(e) => setImageDataForm({ ...imageDataForm, defaultScaleX: parseFloat(e.target.value) })}
+            />
+          </div>
+          <div className="form-group">
+            <label className="form-label" htmlFor="fileType">Model Scale Y-axis</label>
+            <input
+              id="defaultScaleY"
+              className="form-input"
+              type="number"
+              value={imageDataForm.defaultScaleY}
+              onChange={(e) => setImageDataForm({ ...imageDataForm, defaultScaleY: parseFloat(e.target.value) })}
+            />
+          </div>
+          <div className="form-group">
+            <label className="form-label" htmlFor="fileType">Model Scale Z-axis</label>
+            <input
+              id="defaultScaleZ"
+              className="form-input"
+              type="number"
+              value={imageDataForm.defaultScaleZ}
+              onChange={(e) => setImageDataForm({ ...imageDataForm, defaultScaleZ: parseFloat(e.target.value) })}
             />
           </div>
           <div className="modal-footer">

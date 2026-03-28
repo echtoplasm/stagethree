@@ -7,6 +7,9 @@ export interface Image {
   fileType: string;
   category: number;
   createdAt: string;
+  defaultScaleX: number;
+  defaultScaleY: number;
+  defaultScaleZ: number;
 }
 
 /**
@@ -48,5 +51,12 @@ export const createNewImage = async (
     method: 'POST',
     body: formData,
     credentials: 'include',
+  });
+};
+
+export const updateImageById = async (id: number, form: Partial<Image>): Promise<void> => {
+  await apiFetch(`/api/images/${id}`, {
+    method: 'PATCH',
+    body: form,
   });
 };

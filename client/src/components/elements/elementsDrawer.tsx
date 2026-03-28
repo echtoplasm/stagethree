@@ -55,11 +55,13 @@ export const ElementsDrawer = () => {
         rotationX: 0,
         rotationY: 0,
         rotationZ: 0,
-        scaleX: 1,
-        scaleY: 1,
-        scaleZ: 1
+        scaleX: elt.defaultScaleX,
+        scaleY: elt.defaultScaleY,
+        scaleZ: elt.defaultScaleZ
       }
+
      //stupid hacky way of handling model differences in sandbox mode
+     // After testing the admin update option of the default scale and the new baseline default scales I can probably remove this 
       if (data.elementTypeId > 2) {
         setElementPlacements([...elementPlacements, { ...data, id: Date.now() }])
       } else {
@@ -100,9 +102,9 @@ export const ElementsDrawer = () => {
         rotationX: 0,
         rotationY: 0,
         rotationZ: 0,
-        scaleX: 1,
-        scaleY: 1,
-        scaleZ: 1
+        scaleX: elt.defaultScaleX,
+        scaleY: elt.defaultScaleY,
+        scaleZ: elt.defaultScaleZ
       }
 
       const newPlacement = await createNewElementPlacement(data);

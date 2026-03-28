@@ -7,8 +7,10 @@ export interface ElementType {
   imageId?: number;
   filePathImg?: string;
   defaultColor?: string;
+  defaultScaleX: number;
+  defaultScaleY: number;
+  defaultScaleZ: number;
 }
-
 
 export const fetchAllElementTypes = async (): Promise<ElementType[]> => {
   const elementTypes = await apiFetch('/api/elements');

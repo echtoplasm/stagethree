@@ -88,7 +88,7 @@ export const ImageTable = () => {
               {images.map((image) => (
                 <tr key={image.id}>
                   <td>{image.name}</td>
-                  <td>{image.filePath}</td>
+                  <td title='{image.filepath}'>{image.filePath.split('/').pop()}</td>
                   <td>{image.fileType}</td>
                   <td>{image.category}</td>
                   <td className="flex gap-2">
