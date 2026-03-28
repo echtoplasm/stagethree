@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { SlidersHorizontal, CircleUser, Theater, LayoutTemplate, Camera } from 'lucide-react';
 import { PlottingDocModal } from './modals/Plotting';
 import { UserPortalDocModal } from './modals/UserPortal'
-
+import { ControlsDocModal } from './modals/KeyboardControls';
 const docs = [
   {
     key: 'plotting',
@@ -30,7 +30,7 @@ const docs = [
   },
   {
     key: 'cameraControls', 
-    title: 'Camera Controls While Plotting',
+    title: 'Camera/Keyboard Controls While Plotting',
     description: 'These documents describe how to best use the camera/directional controls in the plotting scene',
     icon: Camera
   }
@@ -140,6 +140,24 @@ export const Documentation = () => {
             <div className="modal-body">
               <p className="text-secondary">Stage plots documentation coming soon.</p>
             </div>
+          </div>
+        </>
+      )}
+
+      {open === 'cameraControls' && (
+        <>
+          <div className="modal-backdrop" onClick={() => setOpen(null)} />
+          <div className="modal modal-wide modal-scrollable">
+            <div className="modal-header">
+              <div>
+                <h2>Camera Controls</h2>
+                <p className="text-muted">Account management and settings</p>
+              </div>
+              <button className="close-btn" onClick={() => setOpen(null)}>✕</button>
+            </div>
+            <ControlsDocModal
+              onClose={() => setOpen(null)}
+            />
           </div>
         </>
       )}

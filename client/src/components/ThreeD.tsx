@@ -218,6 +218,14 @@ export function StageScene() {
           selectedObjectRef.current.rotation.y -= rotationSpeed;
           selectedObjectRef.current.rotation.y = Math.round(selectedObjectRef.current.rotation.y * (180 / Math.PI)) * (Math.PI / 180);
         }
+
+        if (e.key === 'ArrowUp') {
+          selectedObjectRef.current.position.y += rotationSpeed;
+        }
+
+        if (e.key === 'ArrowDown') {
+          selectedObjectRef.current.position.y -= rotationSpeed;
+        }
       }
     };
     const handleKeyUp = (e: KeyboardEvent) => keys.delete(e.key.toLowerCase());
