@@ -119,36 +119,76 @@ export async function seed(knex: Knex): Promise<void> {
   // IMAGE FILES
   // ============================================
 
-  await knex('image_img').insert([
-    {
-      name_img: 'Drum Set',
-      file_path_img: `${r2}/drum-set.glb`,
-      file_type_img: 'glb',
-      category_img: 1,
-      id_imc_img: 1,
-    },
-    {
-      name_img: 'Grand Piano',
-      file_path_img: `${r2}/grand-piano.glb`,
-      file_type_img: 'glb',
-      category_img: 1,
-      id_imc_img: 1,
-    },
-    {
-      name_img: 'Mic Stand',
-      file_path_img: `${r2}/micstand.glb`,
-      file_type_img: 'glb',
-      category_img: 2,
-      id_imc_img: 2,
-    },
-    {
-      name_img: 'Speaker',
-      file_path_img: `${r2}/speaker.glb`,
-      file_type_img: 'glb',
-      category_img: 1,
-      id_imc_img: 1,
-    },
-  ]);
+  const imageRows = await knex('image_img')
+    .insert([
+      {
+        name_img: 'Drum Set',
+        file_path_img: `${r2}/drum-set.glb`,
+        file_type_img: 'glb',
+        category_img: 1,
+        id_imc_img: 1,
+      },
+      {
+        name_img: 'Grand Piano',
+        file_path_img: `${r2}/grand-piano.glb`,
+        file_type_img: 'glb',
+        category_img: 1,
+        id_imc_img: 1,
+      },
+      {
+        name_img: 'Mic Stand',
+        file_path_img: `${r2}/micstand.glb`,
+        file_type_img: 'glb',
+        category_img: 2,
+        id_imc_img: 2,
+      },
+      {
+        name_img: 'Speaker',
+        file_path_img: `${r2}/speaker.glb`,
+        file_type_img: 'glb',
+        category_img: 1,
+        id_imc_img: 1,
+      },
+      {
+        name_img: 'Drums On Riser',
+        file_path_img: `${r2}/1774650260751-drum-on-riser.glb`,
+        file_type_img: 'model/gltf-binary',
+      },
+      {
+        name_img: 'Music Stand',
+        file_path_img: `${r2}/1774649950797-music_stand.glb`,
+        file_type_img: 'model/gltf-binary',
+      },
+      {
+        name_img: 'Electric Guitar',
+        file_path_img: `${r2}/1774650403668-electric_guitar.glb`,
+        file_type_img: 'model/gltf-binary',
+      },
+      {
+        name_img: 'Lighting Rig Center Stage',
+        file_path_img: `${r2}/1774650343674-lighting_rigg_8_meter_center.glb`,
+        file_type_img: 'model/gltf-binary',
+      },
+      {
+        name_img: 'Wedge Monitor',
+        file_path_img: `${r2}/1774654353521-new-active-wedge-monitor-speakers-v1-4.glb`,
+        file_type_img: 'model/gltf-binary',
+      },
+    ])
+    .returning('id_img');
+
+  const [
+    drumSetId,
+    grandPianoId,
+    micStandId,
+    speakerId,
+    drumsOnRiserId,
+    musicStandId,
+    electricGuitarId,
+    lightingRigId,
+    wedgeMonitorId,
+  ] = imageRows.map((row: { id_img: number }) => row.id_img);
+ 
 
   // ============================================
   // EQUIPMENT TYPES
@@ -211,28 +251,85 @@ export async function seed(knex: Knex): Promise<void> {
   // ============================================
   await knex('element_type_elt').insert([
     {
-      name_elt: 'Drum Riser',
+      name_elt: 'Drum Set',
       description_elt: 'Elevated platform for drum kit',
       default_color_elt: '#8B4513',
-      id_img_elt: 1,
+      id_img_elt: drumSetId,
+      default_scale_x_elt: 1,
+      default_scale_y_elt: 1,
+      default_scale_z_elt: 1,
     },
     {
-      name_elt: 'Piano',
+      name_elt: 'Grand Piano',
       description_elt: 'Grand or upright piano',
       default_color_elt: '#000000',
-      id_img_elt: 2,
+      id_img_elt: grandPianoId,
+      default_scale_x_elt: 1,
+      default_scale_y_elt: 1,
+      default_scale_z_elt: 1,
     },
     {
       name_elt: 'Mic Stand',
       description_elt: 'Microphone stand',
       default_color_elt: '#C0C0C0',
-      id_img_elt: 3,
+      id_img_elt: micStandId,
+      default_scale_x_elt: 1,
+      default_scale_y_elt: 1,
+      default_scale_z_elt: 1,
     },
     {
       name_elt: 'Speaker',
       description_elt: 'Floor monitor speaker',
       default_color_elt: '#3C3C3C',
-      id_img_elt: 4,
+      id_img_elt: speakerId,
+      default_scale_x_elt: 1.25,
+      default_scale_y_elt: 1.25,
+      default_scale_z_elt: 1.25,
+    },
+    {
+      name_elt: 'Drums On Riser',
+      description_elt: 'Drums on an elevated riser',
+      default_color_elt: '#000000',
+      id_img_elt: drumsOnRiserId,
+      default_scale_x_elt: 0.02,
+      default_scale_y_elt: 0.02,
+      default_scale_z_elt: 0.02,
+    },
+    {
+      name_elt: 'Music Stand',
+      description_elt: 'Music stand',
+      default_color_elt: '#000000',
+      id_img_elt: musicStandId,
+      default_scale_x_elt: 0.03,
+      default_scale_y_elt: 0.03,
+      default_scale_z_elt: 0.03,
+    },
+    {
+      name_elt: 'Electric Guitar',
+      description_elt: 'Electric guitar',
+      default_color_elt: '#000000',
+      id_img_elt: electricGuitarId,
+      default_scale_x_elt: 2,
+      default_scale_y_elt: 2,
+      default_scale_z_elt: 2,
+    },
+    {
+      name_elt: 'Lighting Rig Center Stage',
+      description_elt: 'Lighting rig for center stage',
+      default_color_elt: '#000000',
+      id_img_elt: lightingRigId,
+      default_scale_x_elt: 1.25,
+      default_scale_y_elt: 1.25,
+      default_scale_z_elt: 1.25,
+    },
+    {
+      name_elt: 'Wedge Monitor',
+      description_elt: 'Wedge monitor speaker',
+      default_color_elt: '#000000',
+      id_img_elt: wedgeMonitorId,
+      default_scale_x_elt: 0.025,
+      default_scale_y_elt: 0.025,
+      default_scale_z_elt: 0.025,
     },
   ]);
 
