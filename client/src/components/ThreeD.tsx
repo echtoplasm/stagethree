@@ -6,6 +6,7 @@ import { type ElementPlacement, updateElementPlacement, deleteElementPlacement }
 import { useAuth } from '../contexts/AuthContext';
 import { GLTFLoader } from 'three/examples/jsm/Addons.js';
 import { ElementPositionModal } from './threeDComponents/ElementPostitionModal';
+import { ElementRotationModal } from './threeDComponents/ElementRotationModal';
 
 interface StageObject {
   id: string;
@@ -31,8 +32,15 @@ export function StageScene() {
   //STATE MANAGEMENT
   const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null);
   const [objects, setObjects] = useState<StageObject[]>([]);
+
+  //state for context menu on element right click
   const [elpContext, setElpContext] = useState(false);
+  const [erpContext, setErpContext] = useState(false);
+
+  //state for selected element positioning and rotation
   const [selectedElementPosition, setSelectedElementPosition] = useState<THREE.Vector3 | null>(null);
+  const [selectedObjectRotation, setSelectedObjectRotation] = useState<THREE.Euler | null>(null)
+
   const [selectedObject, setSelectedObject] = useState<StageObject | null>(null);
   //REFS
   const objectsRef = useRef<StageObject[]>([]);
@@ -182,13 +190,13 @@ export function StageScene() {
     camera.lookAt(0, 0, 0);
     cameraRef.current = camera;
 
-    // Renderer setup
+    // renderer setup
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(mountRef.current.clientWidth, mountRef.current.clientHeight);
     mountRef.current.appendChild(renderer.domElement);
     rendererRef.current = renderer;
 
-    // Controls setup
+    // controls setup
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
@@ -196,13 +204,28 @@ export function StageScene() {
 
     const keys = new Set<string>();
 
-    const handleKeyDown = (e: KeyboardEvent) => keys.add(e.key.toLowerCase());
+    const handleKeyDown = (e: KeyboardEvent) => {
+      keys.add(e.key.toLowerCase())
+      if (selectedObjectRef.current) {
+        const rotationSpeed = Math.PI / 45;
+
+        //arrow key press with object selected to rotate degrees, and then fixed floating point accumulation err
+        if (e.key === 'ArrowLeft') {
+          selectedObjectRef.current.rotation.y += rotationSpeed;
+          selectedObjectRef.current.rotation.y = Math.round(selectedObjectRef.current.rotation.y * (180 / Math.PI)) * (Math.PI / 180);
+        }
+        if (e.key === 'ArrowRight') {
+          selectedObjectRef.current.rotation.y -= rotationSpeed;
+          selectedObjectRef.current.rotation.y = Math.round(selectedObjectRef.current.rotation.y * (180 / Math.PI)) * (Math.PI / 180);
+        }
+      }
+    };
     const handleKeyUp = (e: KeyboardEvent) => keys.delete(e.key.toLowerCase());
 
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
 
-    // Lighting
+    // lighting
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
     scene.add(ambientLight);
 
@@ -236,12 +259,12 @@ export function StageScene() {
       if (keys.has('d')) camera.position.x += speed;
       if (keys.has('q')) camera.position.y -= speed;
       if (keys.has('e')) camera.position.y += speed;
+
       controls.update();
       renderer.render(scene, camera);
     };
     animate();
 
-    // Handle window resize
     const handleResize = () => {
       if (!mountRef.current || !camera || !renderer) return;
 
@@ -251,7 +274,6 @@ export function StageScene() {
     };
     window.addEventListener('resize', handleResize);
 
-    // Mouse event handlers
     const handleMouseDown = (event: MouseEvent) => {
       if (event.button !== 0) return;
 
@@ -289,7 +311,6 @@ export function StageScene() {
 
       raycasterRef.current.setFromCamera(mouseRef.current, camera);
 
-      // Raycast against the stage plane
       const plane = scene.children.find(child => child.name === 'stage-plane');
       if (plane) {
         const intersects = raycasterRef.current.intersectObject(plane);
@@ -424,6 +445,14 @@ export function StageScene() {
             }}>
               Update Position
             </li>
+            <li className='context-menu__item' onClick={() => {
+              setSelectedObjectRotation(contextMenu.object.mesh.rotation)
+              setSelectedObject(contextMenu.object);
+              setErpContext(true)
+            }}>
+              Update Rotation
+            </li>
+
           </ul>
         </div>
       )}
@@ -455,6 +484,25 @@ export function StageScene() {
             setContextMenu(null)
           }}
           onClose={() => setElpContext(false)}
+        />
+      )}
+
+      {erpContext && (
+        <ElementRotationModal
+          initialRotation={selectedObjectRotation}
+          onSuccess={(x, y, z) => {
+            selectedObject?.mesh.rotation.set(x, y, z);
+            if (!isSandbox && selectedObject?.placementId) {
+              updateElementPlacement(selectedObject.placementId, {
+                rotationX: x,
+                rotationY: y,
+                rotationZ: z,
+              });
+            }
+            setErpContext(false);
+            setContextMenu(null);
+          }}
+          onClose={() => setErpContext(false)}
         />
       )}
 

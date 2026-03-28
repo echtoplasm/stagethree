@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { SlidersHorizontal, CircleUser, Theater, LayoutTemplate } from 'lucide-react';
+import { SlidersHorizontal, CircleUser, Theater, LayoutTemplate, Camera } from 'lucide-react';
 import { PlottingDocModal } from './modals/Plotting';
 import { UserPortalDocModal } from './modals/UserPortal'
 
@@ -28,6 +28,12 @@ const docs = [
     description: 'Create, organize, and switch between stage plots within your projects.',
     icon: LayoutTemplate,
   },
+  {
+    key: 'cameraControls', 
+    title: 'Camera Controls While Plotting',
+    description: 'These documents describe how to best use the camera/directional controls in the plotting scene',
+    icon: Camera
+  }
 ];
 
 export const Documentation = () => {
