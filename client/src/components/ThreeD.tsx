@@ -234,7 +234,8 @@ export function StageScene() {
       if (keys.has('s')) camera.position.z += speed;
       if (keys.has('a')) camera.position.x -= speed;
       if (keys.has('d')) camera.position.x += speed;
-
+      if (keys.has('q')) camera.position.y -= speed;
+      if (keys.has('e')) camera.position.y += speed;
       controls.update();
       renderer.render(scene, camera);
     };
