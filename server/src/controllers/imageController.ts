@@ -39,17 +39,16 @@ export const getAllImages = async (req: Request, res: Response) => {
  */
 export const deleteImageById = async (req: Request, res: Response) => {
   try {
-    
     const { id } = req.params;
-    
+
     const image = await db('image_img').where({ id_img: id }).first();
-    
+
     if (!image) return res.status(404).json({ message: 'image not found' });
-    
+
     const key = image.file_path_img.split('/').pop();
-    
+
     await db('image_img').delete().where({ id_img: id });
-    
+
     await s3.send(
       new DeleteObjectCommand({
         Bucket: process.env.R2_BUCKET_NAME,
@@ -73,20 +72,16 @@ export const deleteImageById = async (req: Request, res: Response) => {
 
 export const createNewImage = async (req: Request, res: Response) => {
   try {
-    const { name, category } = req.body;
-
-    const data = { name, category };
-
-    const dbData = apiImageToDb(data);
-
-    if (!name || !category) {
+    const { name, description } = req.body;
+    
+    if (!name || !description) {
       return res.status(400).json({ message: 'missing one or more required fields' });
     }
-
+    
     if (!req.file) return res.status(400).json({ error: 'no file provided' });
 
     const key = `${Date.now()}-${req.file.originalname}`;
-    console.log('bucket:', process.env.R2_BUCKET_NAME);
+    
     await s3.send(
       new PutObjectCommand({
         Bucket: process.env.R2_BUCKET_NAME,
@@ -98,20 +93,26 @@ export const createNewImage = async (req: Request, res: Response) => {
 
     const r2FilePath = `https://pub-${process.env.R2_PUBLIC_DOMAIN}.r2.dev/${key}`;
 
-    const id = await db('image_img')
-      .insert({
-        name_img: dbData.name_img,
-        category_img: dbData.category_img,
-        file_path_img: r2FilePath,
-        file_type_img: req.file.mimetype,
-      })
-      .returning('*');
+    await db.transaction(async trx => {
+      const [image] = await trx('image_img')
+        .insert({
+          name_img: name,
+          file_path_img: r2FilePath,
+          file_type_img: req.file!.mimetype,
+        })
+        .returning('*');
 
-    res.json({ id, r2FilePath });
-  } catch (err) {
-    console.error('unable to create new image via creatNewImage', err);
-    res.status(500).json({
-      message: 'unable to create new image',
+      await trx('element_type_elt').insert({
+        name_elt: name,
+        description_elt: description,
+        id_img_elt: image.id_img,
+        default_color_elt: '#000000',
+      });
     });
+
+    res.status(200).json({ message: 'image and element type created' });
+  } catch (err) {
+    console.error('unable to create new image via createNewImage', err);
+    res.status(500).json({ message: 'unable to create new image' });
   }
 };

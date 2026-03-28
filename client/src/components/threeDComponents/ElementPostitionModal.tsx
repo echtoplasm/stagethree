@@ -19,36 +19,46 @@ export const ElementPositionModal = ({ onClose, onSuccess, initialPosition }: El
   return createPortal(
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal" onClick={e => e.stopPropagation()}>
-        <div>
-          <label>Position X</label>
-          <input
-            type="number"
-            value={elementPlacementForm.positionX ?? ''}
-            onChange={e => setElementPlacementForm(prev => ({ ...prev, positionX: parseFloat(e.target.value) || 0 }))}
-          />
+        <div className="modal-header">
+          <h2>Update Position</h2>
         </div>
-        <div>
-          <label>Position Y</label>
-          <input
-            type="number"
-            value={elementPlacementForm.positionY ?? ''}
-            onChange={e => setElementPlacementForm(prev => ({ ...prev, positionY: parseFloat(e.target.value) || 0 }))}
-          />
+        <div className="modal-body">
+          <div className="form-group">
+            <label className="form-label">Position X</label>
+            <input
+              className="form-input"
+              type="number"
+              value={elementPlacementForm.positionX ?? ''}
+              onChange={e => setElementPlacementForm(prev => ({ ...prev, positionX: parseFloat(e.target.value) || 0 }))}
+            />
+          </div>
+          <div className="form-group">
+            <label className="form-label">Position Y</label>
+            <input
+              className="form-input"
+              type="number"
+              value={elementPlacementForm.positionY ?? ''}
+              onChange={e => setElementPlacementForm(prev => ({ ...prev, positionY: parseFloat(e.target.value) || 0 }))}
+            />
+          </div>
+          <div className="form-group">
+            <label className="form-label">Position Z</label>
+            <input
+              className="form-input"
+              type="number"
+              value={elementPlacementForm.positionZ ?? ''}
+              onChange={e => setElementPlacementForm(prev => ({ ...prev, positionZ: parseFloat(e.target.value) || 0 }))}
+            />
+          </div>
         </div>
-        <div>
-          <label>Position Z</label>
-          <input
-            type="number"
-            value={elementPlacementForm.positionZ ?? ''}
-            onChange={e => setElementPlacementForm(prev => ({ ...prev, positionZ: parseFloat(e.target.value) || 0 }))}
-          />
+        <div className="modal-footer">
+          <button className="btn btn-ghost" onClick={onClose}>Cancel</button>
+          <button className="btn btn-primary" onClick={() => onSuccess(
+            elementPlacementForm.positionX ?? 0,
+            elementPlacementForm.positionY ?? 0,
+            elementPlacementForm.positionZ ?? 0,
+          )}>Confirm</button>
         </div>
-        <button onClick={onClose}>Cancel</button>
-        <button onClick={() => onSuccess(
-          elementPlacementForm.positionX ?? 0,
-          elementPlacementForm.positionY ?? 0,
-          elementPlacementForm.positionZ ?? 0,
-        )}>Confirm</button>
       </div>
     </div>,
     document.body

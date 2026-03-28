@@ -7,11 +7,19 @@ export interface ModelCreateProps {
   onClose: () => void;
 }
 
+interface ImageAndElement extends Image {
+  description: string;
+  defaultColor: string;
+}
+
 export const ModelCreate = ({ onSuccess, onClose }: ModelCreateProps) => {
-  const [imageForm, setImageForm] = useState<Partial<Image>>({
+  const [imageForm, setImageForm] = useState<Partial<ImageAndElement>>({
     name: '',
     category: 0,
+    description: '',
+    defaultColor: '',
   });
+
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -26,7 +34,7 @@ export const ModelCreate = ({ onSuccess, onClose }: ModelCreateProps) => {
     if (!file || !imageForm.name || !imageForm.category) return;
     setLoading(true);
     try {
-      await createNewImage(imageForm.name, imageForm.category, file);
+      await createNewImage(imageForm.name, imageForm.category, imageForm.description ?? '', file);
       onSuccess();
       onClose();
     } finally {
@@ -67,6 +75,17 @@ export const ModelCreate = ({ onSuccess, onClose }: ModelCreateProps) => {
               value={imageForm.category}
               onChange={(e) => setImageForm({ ...imageForm, category: Number(e.target.value) })}
             />
+          </div>
+          <div className='form-group'>
+            <label>Description</label>
+            <input
+              id="description"
+              className='form-input'
+              type='text'
+              value={imageForm.description}
+              onChange={(e) => setImageForm({ ...imageForm, description: String(e.target.value) })}
+            />
+
           </div>
           <div className="form-group">
             <label className="form-label" htmlFor="file">File</label>

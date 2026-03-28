@@ -4,12 +4,27 @@ meta {
   seq: 1
 }
 
-get {
-  url: 
-  body: none
+post {
+  url: {{baseUrl}}/images
+  body: multipartForm
   auth: inherit
+}
+
+body:json {
+  {
+    "name": "testing name",
+    "category": 1,
+    "file"
+  }
+}
+
+body:multipart-form {
+  file: @file(/home/zach/Downloads/images.jpeg) @contentType(File)
+  name: "name"
+  category: 1
 }
 
 settings {
   encodeUrl: true
+  timeout: 0
 }
