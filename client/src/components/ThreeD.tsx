@@ -166,9 +166,6 @@ export function StageScene() {
     }
   }
 
-
-
-
   useEffect(() => {
     if (!mountRef.current) return;
 
@@ -205,11 +202,14 @@ export function StageScene() {
     const keys = new Set<string>();
 
     const handleKeyDown = (e: KeyboardEvent) => {
+      const tag = (document.activeElement as HTMLElement)?.tagName.toLowerCase();
+      if (tag === 'input' || tag === 'textarea' || tag === 'select' || tag === 'button') return;
+
+
       keys.add(e.key.toLowerCase())
       if (selectedObjectRef.current) {
         const rotationSpeed = Math.PI / 45;
 
-        //arrow key press with object selected to rotate degrees, and then fixed floating point accumulation err
         if (e.key === 'ArrowLeft') {
           selectedObjectRef.current.rotation.y += rotationSpeed;
           selectedObjectRef.current.rotation.y = Math.round(selectedObjectRef.current.rotation.y * (180 / Math.PI)) * (Math.PI / 180);
