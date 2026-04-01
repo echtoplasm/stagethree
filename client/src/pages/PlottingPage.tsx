@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { ProjectCard } from '../components/projects/ProjectCard';
 import { StageScene } from '../components/ThreeD';
 import { ArrowRight, CircleX, Maximize2 } from 'lucide-react';
@@ -11,17 +11,22 @@ import { useAuth } from '../contexts/AuthContext';
 import { useStageContext } from '../contexts/StageContext';
 import { useWindowSize } from '../hooks/useWindowSize';
 import { ScreenSizeModal } from '../components/userUI/ScreenSizeModal';
+import { type StageSceneHandle } from '../components/ThreeD';
+import { SettingsDrawer } from '../components/projectSettings/SettingsDrawer';
 
 export function PlottingPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<string | null>(null);
   const [elementTypes, setElementTypes] = useState<ElementType[]>([]);
   const [inputChannelModal, setInputChannelModal] = useState(false);
-  const { setIsSandbox} = useStageContext();
+  const { setIsSandbox } = useStageContext();
   const { isAuthenticated } = useAuth();
- 
+
+
+  const stageSceneRef = useRef<StageSceneHandle | null>(null);
+
   const { width } = useWindowSize();
- 
+
   const fetchElementTypes = async () => {
     const data = await fetchAllElementTypes();
     setElementTypes(data);
@@ -69,16 +74,16 @@ export function PlottingPage() {
 
       {/* Main 3D Viewer */}
       <div className="viewer-container">
-        <StageScene />
+        <StageScene ref={stageSceneRef} />
       </div>
 
       {/* Bottom Tab Bar */}
       <div className="tab-bar">
         <button
-          className={`tab ${activeTab === 'equipment' ? 'active' : ''}`}
-          onClick={() => handleTabClick('equipment')}
+          className={`tab ${activeTab === 'settings' ? 'active' : ''}`}
+          onClick={() => handleTabClick('settings')}
         >
-          Equipment
+          Settings
         </button>
         <button
           className={`tab ${activeTab === 'elements' ? 'active' : ''}`}
@@ -96,10 +101,10 @@ export function PlottingPage() {
 
       {/* Bottom Drawer */}
       <div className={`drawer ${activeTab ? 'open' : ''}`}>
-        {activeTab === 'equipment' && (
+        {activeTab === 'settings' && (
           <div className="drawer-content">
-            <h3>Equipment</h3>
-            <p>Equipment palette will go here</p>
+            <h3>Settings</h3>
+            <SettingsDrawer sceneRef={stageSceneRef}/>
           </div>
         )}
         {activeTab === 'elements' && (

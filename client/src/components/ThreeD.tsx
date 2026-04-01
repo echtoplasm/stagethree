@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useImperativeHandle, useRef, forwardRef, useState } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { useStageContext } from '../contexts/StageContext';
@@ -24,10 +24,18 @@ type ContextMenuState = {
 
 }
 
+export interface StageSceneHandle {
+  getSnapshot: () => string | null;
+}
+
 const modelCache = new Map<string, THREE.Group>();
 const loader = new GLTFLoader();
 
-export function StageScene() {
+export const StageScene = forwardRef<StageSceneHandle, {}>((_props, ref) => {
+
+  useImperativeHandle(ref, () => ({
+    getSnapshot: () => rendererRef.current?.domElement.toDataURL('image/png') ?? null
+  }))
 
   //STATE MANAGEMENT
   const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null);
@@ -188,7 +196,7 @@ export function StageScene() {
     cameraRef.current = camera;
 
     // renderer setup
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
     renderer.setSize(mountRef.current.clientWidth, mountRef.current.clientHeight);
     mountRef.current.appendChild(renderer.domElement);
     rendererRef.current = renderer;
@@ -516,5 +524,5 @@ export function StageScene() {
 
     </div >
   );
-}
+})
 
