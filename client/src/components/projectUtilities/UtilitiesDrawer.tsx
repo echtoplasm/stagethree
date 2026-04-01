@@ -1,12 +1,17 @@
 import { type StageSceneHandle } from '../ThreeD';
 import { useStageContext } from '../../contexts/StageContext';
-
-interface SettingsDrawerProps {
+import { useAuth } from '../../contexts/AuthContext';
+import { Info } from 'lucide-react';
+interface UtilitiesDrawerProps {
   sceneRef: React.RefObject<StageSceneHandle | null>;
 }
 
-export const SettingsDrawer = ({ sceneRef }: SettingsDrawerProps) => {
-  const { inputChannels, stage, stagePlot } = useStageContext();
+export const UtilitiesDrawer = ({ sceneRef }: UtilitiesDrawerProps) => {
+  const { inputChannels, stage, stagePlot} = useStageContext();
+  const { isAuthenticated } = useAuth();
+
+  const isSandbox = !isAuthenticated;
+
 
   const handlePdfExport = async () => {
     const { default: jsPDF } = await import('jspdf');
@@ -81,9 +86,17 @@ export const SettingsDrawer = ({ sceneRef }: SettingsDrawerProps) => {
 
   return (
     <div>
-      <button className="btn btn-primary" onClick={handlePdfExport}>
-        Export Scene to PDF
-      </button>
+      {!isSandbox && (
+        <button className="btn btn-primary" onClick={handlePdfExport}>
+          Export Scene to PDF
+        </button>
+      )}
+      <div className="alert mb-6">
+        <Info size={18} />
+        <span>
+          You cannot use the utility functions of StageThree while in sandbox mode. You must sign in or sign up to exit sandbox mode.
+        </span>
+      </div>
     </div>
   );
 };

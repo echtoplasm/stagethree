@@ -12,7 +12,7 @@ import { useStageContext } from '../contexts/StageContext';
 import { useWindowSize } from '../hooks/useWindowSize';
 import { ScreenSizeModal } from '../components/userUI/ScreenSizeModal';
 import { type StageSceneHandle } from '../components/ThreeD';
-import { SettingsDrawer } from '../components/projectSettings/SettingsDrawer';
+import { UtilitiesDrawer } from '../components/projectUtilities/UtilitiesDrawer';
 
 export function PlottingPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -22,6 +22,7 @@ export function PlottingPage() {
   const { setIsSandbox } = useStageContext();
   const { isAuthenticated } = useAuth();
 
+  const isSandbox = !isAuthenticated;
 
   const stageSceneRef = useRef<StageSceneHandle | null>(null);
 
@@ -80,10 +81,10 @@ export function PlottingPage() {
       {/* Bottom Tab Bar */}
       <div className="tab-bar">
         <button
-          className={`tab ${activeTab === 'settings' ? 'active' : ''}`}
-          onClick={() => handleTabClick('settings')}
+          className={`tab ${activeTab === 'utilities' ? 'active' : ''}`}
+          onClick={() => handleTabClick('utilities')}
         >
-          Settings
+          Utilities
         </button>
         <button
           className={`tab ${activeTab === 'elements' ? 'active' : ''}`}
@@ -101,10 +102,10 @@ export function PlottingPage() {
 
       {/* Bottom Drawer */}
       <div className={`drawer ${activeTab ? 'open' : ''}`}>
-        {activeTab === 'settings' && (
+        {activeTab === 'utilities' && (
           <div className="drawer-content">
             <h3>Settings</h3>
-            <SettingsDrawer sceneRef={stageSceneRef}/>
+            <UtilitiesDrawer sceneRef={stageSceneRef} />
           </div>
         )}
         {activeTab === 'elements' && (
@@ -117,10 +118,14 @@ export function PlottingPage() {
         )}
         {activeTab === 'inputs' && (
           <div className="drawer-content pb-8">
-            <button className='btn-sm btn-ghost mb-4' onClick={() => setInputChannelModal(true)}>
-              <Maximize2 />
-            </button>
-            <span className='text-secondary'> expand to edit</span>
+            {!isSandbox && (
+              <div>
+                <button className='btn-sm btn-ghost mb-4' onClick={() => setInputChannelModal(true)}>
+                  <Maximize2 />
+                </button>
+                <span className='text-secondary'> expand to edit</span>
+              </div>
+            )}
             <h3>Input Channels</h3>
             <InputChannelDrawer />
           </div>

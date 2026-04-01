@@ -7,6 +7,8 @@ import { useAuth } from '../contexts/AuthContext';
 import { GLTFLoader } from 'three/examples/jsm/Addons.js';
 import { ElementPositionModal } from './threeDComponents/ElementPostitionModal';
 import { ElementRotationModal } from './threeDComponents/ElementRotationModal';
+import { Maximize2, Minimize2, ShieldQuestion } from 'lucide-react';
+import {SandBoxDocs} from '../components/documentation/modals/SandboxMode';
 
 interface StageObject {
   id: string;
@@ -48,8 +50,18 @@ export const StageScene = forwardRef<StageSceneHandle, {}>((_props, ref) => {
   //state for selected element positioning and rotation
   const [selectedElementPosition, setSelectedElementPosition] = useState<THREE.Vector3 | null>(null);
   const [selectedObjectRotation, setSelectedObjectRotation] = useState<THREE.Euler | null>(null)
-
   const [selectedObject, setSelectedObject] = useState<StageObject | null>(null);
+
+  //state for object overlays 
+  const [objOverlay, setObjOverlay] = useState(false);
+
+  //state for stage overlay 
+  const [stageOverlay, setStageOverlay] = useState(false);
+
+  //state for sandbox doc help
+
+  const [sandBoxHelp, setSandBoxHelp] = useState(false);
+
   //REFS
   const objectsRef = useRef<StageObject[]>([]);
   const mountRef = useRef<HTMLDivElement>(null);
@@ -412,115 +424,161 @@ export const StageScene = forwardRef<StageSceneHandle, {}>((_props, ref) => {
         }}
       />
       <div className='stageobjects-overlay'>
-        <h3>Stage Objects</h3>
-        <ul>
-          {objects.map(obj => (
-            <li key={obj.id}>
-              {obj.name} - ( x: {Number(obj.position.x.toFixed(2))} , z: {Number(obj.position.z.toFixed(2))} )
-            </li>
-          ))}
-        </ul>
-      </div>
-      {stage && activeProject && (
-        <div className='stageinfo-overlay'>
-          <h3>Current Stage</h3>
-          <p>stage: {stage?.name}</p>
-          <p>project: {activeProject?.name}</p>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <h3>Stage Objects</h3>
+          <button className='btn btn-ghost btn-sm' onClick={() => setObjOverlay(prev => !prev)}>
+            {objOverlay ? <Maximize2 size={14} /> : <Minimize2 size={14} />}
+          </button>
         </div>
-      )}
-
-      {contextMenu && (
-        <div
-          className="context-menu"
-          style={{ position: 'fixed', top: contextMenu.y, left: contextMenu.x }}
-          onMouseLeave={() => setContextMenu(null)}
-        >
-          <div className="context-menu__header">{contextMenu.object.name}</div>
-          <ul className="context-menu__list">
-            <li className="context-menu__item context-menu__item--danger" onClick={() => {
-              console.log(contextMenu.object.mesh);
-              console.log(sceneRef.current?.children)
-              if (!isSandbox) {
-                handleDeleteObject(contextMenu.object)
-              } else {
-                contextMenu.object.mesh.removeFromParent();
-                setObjects(prev => {
-                  const next = prev.filter(obj => obj !== contextMenu.object);
-                  objectsRef.current = next;
-                  return next;
-                });
-                setContextMenu(null);
-              }
-            }}>
-              Delete
-            </li>
-            <li className='context-menu__item' onClick={() => {
-              setSelectedElementPosition(contextMenu.object.position)
-              setSelectedObject(contextMenu.object);
-              setElpContext(true)
-            }}>
-              Update Position
-            </li>
-            <li className='context-menu__item' onClick={() => {
-              setSelectedObjectRotation(contextMenu.object.mesh.rotation)
-              setSelectedObject(contextMenu.object);
-              setErpContext(true)
-            }}>
-              Update Rotation
-            </li>
-
+        {!objOverlay && (
+          <ul>
+            {objects.map(obj => (
+              <li key={obj.id}>
+                {obj.name} - ( x: {Number(obj.position.x.toFixed(2))} , z: {Number(obj.position.z.toFixed(2))} )
+              </li>
+            ))}
           </ul>
-        </div>
-      )}
-      {elpContext && (
-        <ElementPositionModal
-          initialPosition={selectedElementPosition}
-          onSuccess={(x, y, z) => {
-            console.log('selected object firing within onsuccess of modal', selectedObject)
-            selectedObject?.mesh.position.set(x, y, z);
-            setObjects(prev => {
-              const next = prev.map(obj =>
-                obj.id === selectedObject?.id
-                  ? { ...obj, position: new THREE.Vector3(x, y, z) }
-                  : obj
-              );
-              objectsRef.current = next;
-              return next;
-            });
+        )}
+      </div>
+      {
+        stage && activeProject && (
+          <div className='stageinfo-overlay'>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <h3>Current Stage</h3>
+              <button className='btn btn-ghost btn-sm' onClick={() => setStageOverlay(prev => !prev)}>
+                {stageOverlay ? <Maximize2 size={14} /> : <Minimize2 size={14} />}
+              </button>
+            </div>
+            {!stageOverlay && (
+              <div>
+                <ul>
+                  <li>stage: {stage?.name}</li>
+                  <li>project: {activeProject?.name}</li>
+                </ul>
+              </div>
+            )}
+          </div>
+        )
+      }
 
-            console.log('after set:', selectedObject?.mesh.position);
-            if (!isSandbox && selectedObject?.placementId) {
-              updateElementPlacement(selectedObject?.placementId, {
-                positionX: x,
-                positionY: y,
-                positionZ: z,
-              });
-            }
-            setElpContext(false);
-            setContextMenu(null)
-          }}
-          onClose={() => setElpContext(false)}
-        />
-      )}
+      {
+        isSandbox && (
+          <div className='sandbox-banner'>
+            <span>You are in sandbox mode.</span>
+            <button
+              onClick={() => setSandBoxHelp(true)} className='btn btn-ghost btn-sm'><ShieldQuestion size={14} /></button>
+          </div>
+        )
+      }
 
-      {erpContext && (
-        <ElementRotationModal
-          initialRotation={selectedObjectRotation}
-          onSuccess={(x, y, z) => {
-            selectedObject?.mesh.rotation.set(x, y, z);
-            if (!isSandbox && selectedObject?.placementId) {
-              updateElementPlacement(selectedObject.placementId, {
-                rotationX: x,
-                rotationY: y,
-                rotationZ: z,
+      {
+        contextMenu && (
+          <div
+            className="context-menu"
+            style={{ position: 'fixed', top: contextMenu.y, left: contextMenu.x }}
+            onMouseLeave={() => setContextMenu(null)}
+          >
+            <div className="context-menu__header">{contextMenu.object.name}</div>
+            <ul className="context-menu__list">
+              <li className="context-menu__item context-menu__item--danger" onClick={() => {
+                console.log(contextMenu.object.mesh);
+                console.log(sceneRef.current?.children)
+                if (!isSandbox) {
+                  handleDeleteObject(contextMenu.object)
+                } else {
+                  contextMenu.object.mesh.removeFromParent();
+                  setObjects(prev => {
+                    const next = prev.filter(obj => obj !== contextMenu.object);
+                    objectsRef.current = next;
+                    return next;
+                  });
+                  setContextMenu(null);
+                }
+              }}>
+                Delete
+              </li>
+              <li className='context-menu__item' onClick={() => {
+                setSelectedElementPosition(contextMenu.object.position)
+                setSelectedObject(contextMenu.object);
+                setElpContext(true)
+              }}>
+                Update Position
+              </li>
+              <li className='context-menu__item' onClick={() => {
+                setSelectedObjectRotation(contextMenu.object.mesh.rotation)
+                setSelectedObject(contextMenu.object);
+                setErpContext(true)
+              }}>
+                Update Rotation
+              </li>
+
+            </ul>
+          </div>
+        )
+      }
+      {
+        elpContext && (
+          <ElementPositionModal
+            initialPosition={selectedElementPosition}
+            onSuccess={(x, y, z) => {
+              console.log('selected object firing within onsuccess of modal', selectedObject)
+              selectedObject?.mesh.position.set(x, y, z);
+              setObjects(prev => {
+                const next = prev.map(obj =>
+                  obj.id === selectedObject?.id
+                    ? { ...obj, position: new THREE.Vector3(x, y, z) }
+                    : obj
+                );
+                objectsRef.current = next;
+                return next;
               });
-            }
-            setErpContext(false);
-            setContextMenu(null);
-          }}
-          onClose={() => setErpContext(false)}
-        />
-      )}
+
+              console.log('after set:', selectedObject?.mesh.position);
+              if (!isSandbox && selectedObject?.placementId) {
+                updateElementPlacement(selectedObject?.placementId, {
+                  positionX: x,
+                  positionY: y,
+                  positionZ: z,
+                });
+              }
+              setElpContext(false);
+              setContextMenu(null)
+            }}
+            onClose={() => setElpContext(false)}
+          />
+        )
+      }
+
+      {
+        erpContext && (
+          <ElementRotationModal
+            initialRotation={selectedObjectRotation}
+            onSuccess={(x, y, z) => {
+              selectedObject?.mesh.rotation.set(x, y, z);
+              if (!isSandbox && selectedObject?.placementId) {
+                updateElementPlacement(selectedObject.placementId, {
+                  rotationX: x,
+                  rotationY: y,
+                  rotationZ: z,
+                });
+              }
+              setErpContext(false);
+              setContextMenu(null);
+            }}
+            onClose={() => setErpContext(false)}
+          />
+        )
+      }
+
+      {
+        sandBoxHelp && (
+          <SandBoxDocs 
+            onClose={() => setSandBoxHelp(false)}
+          />
+        )
+      }
+
+
 
     </div >
   );
