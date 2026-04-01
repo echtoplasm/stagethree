@@ -1,8 +1,10 @@
 import { useState } from 'react';
-import { SlidersHorizontal, CircleUser, Theater, LayoutTemplate, Camera } from 'lucide-react';
+import { SlidersHorizontal, CircleUser, Theater, LayoutTemplate, Camera, BookCheck } from 'lucide-react';
 import { PlottingDocModal } from './modals/Plotting';
 import { UserPortalDocModal } from './modals/UserPortal'
 import { ControlsDocModal } from './modals/KeyboardControls';
+import { SandBoxDocs } from './modals/SandboxMode';
+
 const docs = [
   {
     key: 'plotting',
@@ -33,6 +35,12 @@ const docs = [
     title: 'Camera/Keyboard Controls While Plotting',
     description: 'These documents describe how to best use the camera/directional controls in the plotting scene',
     icon: Camera
+  },
+  {
+   key: 'sandboxMode',
+   title: 'Sandbox Mode',
+   description: 'These documents describe the limitations of sandbox mode',
+   icon: BookCheck 
   }
 ];
 
@@ -156,6 +164,24 @@ export const Documentation = () => {
               <button className="close-btn" onClick={() => setOpen(null)}>✕</button>
             </div>
             <ControlsDocModal
+              onClose={() => setOpen(null)}
+            />
+          </div>
+        </>
+      )}
+      
+      {open === 'sandboxMode' && (
+        <>
+          <div className="modal-backdrop" onClick={() => setOpen(null)} />
+          <div className="modal modal-wide modal-scrollable">
+            <div className="modal-header">
+              <div>
+                <h2>Camera Controls</h2>
+                <p className="text-muted">Sandbox Mode</p>
+              </div>
+              <button className="close-btn" onClick={() => setOpen(null)}>✕</button>
+            </div>
+            <SandBoxDocs
               onClose={() => setOpen(null)}
             />
           </div>
