@@ -7,6 +7,7 @@ import { StageProvider } from './contexts/StageContext';
 import { useAuth } from './contexts/AuthContext';
 
 import { LandingPage } from './pages/LandingPage';
+import { ShareView } from './components/sharedPlot/SharedScene';
 
 const StageRead = lazy(() => import('./components/shared/stage/StageRead').then(m => ({ default: m.StageRead })));
 const PlottingPage = lazy(() => import('./pages/PlottingPage').then(m => ({ default: m.PlottingPage })));
@@ -27,6 +28,7 @@ function AppRoutes() {
         <Route path="/app" element={<PlottingPage />} />
         <Route path="/portal" element={<UserPortal />} />
         <Route path="/docs" element={<Documentation />} />
+        <Route path="/share/:uuid" element={<ShareView />} />
         <Route
           path="/admin"
           element={(user?.roleId ?? 0) >= 2 ? <AdminPage /> : <Navigate to="/" />}

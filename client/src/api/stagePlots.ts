@@ -29,12 +29,18 @@ export const fetchAllStagePlots = async (): Promise<StagePlot[]> => {
   return apiFetch('/api/stageplots');
 };
 
-export const fetchStagePlotsByProjectId = async (projectId: number): Promise<StagePlotWithStageName[]> => {
+export const fetchStagePlotsByProjectId = async (
+  projectId: number
+): Promise<StagePlotWithStageName[]> => {
   return apiFetch(`/api/stageplots/projects/${projectId}`);
 };
 
 export const fetchFullStagePlotConfig = async (plotId: number): Promise<FullStagePlotResponse> => {
   return apiFetch(`/api/stageplots/full/${plotId}`);
+};
+
+export const fetchFullStagePlotByUUID = async (uuid: string): Promise<FullStagePlotResponse> => {
+  return apiFetch(`/api/stageplots/share/${uuid}`);
 };
 
 export const createStagePlot = async (

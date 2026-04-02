@@ -253,6 +253,7 @@ export const apiStageToDb = (apiStage: Partial<StageAPI>): Partial<StageDB> => (
 // ============================================
 export interface StagePlotDB {
   id_stp: number;
+  uuid_stp: string;
   id_prj_stp: number;
   id_stg_stp: number | null;
   name_stp: string;
@@ -262,6 +263,7 @@ export interface StagePlotDB {
 
 export interface StagePlotAPI {
   id: number;
+  stagePlotUUID: string;
   projectId: number;
   stageId?: number;
   name: string;
@@ -277,6 +279,7 @@ export interface StagePlotAPI {
  */
 export const dbStagePlotToApi = (dbStagePlot: StagePlotDB): StagePlotAPI => ({
   id: dbStagePlot.id_stp,
+  stagePlotUUID: dbStagePlot.uuid_stp,
   projectId: dbStagePlot.id_prj_stp,
   stageId: dbStagePlot.id_stg_stp || undefined,
   name: dbStagePlot.name_stp,
@@ -299,6 +302,7 @@ export const dbStagePlotToApi = (dbStagePlot: StagePlotDB): StagePlotAPI => ({
  * @returns Partial StagePlot object converted to database column naming
  */
 export const apiStagePlotToDb = (apiStagePlot: Partial<StagePlotAPI>): Partial<StagePlotDB> => ({
+  ...(apiStagePlot.stagePlotUUID && { uuid_stp: apiStagePlot.stagePlotUUID }),
   ...(apiStagePlot.projectId && { id_prj_stp: apiStagePlot.projectId }),
   ...(apiStagePlot.stageId && { id_stg_stp: apiStagePlot.stageId }),
   ...(apiStagePlot.name && { name_stp: apiStagePlot.name }),
@@ -498,7 +502,6 @@ export interface ImageAPI {
   category?: string;
   createdAt: string;
 }
-
 
 export interface ImageWithScaleDB extends ImageDB {
   default_scale_x_elt: number;

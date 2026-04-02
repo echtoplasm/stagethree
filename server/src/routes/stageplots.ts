@@ -8,6 +8,7 @@ import {
   deleteStagePlot,
   getFullStagePlotInfo,
   getAllStagePlotsByUserId,
+  getStagePlotByUUID,
 } from '../controllers/stageplot';
 
 const stagePlotRouter = Router();
@@ -23,5 +24,5 @@ stagePlotRouter.delete('/:id', deleteStagePlot);
 stagePlotRouter.get('/full/:id', getFullStagePlotInfo);
 stagePlotRouter.get('/user/:id', getAllStagePlotsByUserId);
 stagePlotRouter.post('/', createStagePlot);
-
+stagePlotRouter.get('/share/:uuid', getStagePlotByUUID);
 export default stagePlotRouter;

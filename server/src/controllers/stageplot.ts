@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
 import db from '../db/knex';
+import { randomUUID } from 'node:crypto';
+
 import {
   dbStagePlotToApi,
   apiStagePlotToDb,
@@ -98,6 +100,7 @@ export const createStagePlot = async (req: Request, res: Response): Promise<void
       return;
     }
 
+    //need to insert uuid from crypto
     const plotDbData = apiStagePlotToDb({
       projectId,
       stageId,
@@ -193,7 +196,7 @@ export const deleteStagePlot = async (req: Request, res: Response): Promise<void
 };
 
 /**
- * GET /api/stageplots/full/:id
+ * GET /api/stageplots/share/:uuid
  * get stage plot and element placements with stageplot id
  */
 export const getFullStagePlotInfo = async (req: Request, res: Response): Promise<void> => {
@@ -259,11 +262,11 @@ export const getFullStagePlotInfo = async (req: Request, res: Response): Promise
     });
 
     const { id } = req.params;
-
     //stageplot to api conversion
     const stagePlot = await db('stage_plot_stp').where('id_stp', id).first();
     if (!stagePlot) {
       res.status(404).json({ error: 'Stage plot not found' });
+      return;
     }
     const stagePlotApi = dbStagePlotToApi(stagePlot);
 
@@ -276,6 +279,117 @@ export const getFullStagePlotInfo = async (req: Request, res: Response): Promise
       .leftJoin('element_type_elt', 'element_placement_elp.id_elt_elp', 'element_type_elt.id_elt')
       .leftJoin('image_img', 'element_type_elt.id_img_elt', 'image_img.id_img')
       .where('element_placement_elp.id_stp_elp', id)
+      .select('element_placement_elp.*', 'element_type_elt.name_elt', 'image_img.file_path_img');
+
+    const apiElements = elements.map(dbElementToApi);
+
+    //Stage data passed to the res.json
+    const stage: StageDB = await db('stage_stg').where('id_stg', stagePlot.id_stg_stp).first();
+    const stageApi: StageAPI = dbStageToApi(stage);
+
+    const projectId = stagePlotApi.projectId;
+    const project: ProjectDB = await db('project_prj').where('id_prj', projectId).first();
+
+    const projectApi: ProjectAPI = dbProjectToApi(project);
+    res.json({
+      stagePlot: stagePlotApi,
+      inputChannels: inputChannelsApi,
+      elements: apiElements,
+      stage: stageApi,
+      project: projectApi,
+    });
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+/**
+ * @param req - 
+ * @param res - 
+ */
+export const getStagePlotByUUID = async (req: Request, res: Response): Promise<void> => {
+  try {
+    /**
+     * Wrote these specific type conversions since this endpoint is using data
+     * that is extremely use case specific and very unlikely that data will be
+     * returned and formatted like this elsewhere
+     *
+     */
+    interface dbElement {
+      created_at_elp: string;
+      id_elp: number;
+      id_elt_elp: number;
+      id_stp_elp: number;
+      uuid_stp: string;
+      name_elt: string;
+      file_path_img: string;
+      position_x_elp: string;
+      position_y_elp: string;
+      position_z_elp: string;
+      rotation_x_elp: string;
+      rotation_y_elp: string;
+      rotation_z_elp: string;
+      scale_x_elp: string;
+      scale_y_elp: string;
+      scale_z_elp: string;
+    }
+
+    interface apiElement {
+      createdAt: string;
+      id: number;
+      elementTypeId: number;
+      stagePlotId: number;
+      stagePlotUUID: string;
+      name: string;
+      filePathImg: string;
+      positionX: number;
+      positionY: number;
+      positionZ: number;
+      rotationX: number;
+      rotationY: number;
+      rotationZ: number;
+      scaleX: number;
+      scaleY: number;
+      scaleZ: number;
+    }
+
+    const dbElementToApi = (dbel: dbElement): apiElement => ({
+      createdAt: dbel.created_at_elp,
+      id: dbel.id_elp,
+      elementTypeId: dbel.id_elt_elp,
+      stagePlotId: dbel.id_stp_elp,
+      stagePlotUUID: dbel.uuid_stp,
+      name: dbel.name_elt,
+      filePathImg: dbel.file_path_img,
+      positionX: parseFloat(dbel.position_x_elp),
+      positionY: parseFloat(dbel.position_y_elp),
+      positionZ: parseFloat(dbel.position_z_elp),
+      rotationX: parseFloat(dbel.rotation_x_elp),
+      rotationY: parseFloat(dbel.rotation_y_elp),
+      rotationZ: parseFloat(dbel.rotation_z_elp),
+      scaleX: parseFloat(dbel.scale_x_elp),
+      scaleY: parseFloat(dbel.scale_y_elp),
+      scaleZ: parseFloat(dbel.scale_z_elp),
+    });
+
+    const { uuid } = req.params;
+    //stageplot to api conversion
+    const stagePlot = await db('stage_plot_stp').where('uuid_stp', uuid).first();
+    if (!stagePlot) {
+      res.status(404).json({ error: 'Stage plot not found' });
+      return;
+    }
+    const stagePlotApi = dbStagePlotToApi(stagePlot);
+
+    //input channel api conversion
+    const inputChannels = await db('input_channel_inc').where('id_stp_inc', stagePlot.id_stp);
+    const inputChannelsApi = inputChannels.map(dbInputChannelToApi);
+
+    //endpoint specific elements to api
+    const elements: dbElement[] = await db('element_placement_elp')
+      .leftJoin('element_type_elt', 'element_placement_elp.id_elt_elp', 'element_type_elt.id_elt')
+      .leftJoin('image_img', 'element_type_elt.id_img_elt', 'image_img.id_img')
+      .where('element_placement_elp.id_stp_elp', stagePlot.id_stp)
       .select('element_placement_elp.*', 'element_type_elt.name_elt', 'image_img.file_path_img');
 
     const apiElements = elements.map(dbElementToApi);
