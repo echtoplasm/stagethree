@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { SlidersHorizontal, CircleUser, Theater, LayoutTemplate, Camera, BookCheck } from 'lucide-react';
+import { SlidersHorizontal, CircleUser, Theater, LayoutTemplate, Camera, BookCheck, FileText, Waypoints } from 'lucide-react';
 import { PlottingDocModal } from './modals/Plotting';
 import { UserPortalDocModal } from './modals/UserPortal'
 import { ControlsDocModal } from './modals/KeyboardControls';
@@ -41,6 +41,18 @@ const docs = [
    title: 'Sandbox Mode',
    description: 'These documents describe the limitations of sandbox mode',
    icon: BookCheck 
+  },
+  {
+    key: 'exportPdf', 
+    title: 'Exporting to PDF',
+    description: 'How to get the best use out of the export to PDF feature found in the utilities drawer',
+    icon: FileText
+  },
+  {
+    key: 'sharingPlots',
+    title: 'Sharing Plots',
+    description: 'How the share feature found in the utilites drawer works',
+    icon: Waypoints 
   }
 ];
 

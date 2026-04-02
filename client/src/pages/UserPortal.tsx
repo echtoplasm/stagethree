@@ -4,7 +4,7 @@ import { ProjectTable } from '../components/shared/projects/ProjectTable';
 import { User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
-
+import {VenueTable} from '../components/shared/venues/VenueTable'
 
 export const UserPortal = () => {
   const { user, isAuthenticated } = useAuth();
@@ -45,6 +45,10 @@ export const UserPortal = () => {
 
         <div className='mb-8'>
           <StageTable />
+        </div>
+
+        <div>
+          <VenueTable />
         </div>
 
       </div>

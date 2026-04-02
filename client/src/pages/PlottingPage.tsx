@@ -120,10 +120,10 @@ export function PlottingPage() {
           <div className="drawer-content pb-8">
             {!isSandbox && (
               <div>
-                <button className='btn-sm btn-ghost mb-4' onClick={() => setInputChannelModal(true)}>
-                  <Maximize2 />
+                <button className='btn btn-ghost btn-sm mb-4' onClick={() => setInputChannelModal(true)}>
+                  <Maximize2 size={14} />
+                  <span className='text-secondary'>expand to edit</span>
                 </button>
-                <span className='text-secondary'> expand to edit</span>
               </div>
             )}
             <h3>Input Channels</h3>

@@ -47,10 +47,13 @@ export const getVenueById = async (req: Request, res: Response): Promise<void> =
  * POST /api/equipment/
  * create a new venue
  *
+ *
+ * *** NEED TO ADD USER ID FOR CREATED BY***
+ * *** ALSO PROBABLY GOING TO NEED TO ADD THE SAME DELETE LOGIC THAT STAGE HAS ***
  */
 export const createVenue = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { name, address, city, countryId, stateId, capacity } = req.body;
+    const { name, address, city, countryId, stateId, capacity, createdBy } = req.body;
 
     if (!name || !address || !city || !countryId || !stateId || !capacity) {
       res.status(401).json({
@@ -65,6 +68,7 @@ export const createVenue = async (req: Request, res: Response): Promise<void> =>
       countryId,
       stateId,
       capacity,
+      createdBy,
     });
 
     const [result]: VenueDB[] = await db(venueTable).insert(dbVenueData).returning('*');
@@ -100,4 +104,26 @@ export const deleteVenue = async (req: Request, res: Response): Promise<void> =>
   }
 };
 
+/**
+ * GET /api/venue/user/:userId
+ * get venues by user id
+ */
 
+export const getVenuesByUserId = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { userId } = req.params;
+
+    const results: VenueDB[] = await db(venueTable).where({
+      created_by_ven: userId,
+    });
+
+    const apiResults = results.map(dbVenueToApi);
+
+    res.status(200).json(apiResults);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      message: 'unable to fetch all venues by user id'
+    })
+  }
+};

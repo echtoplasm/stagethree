@@ -6,6 +6,7 @@ import { StageUpdate } from './StageUpdate';
 import { StageDelete } from './StageDelete';
 import { StageCreate } from './StageCreate';
 import { useAuth } from '../../../contexts/AuthContext';
+
 export function StageTable() {
   const [stages, setStages] = useState<Stage[]>([]);
   const [loading, setLoading] = useState(true);

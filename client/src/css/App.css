@@ -1784,6 +1784,10 @@ css
   text-align: center;
 }
 
+.text-secondary {
+  color: var(--text-secondary)
+}
+
 /* ==========================================
    ANIMATIONS
    ========================================== */

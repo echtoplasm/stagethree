@@ -131,6 +131,7 @@ export interface VenueDB {
   id_sta_ven?: number;
   id_cty_ven?: number;
   capacity_ven?: number;
+  created_by_ven?: number;
   created_at_ven: Date | string;
 }
 
@@ -142,6 +143,7 @@ export interface VenueAPI {
   stateId?: number;
   countryId?: number;
   capacity?: number;
+  createdBy?: number;
   createdAt: string;
 }
 
@@ -159,6 +161,7 @@ export const dbVenueToApi = (dbVenue: VenueDB): VenueAPI => ({
   stateId: dbVenue.id_sta_ven || undefined,
   countryId: dbVenue.id_cty_ven || undefined,
   capacity: dbVenue.capacity_ven || undefined,
+  createdBy: dbVenue.created_by_ven,
   createdAt:
     typeof dbVenue.created_at_ven === 'string'
       ? dbVenue.created_at_ven
@@ -178,6 +181,7 @@ export const apiVenueToDb = (apiVenue: Partial<VenueAPI>): Partial<VenueDB> => (
   ...(apiVenue.stateId && { id_sta_ven: apiVenue.stateId }),
   ...(apiVenue.countryId && { id_cty_ven: apiVenue.countryId }),
   ...(apiVenue.capacity && { capacity_ven: apiVenue.capacity }),
+  ...(apiVenue.createdBy && { created_by_ven: apiVenue.createdBy }),
 });
 
 // ============================================
