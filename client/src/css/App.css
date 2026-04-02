@@ -910,6 +910,7 @@ nav ul button:hover::after {
   transition: all var(--transition);
   text-decoration: none;
   letter-spacing: 0.01em;
+  margin-left: .25rem;
 }
 
 .btn:disabled {

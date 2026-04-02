@@ -33,7 +33,7 @@ export function Navbar({ onThemeToggle, theme }: NavbarProps) {
   const evaluateUser = (user: User) => {
     login(user);
     setShowLogin(false);
-    user.roleId >= 2 ? navigate('/admin') : navigate('/portal');
+    user.roleId >= 2 ? navigate('/admin') : navigate('/app');
   }
 
 

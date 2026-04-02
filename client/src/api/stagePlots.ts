@@ -6,6 +6,7 @@ import { type Stage } from './stages';
 
 export interface StagePlot {
   id: number;
+  stagePlotUUID: string;
   projectId: number;
   stageId?: number;
   name: string;
@@ -40,7 +41,9 @@ export const fetchFullStagePlotConfig = async (plotId: number): Promise<FullStag
 };
 
 export const fetchFullStagePlotByUUID = async (uuid: string): Promise<FullStagePlotResponse> => {
-  return apiFetch(`/api/stageplots/share/${uuid}`);
+  const stageplotUUID = apiFetch(`/api/stageplots/share/${uuid}`);
+  console.log(stageplotUUID);
+  return stageplotUUID;
 };
 
 export const createStagePlot = async (

@@ -2,15 +2,19 @@ import { type StageSceneHandle } from '../ThreeD';
 import { useStageContext } from '../../contexts/StageContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { Info } from 'lucide-react';
+import { useState } from 'react';
+import { Clipboard } from 'lucide-react';
 interface UtilitiesDrawerProps {
   sceneRef: React.RefObject<StageSceneHandle | null>;
 }
 
 export const UtilitiesDrawer = ({ sceneRef }: UtilitiesDrawerProps) => {
-  const { inputChannels, stage, stagePlot} = useStageContext();
+  const { inputChannels, stage, stagePlot } = useStageContext();
   const { isAuthenticated } = useAuth();
-
+  const [copied, setCopied] = useState(false);
   const isSandbox = !isAuthenticated;
+
+  console.log(stagePlot);
 
 
   const handlePdfExport = async () => {
@@ -84,19 +88,34 @@ export const UtilitiesDrawer = ({ sceneRef }: UtilitiesDrawerProps) => {
     doc.save('stage-plot.pdf');
   };
 
+  const handleShareLink = () => {
+    const base = import.meta.env.MODE === 'production'
+      ? 'https://stagethree.dev'
+      : 'http://localhost:5173';
+    navigator.clipboard.writeText(`${base}/share/${stagePlot?.stagePlotUUID}`);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
+
   return (
     <div>
-      {!isSandbox && (
-        <button className="btn btn-primary" onClick={handlePdfExport}>
-          Export Scene to PDF
-        </button>
+      {!isSandbox ? (
+        <div className='row'>
+          <button className="btn btn-primary" onClick={handlePdfExport}>
+            Export Scene to PDF
+          </button>
+          <button className="btn btn-primary" onClick={() => handleShareLink()}>
+            {copied ? <><Clipboard size={12} /> Copied</> : 'Share Plot'}
+          </button>
+        </div>
+      ) : (
+        <div className="alert mb-6">
+          <Info size={18} />
+          <span>
+            You cannot use the utility functions of StageThree while in sandbox mode. You must sign in or sign up to exit sandbox mode.
+          </span>
+        </div>
       )}
-      <div className="alert mb-6">
-        <Info size={18} />
-        <span>
-          You cannot use the utility functions of StageThree while in sandbox mode. You must sign in or sign up to exit sandbox mode.
-        </span>
-      </div>
     </div>
   );
-};
+}

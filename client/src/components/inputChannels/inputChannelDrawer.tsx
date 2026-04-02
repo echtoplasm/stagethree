@@ -1,8 +1,7 @@
 import { useStageContext } from "../../contexts/StageContext";
 import { useAuth } from "../../contexts/AuthContext";
-import {Info} from "lucide-react"
+import { Info } from "lucide-react"
 export const InputChannelDrawer = () => {
-  //*** TODO add editable dropdown menus for input channels ***//
   const { inputChannels } = useStageContext();
   const { isAuthenticated } = useAuth();
 
@@ -10,7 +9,7 @@ export const InputChannelDrawer = () => {
 
   return (
     <div>
-      {!isSandbox && (
+      {!isSandbox ? (
         <div className="input-channel-drawer">
           <table className="table">
             <thead>
@@ -33,15 +32,15 @@ export const InputChannelDrawer = () => {
             </tbody>
           </table>
         </div>
+      ) : (
+
+        <div className="alert mb-6">
+          <Info size={18} />
+          <span>
+            You cannot use the input channel features of StageThree while in sandbox mode. You must sign in or sign up to exit sandbox mode.
+          </span>
+        </div>
       )}
-
-      <div className="alert mb-6">
-        <Info size={18} />
-        <span>
-          You cannot use the input channel features of StageThree while in sandbox mode. You must sign in or sign up to exit sandbox mode.
-        </span>
-      </div>
-
 
     </div>
   )
