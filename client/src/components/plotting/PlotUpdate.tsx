@@ -17,7 +17,8 @@ export function PlotUpdate({ plot, onClose }: PlotUpdateProps) {
     name: plot.name,
     projectId: plot.projectId,
     createdAt: plot.createdAt,
-    gigDate: plot.gigDate
+    gigDate: plot.gigDate,
+    stagePlotUUID: plot.stagePlotUUID
   });
 
   const [error, setError] = useState<string | null>(null);

@@ -27,6 +27,7 @@ export const PlotCreate = ({ onClose, onSuccess, projectId }: PlotCreateProps) =
     stageId: 0,
     name: '',
     gigDate: '',
+    stagePlotUUID: crypto.randomUUID(),
   });
 
   const navigate = useNavigate();

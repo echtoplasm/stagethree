@@ -16,7 +16,7 @@ export function VenueUpdate({ venue, onClose }: VenueUpdateProps) {
     city: venue.city,
     stateId: venue.stateId,
     capacity: venue.capacity,
-
+    createdBy: venue.createdBy
   });
 
 

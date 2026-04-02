@@ -1,5 +1,5 @@
 import { createPortal } from 'react-dom';
-import { X, Lightbulb, MessageCircleWarning } from 'lucide-react';
+import { X, Lightbulb, MessageCircleWarning, Check, Info} from 'lucide-react';
 import { Divider } from '../utilityComponents/Divider';
 
 export interface StageDocsModalProps {
@@ -157,4 +157,4 @@ export const StageDocsModal = ({ onClose }: StageDocsModalProps) => {
   )
 }
  
-}
+
