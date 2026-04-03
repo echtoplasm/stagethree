@@ -6,17 +6,19 @@ import { ErrorMessage } from '../../../components/userUI/ErrorMessage';
 
 
 interface StageCreateProps {
+  venueId: number;
   onClose: () => void;
   onSuccess: () => void;
 }
 
-export function StageCreate({ onClose, onSuccess }: StageCreateProps) {
+export function StageCreate({ venueId,  onClose, onSuccess }: StageCreateProps) {
   //AUTH CHECK
   const { user } = useAuth();
   if (!user) return null
 
   //STATE MANAGEMENT
   const [stageForm, setStageForm] = useState<Omit<Stage, 'id'>>({
+    venueId: venueId,
     name: '',
     width: 0,
     depth: 0,

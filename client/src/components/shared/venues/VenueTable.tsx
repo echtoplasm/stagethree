@@ -1,20 +1,40 @@
 import { useState, useEffect } from 'react';
-import { Box, Trash, Plus, Pencil } from 'lucide-react';
+import { Box, Trash, Plus, Pencil} from 'lucide-react';
 import type { Venue } from '../../../api/venues';
 import { getVenuesByUserId } from '../../../api/venues';
 import { VenueUpdate } from './VenueUpdate';
 import { VenueDelete } from './VenueDelete';
 import { VenueCreate } from './VenueCreate';
 import { useAuth } from '../../../contexts/AuthContext';
+import { type Stage, getStagesByVenueId } from '../../../api/stages'
+import { StageCreate } from '../stage/StageCreate';
+import { StageDelete } from '../stage/StageDelete';
+import { StageUpdate } from '../stage/StageUpdate';
 
 export function VenueTable() {
+
   const [venues, setVenues] = useState<Venue[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
   const [update, setUpdate] = useState(false);
   const [deleteVenue, setVenueDelete] = useState(false);
   const [selectedVenue, setSelectedVenue] = useState<Venue | null>(null)
   const [venueCreate, setVenueCreate] = useState(false);
+
+  // *** *** STAGE state management *** ***
+  const [stages, setStages] = useState<Stage[]>([])
+  const [selectedStage, setSelectedStage] = useState<Stage | null>(null);
+
+  //stage component states
+  const [showStages, setShowStages] = useState(false);
+  const [stageCreate, setStageCreate] = useState(false);
+  const [stageUpdate, setStageUpdate] = useState(false);
+  const [stageDelete, setStageDelete] = useState(false);
+
+
+
+  //Initialize user state from auth context
   const { user } = useAuth();
   if (!user) return null;
 
@@ -37,6 +57,13 @@ export function VenueTable() {
   const resetVenueState = async () => {
     const data = await getVenuesByUserId(user.id);
     setVenues(data);
+  }
+
+  const getVenueStages = async (venueId: number) => {
+    const data = await getStagesByVenueId(venueId);
+    setStages(data);
+    console.log(stages);
+    setShowStages(true);
   }
 
   if (loading) {
@@ -64,8 +91,8 @@ export function VenueTable() {
     <div>
       <div className="content-wrapper">
         <header className="mb-8">
-          <h1>Manage Your Venues</h1>
-          <p className="text-secondary mb-4">Here are all of the Venues associated with your account</p>
+          <h1>Manage Your Venues and Stages</h1>
+          <p className="text-secondary mb-4">Here are all of the Venues associated with your account, click on a venue to see the associated stages with it. You can create venues and stages together in one place here.</p>
           <button className="btn btn-primary" onClick={() => setVenueCreate(true)}>
             <Plus size={18} />
             Create New Venue
@@ -78,44 +105,45 @@ export function VenueTable() {
           </div>
         ) : (
           <div className='card'>
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Name</th>
-                  <th>Address</th>
-                  <th>City</th>
-                  <th>Capacity</th>
-                  <th colSpan={2}>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {venues.map(venue => (
-                  <tr key={venue.id}>
-                    <td>{venue.id}</td>
-                    <td>{venue.name}</td>
-                    <td>{venue.address}</td>
-                    <td>{venue.city}</td>
-                    <td>{venue.capacity}</td>
-                    <td>
-                      <button
-                        className="btn btn-danger btn-sm"
-                        onClick={() => { setSelectedVenue(venue); setVenueDelete(true); }}
-                      >
-                        <Trash size={16} /> Delete
-                      </button>
-                    </td>
-                    <td>
-                      <button
-                        className='btn btn-update btn-sm'
-                        onClick={() => { setSelectedVenue(venue); setUpdate(true); }}
-                      >
-                        <Pencil size={16} /> Update
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>            </table>
+            {venues.map(venue => (
+              <div key={venue.id}>
+                <div className='project-row' onClick={() => { getVenueStages(venue.id); setSelectedVenue(venue); }}>
+                  <span className='icon'><Box size={18} /></span>
+                  <div style={{ flex: 1 }}>
+                    <span className='name'>{venue.name}</span>
+                    {venue.city && <span className='text-muted' style={{ marginLeft: '0.5rem' }}>{venue.city}</span>}
+                    {venue.address && <span className='text-muted' style={{ marginLeft: '0.5rem' }}>— {venue.address}</span>}
+                  </div>
+                  {venue.capacity && <span className='text-secondary' style={{ fontSize: '0.8rem' }}>cap. {venue.capacity.toLocaleString()}</span>}
+                  <button className='btn btn-danger btn-sm' onClick={(e) => { e.stopPropagation(); setSelectedVenue(venue); setVenueDelete(true); }}>
+                    <Trash size={16} />
+                  </button>
+                  <button className='btn btn-update btn-sm' onClick={(e) => { e.stopPropagation(); setSelectedVenue(venue); setUpdate(true); }}>
+                    <Pencil size={16} />
+                  </button>
+                </div>
+
+                {showStages && selectedVenue?.id === venue.id && (
+                  <div style={{ marginLeft: '2.75rem', borderLeft: '1px solid var(--border-accent)', paddingBottom: '0.5rem' }}>
+                    {stages.map(stage => (
+                      <div key={stage.id} className='plot-row'>
+                        <span style={{ flex: 1 }}>{stage.name}</span>
+                        <span className='text-muted'>{stage.width}ft × {stage.depth}ft × {stage.height}ft</span>
+                        <button className='btn btn-danger btn-sm plot-delete' onClick={() => { setSelectedStage(stage); setStageDelete(true); }}>
+                          <Trash size={14} />
+                        </button>
+                        <button className='btn btn-update btn-sm plot-update' onClick={() => { setSelectedStage(stage); setStageUpdate(true); }}>
+                          <Pencil size={14} />
+                        </button>
+                      </div>
+                    ))}
+                    <button className='btn btn-ghost btn-sm' style={{ margin: '0.25rem 0.5rem' }} onClick={() => setStageCreate(true)}>
+                      <Plus size={14} /> Add Stage
+                    </button>
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
         )}
       </div>
@@ -150,6 +178,38 @@ export function VenueTable() {
 
           }}
           onClose={() => setVenueCreate(false)}
+        />
+      )}
+
+      {stageCreate && selectedVenue && (
+        <StageCreate
+          venueId={selectedVenue.id}
+          onClose={() => setStageCreate(false)}
+          onSuccess={() => {
+            getVenueStages(selectedVenue.id)
+            setStageCreate(false)
+          }} />
+      )}
+
+      {stageUpdate && selectedStage && selectedVenue && (
+        <StageUpdate
+          stage={selectedStage}
+          onClose={() => {
+            getVenueStages(selectedVenue.id)
+            setStageUpdate(false)
+            setSelectedStage(null)
+          }}
+        />
+      )}
+
+      {stageDelete && selectedStage && selectedVenue && (
+        <StageDelete
+          stage={selectedStage}
+          onClose={() => {
+            getVenueStages(selectedVenue.id)
+            setStageDelete(false)
+            setSelectedStage(null)
+          }}
         />
       )}
     </div >

@@ -910,7 +910,7 @@ nav ul button:hover::after {
   transition: all var(--transition);
   text-decoration: none;
   letter-spacing: 0.01em;
-  margin-left: .25rem;
+  margin-left: 0.25rem;
 }
 
 .btn:disabled {
@@ -1762,6 +1762,35 @@ css
   margin-top: 2rem;
 }
 
+.ml-2 {
+  margin-left: 0.5rem;
+}
+
+.ml-4 {
+  margin-left: 1rem;
+}
+
+.ml-6 {
+  margin-left: 1.5rem;
+}
+.ml-8 {
+  margin-left: 2rem;
+}
+
+.mr-2 {
+  margin-right: 0.5rem;
+}
+
+.mr-4 {
+  margin-right: 1rem;
+}
+
+.mr-6 {
+  margin-right: 1.5rem;
+}
+.mr-8 {
+  margin-right: 2rem;
+}
 .list {
   list-style: none;
 }
@@ -1785,7 +1814,7 @@ css
 }
 
 .text-secondary {
-  color: var(--text-secondary)
+  color: var(--text-secondary);
 }
 
 /* ==========================================

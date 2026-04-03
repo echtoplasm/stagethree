@@ -100,12 +100,15 @@ export const createStagePlot = async (req: Request, res: Response): Promise<void
       return;
     }
 
+    const stagePlotUUID = crypto.randomUUID();
+
     //need to insert uuid from crypto
     const plotDbData = apiStagePlotToDb({
       projectId,
       stageId,
       name,
       gigDate,
+      stagePlotUUID,
     });
 
     const [plots]: StagePlotDB[] = await db(plotTable).insert(plotDbData).returning('*');

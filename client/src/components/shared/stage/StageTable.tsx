@@ -151,6 +151,7 @@ export function StageTable() {
         />
       )}
 
+
       {stageCreate && (
         <StageCreate
           onSuccess={async () => {
@@ -158,6 +159,15 @@ export function StageTable() {
             setStageCreate(false)
 
           }}
+
+          //***//
+          //DOUBLE CHECK THIS VENUE ID NULL!
+          //if there are any errors within the admin portal 
+          //but really an admin should not be creating stages 
+          //from the admin portal but from within their own user portal 
+          //***//
+          
+          venueId={null!}
           onClose={() => setStageCreate(false)}
         />
       )}

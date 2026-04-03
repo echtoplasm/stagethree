@@ -60,7 +60,7 @@ export const createDefaultProjectAndPlot = async (user: User): Promise<FullStage
     description: 'This is a placeholder project',
   };
 
-  const defaultStage: Omit<Stage, 'id' | 'createdAt'> = {
+  const defaultStage: Omit<Stage, 'id' | 'createdAt' | 'venueId'> = {
     name: 'Default stage',
     width: 20,
     depth: 20,

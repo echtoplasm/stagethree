@@ -1,5 +1,4 @@
 import { useAuth } from '../contexts/AuthContext';
-import { StageTable } from '../components/shared/stage/StageTable';
 import { ProjectTable } from '../components/shared/projects/ProjectTable';
 import { User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -43,9 +42,6 @@ export const UserPortal = () => {
           <ProjectTable />
         </div>
 
-        <div className='mb-8'>
-          <StageTable />
-        </div>
 
         <div>
           <VenueTable />

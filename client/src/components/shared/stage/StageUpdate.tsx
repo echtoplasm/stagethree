@@ -11,6 +11,7 @@ interface StageUpdateProps {
 export function StageUpdate({ stage, onClose }: StageUpdateProps) {
   const [stageForm, setStageForm] = useState<Stage>({
     id: stage.id,
+    venueId: stage.venueId,
     name: stage.name,
     width: stage.width,
     depth: stage.depth,

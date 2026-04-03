@@ -290,13 +290,11 @@ export const dbStagePlotToApi = (dbStagePlot: StagePlotDB): StagePlotAPI => ({
   gigDate:
     dbStagePlot.gig_date_stp === null
       ? null
-      : typeof dbStagePlot.gig_date_stp === 'string'
-        ? dbStagePlot.gig_date_stp
-        : dbStagePlot.gig_date_stp.toISOString(),
+      :new Date(dbStagePlot.gig_date_stp).toLocaleDateString('en-US', { dateStyle: 'medium' }),
   createdAt:
     typeof dbStagePlot.created_at_stp === 'string'
       ? dbStagePlot.created_at_stp
-      : dbStagePlot.created_at_stp.toISOString(),
+      : new Date(dbStagePlot.created_at_stp).toLocaleDateString('en-US', {dateStyle: 'medium'}),
 });
 
 /**

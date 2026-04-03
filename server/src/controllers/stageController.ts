@@ -91,15 +91,14 @@ export const getStageById = async (req: Request, res: Response): Promise<void> =
 
 export const createStage = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { name, width, depth, height, createdBy } = req.body;
-
+    const { name, width, depth, height, createdBy, venueId } = req.body;
     if (!name || !width || !depth || !height || !createdBy) {
       res.status(400).json({
         message: 'missing one of required fields',
       });
     }
 
-    const data = { name, width, depth, height, createdBy };
+    const data = { name, width, depth, height, createdBy, venueId };
 
     const dbdata = apiStageToDb(data);
 
