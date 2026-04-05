@@ -41,7 +41,7 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
       email: apiUser.email, 
       roleId: apiUser.roleId
     }, process.env.JWT_SECRET!, {
-      expiresIn: '45m',
+      expiresIn: '2h',
     });
 
     // Set cookie
