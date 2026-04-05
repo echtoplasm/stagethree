@@ -1431,11 +1431,22 @@ input[type='number']::-webkit-inner-spin-button {
   border-color: var(--accent-glow);
 }
 
+.plot-to-app {
+  opacity: 0;
+  transition: opacity var(--transition);
+  color: var(--accent);
+  border-color: var(--accent-glow);
+}
+
 .plot-row:hover .plot-delete {
   opacity: 1;
 }
 
 .plot-row:hover .plot-update {
+  opacity: 1;
+}
+
+.plot-row:hover .plot-to-app {
   opacity: 1;
 }
 

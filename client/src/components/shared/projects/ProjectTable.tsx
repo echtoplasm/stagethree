@@ -87,6 +87,14 @@ export function ProjectTable() {
     setPlots(data);
   }
 
+  //gets full plot config for selected stage plot
+  const getFullPlotConfig = async (plotId: number) => {
+    if (!plotId) return;
+    const data = await fetchFullStagePlotConfig(plotId);
+    return data;
+  }
+
+  //sets context provider for /app page
   const setPlotContext = (data: FullStagePlotResponse) => {
     setElementPlacements(data.elements);
     setInputChannels(data.inputChannels);
@@ -95,21 +103,19 @@ export function ProjectTable() {
     setStagePlot(data.stagePlot);
   }
 
-
+  //navigates to app page
   const handleAppPageNavigate = () => {
     navigate('/app');
   }
 
-  const getFullPlotConfig = async (plotId: number) => {
-    if(!plotId) return;
-    const data = await fetchFullStagePlotConfig(plotId);
-    return data;
-  }
-
+  //click listener for stageplots in "table"
+  // -gets getFullPlotConfig
+  // -sets stagecontext with getFullPlotConfig
+  // -navigates to /app that now has context to render with
   const handleGoToAppClick = async (plotId: number) => {
-    if(!plotId) return;
+    if (!plotId) return;
     const data = await getFullPlotConfig(plotId);
-    if(!data) return;
+    if (!data) return;
     setPlotContext(data);
     handleAppPageNavigate();
   }
@@ -225,9 +231,10 @@ export function ProjectTable() {
                             }}>
                             <Pencil size={14} />
                           </button>
-                          <button className='btn btn-sm' onClick={() =>{
+                          <button className='btn btn-sm btn-update plot-to-app' onClick={() => {
                             setSelectedPlot(plot)
-                            selectedPlot && handleGoToAppClick(selectedPlot.id)}}>
+                            selectedPlot && handleGoToAppClick(selectedPlot.id)
+                          }}>
                             To App
                           </button>
                         </div>
