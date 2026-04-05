@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Box, Trash, Plus, Pencil } from 'lucide-react';
 import { type Project } from '../../../api/projects';
 import { fetchAllProjectByUserId } from '../../../api/projects';
-import { fetchStagePlotsByProjectId, type StagePlotWithStageName } from '../../../api/stagePlots';
+import { fetchStagePlotsByProjectId, fetchFullStagePlotConfig, type StagePlotWithStageName, type FullStagePlotResponse } from '../../../api/stagePlots';
 import { ProjectUpdate } from './ProjectUpdate';
 import { ProjectDeletePortal } from './ProjectDelete';
 import { ProjectCreate } from './ProjectCreate';
@@ -10,6 +10,8 @@ import { useAuth } from '../../../contexts/AuthContext';
 import { PlotUpdate } from '../../../components/plotting/PlotUpdate';
 import { PlotDelete } from '../../../components/plotting/PlotDelete'
 import { PlotCreate } from '../../../components/plotting/PlotCreate';
+import { useStageContext } from '../../../contexts/StageContext';
+import { useNavigate } from 'react-router-dom';
 
 export function ProjectTable() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -35,9 +37,84 @@ export function ProjectTable() {
   const [plotCreate, setPlotCreate] = useState(false);
   const [plotsLoading, setPlotsLoading] = useState(false);
 
-  /* *** ==== *** AUTH STATE MANAGEMENT *** ==== *** */
+  /* *** === *** STAGE CONTEXT PROVIDER *** === *** */
+  /* this is for passing context about the plot to the provider in
+     in order to redirect from the user portal to the /app and provide
+     the clicked plots details and populate the three scene */
+
+  const {
+    setActiveProject,
+    setElementPlacements,
+    projectsVersion,
+    setInputChannels,
+    setStage,
+    setStagePlot
+  } = useStageContext();
+
+
+  /* *** === *** AUTH STATE MANAGEMENT *** === *** */
   const { user } = useAuth();
   if (!user) return null;
+
+
+  //used to update the project state after any CRUD action
+  const updateProjectState = async () => {
+    const data = await fetchAllProjectByUserId(user.id);
+    setProjects(data);
+  }
+
+
+  const navigate = useNavigate();
+
+  //used to load plots upon project click
+  const loadPlots = async (projectId: number) => {
+    try {
+      if (!selectedProject) return;
+      setPlotsLoading(true);
+      const data = await fetchStagePlotsByProjectId(projectId);
+      setPlots(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to fetch plots for user');
+    } finally {
+      setPlotsLoading(false);
+    }
+  }
+
+  //used to updated plot state after any crud action
+  const updatePlotState = async () => {
+    if (!selectedProject) return;
+    const data = await fetchStagePlotsByProjectId(selectedProject.id);
+    setPlots(data);
+  }
+
+  const setPlotContext = (data: FullStagePlotResponse) => {
+    setElementPlacements(data.elements);
+    setInputChannels(data.inputChannels);
+    setStage(data.stage)
+    setActiveProject(data.project);
+    setStagePlot(data.stagePlot);
+  }
+
+
+  const handleAppPageNavigate = () => {
+    navigate('/app');
+  }
+
+  const getFullPlotConfig = async (plotId: number) => {
+    if(!plotId) return;
+    const data = await fetchFullStagePlotConfig(plotId);
+    return data;
+  }
+
+  const handleGoToAppClick = async (plotId: number) => {
+    if(!plotId) return;
+    const data = await getFullPlotConfig(plotId);
+    if(!data) return;
+    setPlotContext(data);
+    handleAppPageNavigate();
+  }
+
+
 
 
   useEffect(() => {
@@ -55,33 +132,6 @@ export function ProjectTable() {
 
     loadProjects();
   }, [user]);
-
-  const updateProjectState = async () => {
-    const data = await fetchAllProjectByUserId(user.id);
-    setProjects(data);
-  }
-
-
-  const loadPlots = async (projectId: number) => {
-    try {
-      if (!selectedProject) return;
-      setPlotsLoading(true);
-      const data = await fetchStagePlotsByProjectId(projectId);
-      setPlots(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch plots for user');
-    } finally {
-      setPlotsLoading(false);
-    }
-  }
-
-  const updatePlotState = async () => {
-    if (!selectedProject) return;
-    const data = await fetchStagePlotsByProjectId(selectedProject.id);
-    setPlots(data);
-  }
-
-
 
   if (loading) {
     return (
@@ -120,19 +170,20 @@ export function ProjectTable() {
             <Box size={64} />
             <p>No project templates found</p>
           </div>
-        ) : (
+        ) : /* currently the onclick here is not working properly*/ (
           <div className='card'>
+
             {projects.map(project => (
               <div key={project.id}>
                 <div className='project-row' onClick={() => {
-                  setSelectedProject(project);
-                  if (selectedProject?.id === project.id) {
-                    setRenderPlots(!renderPlots)
+                  const isSelected = selectedProject?.id === project.id && renderPlots;
+                  if (isSelected) {
+                    setRenderPlots(false);
                   } else {
                     setSelectedProject(project);
                     loadPlots(project.id);
-                    setRenderPlots(true)
-                  };
+                    setRenderPlots(true);
+                  }
                 }}>
                   <span className='icon'><Box size={18} /></span>
                   <div style={{ flex: 1 }}>
@@ -173,6 +224,11 @@ export function ProjectTable() {
                               setPlotUpdate(true);
                             }}>
                             <Pencil size={14} />
+                          </button>
+                          <button className='btn btn-sm' onClick={() =>{
+                            setSelectedPlot(plot)
+                            selectedPlot && handleGoToAppClick(selectedPlot.id)}}>
+                            To App
                           </button>
                         </div>
                       ))

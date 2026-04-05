@@ -166,7 +166,7 @@ export function StageTable() {
           //but really an admin should not be creating stages 
           //from the admin portal but from within their own user portal 
           //***//
-          
+
           venueId={null!}
           onClose={() => setStageCreate(false)}
         />

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { fetchAllProjectByUserId, type Project } from "../../api/projects";
-import { fetchAllStagePlots, fetchFullStagePlotConfig, fetchStagePlotsByProjectId, type StagePlot } from "../../api/stagePlots";
+import { fetchAllStagePlots, fetchFullStagePlotConfig, fetchStagePlotsByProjectId, type StagePlot, type FullStagePlotResponse } from "../../api/stagePlots";
 import { Folder, Plus, PlusCircle, Trash, Pencil } from 'lucide-react';
 import { ProjectCreate } from './ProjectCreate'
 import { ProjectDelete } from './ProjectDelete';
@@ -10,7 +10,6 @@ import { PlotCreate } from '../plotting/PlotCreate';
 import { PlotDelete } from '../plotting/PlotDelete.tsx'
 import { PlotUpdate } from '../plotting/PlotUpdate.tsx'
 import { useStageContext } from '../../contexts/StageContext.tsx';
-import { type FullStagePlotResponse } from '../../api/stagePlots';
 
 interface ProjectCardProps {
   onStageSelect: () => void;

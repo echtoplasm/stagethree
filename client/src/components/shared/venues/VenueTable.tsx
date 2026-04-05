@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Box, Trash, Plus, Pencil} from 'lucide-react';
+import { Box, Trash, Plus, Pencil } from 'lucide-react';
 import type { Venue } from '../../../api/venues';
 import { getVenuesByUserId } from '../../../api/venues';
 import { VenueUpdate } from './VenueUpdate';
@@ -107,7 +107,17 @@ export function VenueTable() {
           <div className='card'>
             {venues.map(venue => (
               <div key={venue.id}>
-                <div className='project-row' onClick={() => { getVenueStages(venue.id); setSelectedVenue(venue); }}>
+                <div className='project-row' onClick={() => {
+                  setSelectedVenue(venue);
+                  if (selectedVenue?.id === venue.id) {
+                    setShowStages(!showStages);
+                  } else {
+                    setSelectedVenue(venue);
+                    getVenueStages(venue.id);
+                    setShowStages(true);
+                  }
+
+                }}>
                   <span className='icon'><Box size={18} /></span>
                   <div style={{ flex: 1 }}>
                     <span className='name'>{venue.name}</span>
