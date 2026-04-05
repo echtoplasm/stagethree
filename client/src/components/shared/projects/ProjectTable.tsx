@@ -45,7 +45,6 @@ export function ProjectTable() {
   const {
     setActiveProject,
     setElementPlacements,
-    projectsVersion,
     setInputChannels,
     setStage,
     setStagePlot

@@ -7,13 +7,13 @@ import { StageProvider } from './contexts/StageContext';
 import { useAuth } from './contexts/AuthContext';
 
 import { LandingPage } from './pages/LandingPage';
-import { ShareView } from './components/sharedPlot/SharedScene';
 
 const StageRead = lazy(() => import('./components/shared/stage/StageRead').then(m => ({ default: m.StageRead })));
 const PlottingPage = lazy(() => import('./pages/PlottingPage').then(m => ({ default: m.PlottingPage })));
 const AdminPage = lazy(() => import('./pages/AdminPage').then(m => ({ default: m.AdminPage })));
 const UserPortal = lazy(() => import('./pages/UserPortal').then(m => ({ default: m.UserPortal })));
 const Documentation = lazy(() => import('./components/documentation/Documentation').then(m => ({ default: m.Documentation })));
+const ShareView = lazy(() => import('./components/sharedPlot/SharedScene').then(m => ({ default: m.ShareView})))
 
 function AppRoutes() {
   const { user, loading } = useAuth();
