@@ -4,6 +4,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { Info } from 'lucide-react';
 import { useState } from 'react';
 import { Clipboard } from 'lucide-react';
+
 interface UtilitiesDrawerProps {
   sceneRef: React.RefObject<StageSceneHandle | null>;
 }

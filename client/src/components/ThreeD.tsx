@@ -7,9 +7,9 @@ import { useAuth } from '../contexts/AuthContext';
 import { GLTFLoader } from 'three/examples/jsm/Addons.js';
 import { ElementPositionModal } from './threeDComponents/ElementPostitionModal';
 import { ElementRotationModal } from './threeDComponents/ElementRotationModal';
-import { Maximize2, Minimize2, ShieldQuestion } from 'lucide-react';
-import {SandBoxDocs} from '../components/documentation/modals/SandboxMode';
-
+import { Maximize2, Minimize2, Pipette, ShieldQuestion } from 'lucide-react';
+import { SandBoxDocs } from '../components/documentation/modals/SandboxMode';
+import { CustomBackGroundModal } from './threeDComponents/CustomBackGroundModal';
 interface StageObject {
   id: string;
   placementId: number;
@@ -59,8 +59,11 @@ export const StageScene = forwardRef<StageSceneHandle, {}>((_props, ref) => {
   const [stageOverlay, setStageOverlay] = useState(false);
 
   //state for sandbox doc help
-
   const [sandBoxHelp, setSandBoxHelp] = useState(false);
+
+  //state for background color
+  const [customBackGround, setCustomBackGround] = useState(false);
+  const [backgroundColor, setBackGroundColor] = useState('#5a6a9a')
 
   //REFS
   const objectsRef = useRef<StageObject[]>([]);
@@ -78,6 +81,9 @@ export const StageScene = forwardRef<StageSceneHandle, {}>((_props, ref) => {
   const { elementPlacements, stage, activeProject, setElementPlacements } = useStageContext();
   const { isAuthenticated } = useAuth();
   const isSandbox = !isAuthenticated;
+
+
+  // click handler for setting custom background color
 
 
   //LOAD MODELS WITH CACHE CHECK
@@ -193,7 +199,7 @@ export const StageScene = forwardRef<StageSceneHandle, {}>((_props, ref) => {
     console.log(elementPlacements);
     // Scene setup
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x5a6a9a);
+    scene.background = new THREE.Color(backgroundColor);
     sceneRef.current = scene;
 
     // Camera setup
@@ -389,10 +395,14 @@ export const StageScene = forwardRef<StageSceneHandle, {}>((_props, ref) => {
     // Cleanup
     return () => {
       window.removeEventListener('resize', handleResize);
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
       renderer.domElement.removeEventListener('mousedown', handleMouseDown);
       renderer.domElement.removeEventListener('mousemove', handleMouseMove);
       renderer.domElement.removeEventListener('mouseup', handleMouseUp);
       renderer.domElement.removeEventListener('contextmenu', handleContextMenu);
+
+      renderer.dispose();
 
       if (mountRef.current && renderer.domElement) {
         mountRef.current.removeChild(renderer.domElement);
@@ -411,6 +421,12 @@ export const StageScene = forwardRef<StageSceneHandle, {}>((_props, ref) => {
     });
   }, [elementPlacements]);
 
+
+  useEffect(() => {
+    if (sceneRef.current) {
+      sceneRef.current.background = new THREE.Color(backgroundColor);
+    }
+  }, [backgroundColor]);
 
 
   return (
@@ -440,6 +456,11 @@ export const StageScene = forwardRef<StageSceneHandle, {}>((_props, ref) => {
           </ul>
         )}
       </div>
+      <div>
+        <button className='pipette' onClick={() => setCustomBackGround(true)}   >
+          <Pipette size={18} />
+        </button>
+      </div>
       {
         stage && activeProject && (
           <div className='stageinfo-overlay'>
@@ -467,6 +488,21 @@ export const StageScene = forwardRef<StageSceneHandle, {}>((_props, ref) => {
             <span>You are in sandbox mode.</span>
             <button
               onClick={() => setSandBoxHelp(true)} className='btn btn-ghost btn-sm'><ShieldQuestion size={14} /></button>
+          </div>
+        )
+      }
+
+      {
+        customBackGround && (
+          <div>
+            <CustomBackGroundModal
+              bgColor={backgroundColor}
+              onSuccess={(backgroundColor) => {
+                setBackGroundColor(backgroundColor)
+                setCustomBackGround(false);
+              }}
+              onClose={() => setCustomBackGround(false)}
+            />
           </div>
         )
       }
@@ -572,7 +608,7 @@ export const StageScene = forwardRef<StageSceneHandle, {}>((_props, ref) => {
 
       {
         sandBoxHelp && (
-          <SandBoxDocs 
+          <SandBoxDocs
             onClose={() => setSandBoxHelp(false)}
           />
         )
