@@ -21,6 +21,9 @@ export function PlottingPage() {
   const [inputChannelModal, setInputChannelModal] = useState(false);
   const { setIsSandbox } = useStageContext();
   const { isAuthenticated } = useAuth();
+  const [showStageObjects, setShowStageObjects] = useState(true);
+  const [showCurrentStage, setShowCurrentStage] = useState(true);
+  const [showColorPicker, setShowColorPicker] = useState(true);
 
   const isSandbox = !isAuthenticated;
 
@@ -75,7 +78,11 @@ export function PlottingPage() {
 
       {/* Main 3D Viewer */}
       <div className="viewer-container">
-        <StageScene ref={stageSceneRef} />
+        <StageScene ref={stageSceneRef} 
+          showColorPicker={showColorPicker}
+          showStageObjects={showStageObjects}
+          showCurrentStage={showCurrentStage}
+        />
       </div>
 
       {/* Bottom Tab Bar */}
@@ -105,7 +112,12 @@ export function PlottingPage() {
         {activeTab === 'utilities' && (
           <div className="drawer-content">
             <h3>Settings</h3>
-            <UtilitiesDrawer sceneRef={stageSceneRef} />
+            <UtilitiesDrawer
+              sceneRef={stageSceneRef}
+              showCurrentStage={showCurrentStage} setShowCurrentStage={setShowCurrentStage}
+              showStageObjects={showStageObjects} setShowStageObjects={setShowStageObjects}
+              showColorPicker={showColorPicker} setShowColorPicker={setShowColorPicker}
+            />
           </div>
         )}
         {activeTab === 'elements' && (

@@ -10,6 +10,7 @@ import { ElementRotationModal } from './threeDComponents/ElementRotationModal';
 import { Maximize2, Minimize2, Pipette, ShieldQuestion } from 'lucide-react';
 import { SandBoxDocs } from '../components/documentation/modals/SandboxMode';
 import { CustomBackGroundModal } from './threeDComponents/CustomBackGroundModal';
+
 interface StageObject {
   id: string;
   placementId: number;
@@ -30,10 +31,19 @@ export interface StageSceneHandle {
   getSnapshot: () => string | null;
 }
 
+interface StageSceneProps {
+  showStageObjects: boolean;
+  showColorPicker: boolean;
+  showCurrentStage: boolean;
+}
+
 const modelCache = new Map<string, THREE.Group>();
 const loader = new GLTFLoader();
 
-export const StageScene = forwardRef<StageSceneHandle, {}>((_props, ref) => {
+
+//COMPONENT START//
+export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, ref) => {
+  const { showStageObjects, showColorPicker, showCurrentStage } = props;
 
   useImperativeHandle(ref, () => ({
     getSnapshot: () => rendererRef.current?.domElement.toDataURL('image/png') ?? null
@@ -52,10 +62,10 @@ export const StageScene = forwardRef<StageSceneHandle, {}>((_props, ref) => {
   const [selectedObjectRotation, setSelectedObjectRotation] = useState<THREE.Euler | null>(null)
   const [selectedObject, setSelectedObject] = useState<StageObject | null>(null);
 
-  //state for object overlays 
+  //state for object overlay expanded view 
   const [objOverlay, setObjOverlay] = useState(false);
 
-  //state for stage overlay 
+  //state for stage overlay expanded view 
   const [stageOverlay, setStageOverlay] = useState(false);
 
   //state for sandbox doc help
@@ -439,30 +449,36 @@ export const StageScene = forwardRef<StageSceneHandle, {}>((_props, ref) => {
           cursor: selectedObjectRef.current ? 'grabbing' : 'grab'
         }}
       />
-      <div className='stageobjects-overlay'>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <h3>Stage Objects</h3>
-          <button className='btn btn-ghost btn-sm' onClick={() => setObjOverlay(prev => !prev)}>
-            {objOverlay ? <Maximize2 size={14} /> : <Minimize2 size={14} />}
+      {showStageObjects && (
+        <>
+          <div className='stageobjects-overlay'>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <h3>Stage Objects</h3>
+              <button className='btn btn-ghost btn-sm' onClick={() => setObjOverlay(prev => !prev)}>
+                {objOverlay ? <Maximize2 size={14} /> : <Minimize2 size={14} />}
+              </button>
+            </div>
+            {!objOverlay && (
+              <ul>
+                {objects.map(obj => (
+                  <li key={obj.id}>
+                    {obj.name} - ( x: {Number(obj.position.x.toFixed(2))} , z: {Number(obj.position.z.toFixed(2))} )
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </>
+      )}
+      {showColorPicker && (
+        <div>
+          <button className='pipette' onClick={() => setCustomBackGround(true)}   >
+            <Pipette size={18} />
           </button>
         </div>
-        {!objOverlay && (
-          <ul>
-            {objects.map(obj => (
-              <li key={obj.id}>
-                {obj.name} - ( x: {Number(obj.position.x.toFixed(2))} , z: {Number(obj.position.z.toFixed(2))} )
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-      <div>
-        <button className='pipette' onClick={() => setCustomBackGround(true)}   >
-          <Pipette size={18} />
-        </button>
-      </div>
+      )}
       {
-        stage && activeProject && (
+        stage && activeProject && showCurrentStage && (
           <div className='stageinfo-overlay'>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <h3>Current Stage</h3>

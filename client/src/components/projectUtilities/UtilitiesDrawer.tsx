@@ -7,9 +7,15 @@ import { Clipboard } from 'lucide-react';
 
 interface UtilitiesDrawerProps {
   sceneRef: React.RefObject<StageSceneHandle | null>;
+  setShowColorPicker: (val: boolean) => void;
+  setShowCurrentStage: (val: boolean) => void;
+  setShowStageObjects: (val: boolean) => void;
+  showColorPicker: boolean;
+  showCurrentStage: boolean;
+  showStageObjects: boolean;
 }
 
-export const UtilitiesDrawer = ({ sceneRef }: UtilitiesDrawerProps) => {
+export const UtilitiesDrawer = ({ sceneRef, setShowColorPicker, setShowCurrentStage, setShowStageObjects, showColorPicker, showCurrentStage, showStageObjects }: UtilitiesDrawerProps) => {
   const { inputChannels, stage, stagePlot } = useStageContext();
   const { isAuthenticated } = useAuth();
   const [copied, setCopied] = useState(false);
@@ -98,25 +104,49 @@ export const UtilitiesDrawer = ({ sceneRef }: UtilitiesDrawerProps) => {
     setTimeout(() => setCopied(false), 2000);
   }
 
-  return (
-    <div>
-      {!isSandbox ? (
-        <div className='row'>
-          <button className="btn btn-primary" onClick={handlePdfExport}>
-            Export Scene to PDF
-          </button>
-          <button className="btn btn-primary" onClick={() => handleShareLink()}>
-            {copied ? <><Clipboard size={12} /> Copied</> : 'Share Plot'}
-          </button>
+return (
+  <div className="utilities-drawer">
+    {!isSandbox ? (
+      <>
+        <div className="utilities-section">
+          <span className="utilities-section-label">Export</span>
+          <div className="utilities-actions">
+            <button className="btn btn-primary btn-sm" onClick={handlePdfExport}>
+              Export to PDF
+            </button>
+            <button className="btn btn-ghost btn-sm" onClick={handleShareLink}>
+              <Clipboard size={13} />
+              {copied ? 'Copied!' : 'Share Plot'}
+            </button>
+          </div>
         </div>
-      ) : (
-        <div className="alert mb-6">
-          <Info size={18} />
-          <span>
-            You cannot use the utility functions of StageThree while in sandbox mode. You must sign in or sign up to exit sandbox mode.
-          </span>
+
+        <div className="utilities-divider" />
+
+        <div className="utilities-section">
+          <span className="utilities-section-label">Overlays</span>
+          <div className="utilities-toggles">
+            <label className="toggle-switch">
+              <input type="checkbox" checked={showStageObjects} onChange={e => setShowStageObjects(e.target.checked)} />
+              <span>Stage Objects</span>
+            </label>
+            <label className="toggle-switch">
+              <input type="checkbox" checked={showColorPicker} onChange={e => setShowColorPicker(e.target.checked)} />
+              <span>Color Picker</span>
+            </label>
+            <label className="toggle-switch">
+              <input type="checkbox" checked={showCurrentStage} onChange={e => setShowCurrentStage(e.target.checked)} />
+              <span>Stage Info</span>
+            </label>
+          </div>
         </div>
-      )}
-    </div>
-  );
+      </>
+    ) : (
+      <div className="alert mb-6">
+        <Info size={18} />
+        <span>Sign in to access utility functions.</span>
+      </div>
+    )}
+  </div>
+);
 }
