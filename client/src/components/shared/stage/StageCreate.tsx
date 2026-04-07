@@ -69,12 +69,12 @@ export function StageCreate({ venueId,  onClose, onSuccess }: StageCreateProps) 
           </div>
           <div className="form-group">
             <label className="form-label" htmlFor="width">Width (ft)</label>
-            <input id="width" className="form-input" type="number" value={stageForm.width}
+            <input id="width" className="form-input" type="number" value={stageForm.width} max={500}
               onChange={(e) => setStageForm({ ...stageForm, width: Number(e.target.value) })} />
           </div>
           <div className="form-group">
             <label className="form-label" htmlFor="depth">Depth (ft)</label>
-            <input id="depth" className="form-input" type="number" value={stageForm.depth}
+            <input id="depth" className="form-input" type="number" value={stageForm.depth} max={150}
               onChange={(e) => setStageForm({ ...stageForm, depth: Number(e.target.value) })} />
           </div>
           <div className="form-group">

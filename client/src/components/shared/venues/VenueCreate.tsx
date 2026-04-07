@@ -77,7 +77,7 @@ export function VenueCreate({ onClose, onSuccess }: VenueCreateProps) {
           </div>
           <div className="form-group">
             <label className="form-label" htmlFor="capacity">Capacity</label>
-            <input id="capacity" className="form-input" type="number" value={stageForm.capacity}
+            <input id="capacity" className="form-input" type="number" max={100000} value={stageForm.capacity}
               onChange={(e) => setVenueForm({ ...stageForm, capacity: Number(e.target.value) })} />
           </div>
           <div className="modal-footer">
