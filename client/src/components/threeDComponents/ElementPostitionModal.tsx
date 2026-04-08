@@ -2,13 +2,22 @@ import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { type ElementPlacement } from '../../api/elementPlacement';
 import * as THREE from 'three'
+
 export interface ElementPositionProps {
   onClose: () => void;
   onSuccess: (x: number, y: number, z: number) => void;
   initialPosition: THREE.Vector3 | null;
 }
 
-
+/**
+ * Portal-rendered modal for manually editing an element's X/Y/Z position in the Three.js scene.
+ * Seeds input fields from the element's current world position.
+ *
+ * @param onClose - Callback invoked when the modal is dismissed.
+ * @param onSuccess - Callback invoked with the updated x, y, z coordinates on confirm.
+ * @param initialPosition - The element's current Three.js world position, used to seed the form.
+ * @returns A position editor modal portal mounted to document.body.
+ */
 export const ElementPositionModal = ({ onClose, onSuccess, initialPosition }: ElementPositionProps) => {
   const [elementPlacementForm, setElementPlacementForm] = useState<Partial<ElementPlacement>>({
     positionX: initialPosition?.x,

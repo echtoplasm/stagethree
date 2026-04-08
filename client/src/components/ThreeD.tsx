@@ -41,7 +41,17 @@ const modelCache = new Map<string, THREE.Group>();
 const loader = new GLTFLoader();
 
 
-//COMPONENT START//
+/**
+ * Core Three.js scene component for stage plot visualization and element manipulation.
+ * Handles scene setup, GLTF model loading with client-side caching, raycaster-based drag,
+ * keyboard controls, right-click context menu, and element position/rotation editing.
+ * Exposes a getSnapshot handle for PDF export via forwardRef.
+ *
+ * @param showStageObjects - Whether to render the stage objects position overlay.
+ * @param showColorPicker - Whether to render the background color picker toggle.
+ * @param showCurrentStage - Whether to render the current stage/project info overlay.
+ * @returns The Three.js canvas mount with overlays, context menu, and editing modals.
+ */
 export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, ref) => {
   const { showStageObjects, showColorPicker, showCurrentStage } = props;
 
@@ -92,11 +102,14 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
   const { isAuthenticated } = useAuth();
   const isSandbox = !isAuthenticated;
 
-
-  // click handler for setting custom background color
-
-
-  //LOAD MODELS WITH CACHE CHECK
+  /**
+   * Loads a GLTF model from the given path, normalizing its scale to a unit cube.
+   * Returns a cached clone on subsequent calls to avoid redundant network requests.
+   *
+   * @param modelPath - The URL of the GLB/GLTF model to load.
+   * @param placement - The element placement used to apply the configured scale after loading.
+   * @returns A promise resolving to the scaled Three.js Group.
+   */
   const loadModel = (modelPath: string, placement: ElementPlacement): Promise<THREE.Group> => {
     return new Promise((resolve) => {
       if (modelCache.has(modelPath)) {
@@ -123,6 +136,13 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
     });
   };
 
+
+  /**
+   * Adds an element to the Three.js scene from an element placement record.
+   * Loads a GLTF model if a file path is present, otherwise falls back to a BoxGeometry.
+   *
+   * @param placement - The element placement record containing position, rotation, scale, and optional model path.
+   */
   const addInstrument = async (placement: ElementPlacement) => {
     if (!sceneRef.current) return;
 
@@ -156,6 +176,13 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
     });
   };
 
+
+  /**
+   * Removes a stage object from the scene and deletes its placement record from the API.
+   * Updates both objects state and elementPlacements context on completion.
+   *
+   * @param stageObj - The stage object to remove from the scene and database.
+   */
   const handleDeleteObject = async (stageObj: StageObject) => {
     if (sceneRef.current) {
       const mesh = sceneRef.current.getObjectByName(`instrument-${stageObj.placementId}`);
@@ -173,9 +200,7 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
     setContextMenu(null);
   };
 
-  /**
-   * Mouse up event helper function for setting position state
-   */
+  /** Finalizes a drag operation, re-enables orbit controls, and persists the updated position to the API. */
   const handleMouseUp = () => {
     const selected = selectedObjectRef.current;
     selectedObjectRef.current = null;
@@ -202,6 +227,11 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
     }
   }
 
+  /**
+   * Initializes the Three.js scene, camera, renderer, orbit controls, lighting, stage grid,
+   * and all mouse/keyboard event listeners. Tears down and disposes all resources on unmount.
+   * Re-runs whenever the active stage changes.
+   */
   useEffect(() => {
     if (!mountRef.current) return;
 
@@ -237,6 +267,11 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
 
     const keys = new Set<string>();
 
+
+    /**
+     * Handles WASD/QE camera translation and arrow key rotation/elevation of the selected object.
+     * Ignores input when focus is on an interactive form element.
+     */
     const handleKeyDown = (e: KeyboardEvent) => {
       const tag = (document.activeElement as HTMLElement)?.tagName.toLowerCase();
       if (tag === 'input' || tag === 'textarea' || tag === 'select' || tag === 'button') return;
@@ -264,6 +299,8 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
         }
       }
     };
+
+    /** Removes the released key from the active key set. */
     const handleKeyUp = (e: KeyboardEvent) => keys.delete(e.key.toLowerCase());
 
     window.addEventListener('keydown', handleKeyDown);
@@ -292,7 +329,7 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
     plane.name = 'stage-plane';
     scene.add(plane);
 
-    // Animation loop
+    /** Runs the Three.js render loop, applying WASD/QE camera movement each frame. */
     const animate = () => {
       requestAnimationFrame(animate);
 
@@ -309,6 +346,7 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
     };
     animate();
 
+    /** Updates camera aspect ratio and renderer dimensions on container resize. */
     const handleResize = () => {
       if (!mountRef.current || !camera || !renderer) return;
 
@@ -318,6 +356,10 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
     };
     window.addEventListener('resize', handleResize);
 
+    /**
+     * Initiates a drag operation on left click by raycasting against scene instruments
+     * and storing the hit offset to prevent snapping on pickup.
+     */
     const handleMouseDown = (event: MouseEvent) => {
       if (event.button !== 0) return;
 
@@ -346,6 +388,7 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
       }
     };
 
+    /** Translates the selected object along the stage plane by projecting the cursor ray onto it. */
     const handleMouseMove = (event: MouseEvent) => {
       if (!selectedObjectRef.current || !mountRef.current || !camera || !scene) return;
 
@@ -366,6 +409,11 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
       }
     };
 
+
+    /**
+     * Opens the right-click context menu for the instrument under the cursor.
+     * Clears the context menu if no instrument is hit.
+     */
     const handleContextMenu = (event: MouseEvent) => {
       event.preventDefault();
       if (!mountRef.current || !cameraRef.current || !sceneRef.current) return;
@@ -420,6 +468,10 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
     };
   }, [stage]);
 
+  /**
+   * Adds any element placements to the scene that are not yet represented by a scene object.
+   * Runs whenever elementPlacements context updates.
+   */
   useEffect(() => {
     if (!sceneRef.current || !elementPlacements.length) return;
 
@@ -431,7 +483,7 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
     });
   }, [elementPlacements]);
 
-
+  /** Updates the Three.js scene background color whenever the user selects a new color. */
   useEffect(() => {
     if (sceneRef.current) {
       sceneRef.current.background = new THREE.Color(backgroundColor);
@@ -630,9 +682,6 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
           />
         )
       }
-
-
-
     </div >
   );
 })

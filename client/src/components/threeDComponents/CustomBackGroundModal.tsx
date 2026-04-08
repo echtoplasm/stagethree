@@ -1,14 +1,21 @@
-import { useState} from 'react';
+import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
+
 interface CustomBackGroundModalProps {
-  onSuccess: (backgroundColor : string) => void;
+  onSuccess: (backgroundColor: string) => void;
   onClose: () => void;
   bgColor: string;
 }
 
-
-
+/**
+ * Portal-rendered modal for selecting a custom Three.js scene background color.
+ *
+ * @param onSuccess - Callback invoked with the selected hex color string when the user applies their choice.
+ * @param onClose - Callback invoked when the modal is dismissed.
+ * @param bgColor - The current background color used to seed the color picker.
+ * @returns A color picker modal portal mounted to document.body.
+ */
 export const CustomBackGroundModal = ({ onSuccess, onClose, bgColor }: CustomBackGroundModalProps) => {
   const [backgroundColor, setBackgroundColor] = useState(bgColor)
   return createPortal(

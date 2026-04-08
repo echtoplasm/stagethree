@@ -4,10 +4,20 @@ import { useParams } from "react-router-dom";
 import { useStageContext } from "../../contexts/StageContext"
 import { fetchFullStagePlotByUUID } from "../../api/stagePlots"
 
+
+/**
+ * Read-only stage plot viewer for public share links.
+ * Fetches full plot configuration by UUID from the route params and loads it into StageContext.
+ *
+ * @returns The Three.js scene in viewer mode with all overlays disabled.
+ */
 export function ShareView() {
   const { uuid } = useParams();
   const { setElementPlacements, setInputChannels, setStage, setStagePlot, setActiveProject } = useStageContext();
-
+  /**
+   * Fetches the full plot configuration by UUID and populates StageContext for scene rendering.
+   * Refetches whenever the UUID route param changes.
+   */
   useEffect(() => {
     const fetchPlot = async () => {
       const data = await fetchFullStagePlotByUUID(uuid!);

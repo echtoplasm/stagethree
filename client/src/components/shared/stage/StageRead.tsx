@@ -2,12 +2,21 @@ import { useState, useEffect } from 'react';
 import { Box, Ruler, Layers } from 'lucide-react';
 import { fetchAllPublicStages, type Stage } from '../../../api/stages';
 
+
+/**
+ * Displays a grid of all publicly available stage templates with their dimensions.
+ * Renders loading and error states while fetching.
+ *
+ * @returns The stage templates grid, or a loading/error state.
+ */
 export function StageRead() {
   const [stages, setStages] = useState<Stage[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-
+  /**
+   * Fetches all public stages on mount and updates loading and error state accordingly.
+   */
   useEffect(() => {
     const loadStages = async () => {
       try {

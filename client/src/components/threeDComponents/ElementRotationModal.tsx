@@ -8,6 +8,15 @@ export interface ElementRotationProps {
   initialRotation: THREE.Euler | null;
 }
 
+/**
+ * Portal-rendered modal for manually editing an element's X/Y/Z rotation in the Three.js scene.
+ * Converts between radians (Three.js internal) and degrees (user-facing) on input and confirm.
+ *
+ * @param onClose - Callback invoked when the modal is dismissed.
+ * @param onSuccess - Callback invoked with the updated x, y, z rotation values in radians on confirm.
+ * @param initialRotation - The element's current Three.js Euler rotation, used to seed the form.
+ * @returns A rotation editor modal portal mounted to document.body.
+ */
 export const ElementRotationModal = ({ onClose, onSuccess, initialRotation }: ElementRotationProps) => {
   const [rotationForm, setRotationForm] = useState({
     x: initialRotation ? THREE.MathUtils.radToDeg(initialRotation.x) : 0,

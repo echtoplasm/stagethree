@@ -11,6 +11,15 @@ interface StageCreateProps {
   onSuccess: () => void;
 }
 
+/**
+ * Modal form for creating a new stage under a given venue.
+ * Returns null if no authenticated user is present.
+ *
+ * @param venueId - The ID of the venue this stage belongs to.
+ * @param onClose - Callback invoked when the modal is dismissed.
+ * @param onSuccess - Callback invoked after the stage is successfully created.
+ * @returns The create stage modal with dimension and visibility fields.
+ */
 export function StageCreate({ venueId,  onClose, onSuccess }: StageCreateProps) {
   //AUTH CHECK
   const { user } = useAuth();
@@ -30,7 +39,8 @@ export function StageCreate({ venueId,  onClose, onSuccess }: StageCreateProps) 
   const [error, setError] = useState<string | null>(null);
 
 
-  //submission handler with error state set
+
+/** Submits the stage form and calls onSuccess on completion, or sets error state on failure. */
   const handleSubmit = async (e: React.FormEvent) => {
     try {
       e.preventDefault();

@@ -7,7 +7,14 @@ interface VenueUpdateProps {
   onClose: () => void;
 }
 
-
+/**
+ * Modal form for updating an existing venue's name, address, city, and capacity.
+ * Initializes form state from the provided venue and calls onClose after a successful update.
+ *
+ * @param venue - The venue to edit, used to seed initial form state.
+ * @param onClose - Callback invoked when the modal is dismissed or the update completes.
+ * @returns The update venue modal with name, address, city, and capacity fields.
+ */
 export function VenueUpdate({ venue, onClose }: VenueUpdateProps) {
   const [venueForm, setVenueForm] = useState<Omit<Venue, 'createdAt'>>({
     id: venue.id,
@@ -19,7 +26,7 @@ export function VenueUpdate({ venue, onClose }: VenueUpdateProps) {
     createdBy: venue.createdBy
   });
 
-
+  /** Submits the updated venue form and calls onClose on completion. */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     await updateVenue(venueForm.id, venueForm);

@@ -13,13 +13,21 @@ interface NavbarProps {
   theme: string;
 }
 
-
+/**
+ * Global navigation bar with auth-aware controls and theme toggling.
+ * Renders login/signup modals inline and redirects based on user role after authentication.
+ *
+ * @param onThemeToggle - Callback invoked when the user toggles light/dark mode.
+ * @param theme - The current active theme, used to render the correct toggle icon.
+ * @returns The navigation bar with links, auth controls, and theme toggle.
+ */
 export function Navbar({ onThemeToggle, theme }: NavbarProps) {
   const navigate = useNavigate();
   const { isAuthenticated, user, login, logout } = useAuth();
   const [showLogin, setShowLogin] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
 
+  /** Logs out the current user, clears auth state, and redirects to the home page. */
   const handleLogOut = async () => {
     try {
       await logoutUser();
@@ -29,7 +37,13 @@ export function Navbar({ onThemeToggle, theme }: NavbarProps) {
       console.error('Logout failed', err);
     }
   };
-
+  
+  /**
+   * Updates auth context with the authenticated user and redirects based on role.
+   * Users with roleId >= 2 are redirected to the admin panel, others to the app.
+   *
+   * @param user - The authenticated user returned from the login or signup flow.
+   */
   const evaluateUser = (user: User) => {
     login(user);
     setShowLogin(false);

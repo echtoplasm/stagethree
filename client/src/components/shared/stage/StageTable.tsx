@@ -7,6 +7,14 @@ import { StageDelete } from './StageDelete';
 import { StageCreate } from './StageCreate';
 import { useAuth } from '../../../contexts/AuthContext';
 
+
+/**
+ * Displays a table of all stages belonging to the authenticated user.
+ * Handles stage CRUD operations and renders loading and error states while fetching.
+ * Returns null if no authenticated user is present.
+ *
+ * @returns The stage management table with update/delete actions and a create modal.
+ */
 export function StageTable() {
   const [stages, setStages] = useState<Stage[]>([]);
   const [loading, setLoading] = useState(true);
@@ -18,6 +26,9 @@ export function StageTable() {
   const { user } = useAuth();
   if (!user) return null;
 
+  /**
+   * Fetches all stages for the authenticated user on mount and updates loading and error state accordingly.
+   */
   useEffect(() => {
     const loadStages = async () => {
       try {
@@ -33,7 +44,8 @@ export function StageTable() {
 
     loadStages();
   }, [user]);
-
+  
+  /** Refreshes the stage list after any CRUD operation. */
   const resetStageState = async () => {
     const data = await getStagesByUserId(user.id);
     setStages(data);

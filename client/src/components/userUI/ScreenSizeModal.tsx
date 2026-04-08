@@ -1,5 +1,11 @@
 import { createPortal } from "react-dom"
 
+
+/**
+ * Portal-rendered modal informing the user their screen size is too small to use the application.
+ *
+ * @returns A blocking modal portal mounted to document.body.
+ */
 export function ScreenSizeModal() {
   return createPortal(
     <>
@@ -16,7 +22,7 @@ export function ScreenSizeModal() {
           </div>
         </div>
         <div className="modal-footer">
-          our apologies 
+          our apologies
         </div>
       </div>
     </>, document.body

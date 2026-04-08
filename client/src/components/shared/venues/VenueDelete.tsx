@@ -1,4 +1,3 @@
-
 import { type Venue, deleteVenue } from '../../../api/venues';
 
 interface VenueDeleteProps {
@@ -6,17 +5,21 @@ interface VenueDeleteProps {
   onClose: () => void;
 }
 
-
+/**
+ * Confirmation modal for deleting a venue.
+ *
+ * @param venue - The venue to be deleted.
+ * @param onClose - Callback invoked when the modal is dismissed or the deletion completes.
+ * @returns The delete confirmation modal.
+ */
 export function VenueDelete({ venue, onClose }: VenueDeleteProps) {
 
-
-
+/** Deletes the venue by ID and calls onClose on completion. */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     await deleteVenue(venue.id);
     onClose();
   }
-
 
   return (
     <>

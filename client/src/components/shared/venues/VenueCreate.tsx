@@ -10,6 +10,15 @@ interface VenueCreateProps {
   onSuccess: () => void;
 }
 
+
+/**
+ * Modal form for creating a new venue.
+ * Returns null if no authenticated user is present.
+ *
+ * @param onClose - Callback invoked when the modal is dismissed.
+ * @param onSuccess - Callback invoked after the venue is successfully created.
+ * @returns The create venue modal with name, address, city, and capacity fields.
+ */
 export function VenueCreate({ onClose, onSuccess }: VenueCreateProps) {
   //AUTH CHECK
   const { user } = useAuth();
@@ -28,7 +37,7 @@ export function VenueCreate({ onClose, onSuccess }: VenueCreateProps) {
   const [error, setError] = useState<string | null>(null);
 
 
-  //submission handler with error state set
+  /** Submits the venue form and calls onSuccess on completion, or sets error state on failure. */
   const handleSubmit = async (e: React.FormEvent) => {
     try {
       e.preventDefault();
@@ -39,7 +48,6 @@ export function VenueCreate({ onClose, onSuccess }: VenueCreateProps) {
     }
   };
 
-  //JSX component return
   return (
     <>
       <div className="modal-backdrop" onClick={onClose} />

@@ -7,7 +7,14 @@ interface StageUpdateProps {
   onClose: () => void;
 }
 
-
+/**
+ * Modal form for updating an existing stage's name, dimensions, and visibility.
+ * Initializes form state from the provided stage and calls onClose after a successful update.
+ *
+ * @param stage - The stage to edit, used to seed initial form state.
+ * @param onClose - Callback invoked when the modal is dismissed or the update completes.
+ * @returns The update stage modal with name, dimension, and visibility fields.
+ */
 export function StageUpdate({ stage, onClose }: StageUpdateProps) {
   const [stageForm, setStageForm] = useState<Stage>({
     id: stage.id,
@@ -20,7 +27,7 @@ export function StageUpdate({ stage, onClose }: StageUpdateProps) {
     isPublic: stage.isPublic
   });
 
-
+  /** Submits the updated stage form and calls onClose on completion. */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     await updateStage(stageForm.id, stageForm);

@@ -11,6 +11,14 @@ import { StageCreate } from '../stage/StageCreate';
 import { StageDelete } from '../stage/StageDelete';
 import { StageUpdate } from '../stage/StageUpdate';
 
+
+/**
+ * Displays all venues belonging to the authenticated user with expandable stage rows.
+ * Handles venue and stage CRUD operations and renders loading and error states while fetching.
+ * Returns null if no authenticated user is present.
+ *
+ * @returns The venue management table with nested stage rows and CRUD modals.
+ */
 export function VenueTable() {
 
   const [venues, setVenues] = useState<Venue[]>([]);
@@ -38,6 +46,9 @@ export function VenueTable() {
   const { user } = useAuth();
   if (!user) return null;
 
+  /**
+   * Fetches all venues for the authenticated user on mount and updates loading and error state accordingly.
+   */
   useEffect(() => {
     const loadVenues = async () => {
       try {
@@ -54,11 +65,17 @@ export function VenueTable() {
     loadVenues();
   }, [user]);
 
+  /** Refreshes the venue list after any CRUD operation. */
   const resetVenueState = async () => {
     const data = await getVenuesByUserId(user.id);
     setVenues(data);
   }
 
+  /**
+   * Fetches all stages for the given venue and expands the stage row dropdown.
+   *
+   * @param venueId - The ID of the venue whose stages should be loaded.
+   */
   const getVenueStages = async (venueId: number) => {
     const data = await getStagesByVenueId(venueId);
     setStages(data);
