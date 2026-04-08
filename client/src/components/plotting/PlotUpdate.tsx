@@ -10,6 +10,12 @@ interface PlotUpdateProps {
 }
 
 
+/**
+ * Returns a modal for updating the plot that is being passed in params
+ * @param  - PlotUpdateProps, contains a <StagePlot>, and callback 
+ * 
+ * @returns - JSX portal form for updating plot information  
+ */
 export function PlotUpdate({ plot, onClose }: PlotUpdateProps) {
   //state management
   const [plotForm, setPlotForm] = useState<StagePlot>({
@@ -23,7 +29,11 @@ export function PlotUpdate({ plot, onClose }: PlotUpdateProps) {
 
   const [error, setError] = useState<string | null>(null);
 
-  //submit handler
+  /**
+   * handle form submit and passes the form information to updatePlot from client/api function
+   *
+   * @param e - React.FormEvent, read type declaration
+   */
   const handleSubmit = async (e: React.FormEvent) => {
     try {
       e.preventDefault();

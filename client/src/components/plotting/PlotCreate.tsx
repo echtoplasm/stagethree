@@ -16,6 +16,15 @@ interface PlotCreateProps {
 }
 
 
+/**
+ * Component for creating a plot and passing the related form data to the backend
+ * 
+ * @param  - onClose react props callback function for determining what happens on comp close
+ * @param  - onSuccess react prop callback function for determining what happens on comp success
+ * @param  - projectId the project id to associate the new plot with
+ *
+ * @returns - JSX containing the form to create a new stage plot
+ */
 export const PlotCreate = ({ onClose, onSuccess, projectId }: PlotCreateProps) => {
   const [error, setError] = useState<string | null>(null);
   const [stages, setStages] = useState<Stage[]>([]);
@@ -32,6 +41,11 @@ export const PlotCreate = ({ onClose, onSuccess, projectId }: PlotCreateProps) =
 
   const navigate = useNavigate();
 
+  /**
+   * Handles form submit and err catching, if success then pass form data to client/api plot create function
+   * 
+   * @param e - react form event 
+   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -42,16 +56,22 @@ export const PlotCreate = ({ onClose, onSuccess, projectId }: PlotCreateProps) =
     }
   }
 
+  /** 
+   * Fetches venues using client/api fetchallvenues function and sets 
+   * state in this component to have local access to venue array
+   */
   const fetchVenues = async () => {
     const venArr = await fetchAllVenues();
     setVenues(venArr);
   }
 
+
+  //fetch venues on component mount
   useEffect(() => {
     fetchVenues();
   }, []);
 
-
+  //fetch stages based on change to selectedVenueId change, being passed in effects dependency array
   useEffect(() => {
     if (!selectedVenueId) return;
     const fetchStages = async () => {

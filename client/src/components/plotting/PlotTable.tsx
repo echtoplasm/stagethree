@@ -16,6 +16,12 @@ interface PlotTableProps {
 }
 
 
+/**
+ * Component for plot table in admin portal
+ *  
+ * @param  - PlotTableProps, see interface definiton, contains <Project>, and onClose callback
+ * @returns - JSX rendering a table 
+ */
 export function PlotTable({ selectedProject, onClose }: PlotTableProps) {
   const [plots, setPlots] = useState<StagePlotWithStageName[]>([]);
   const [loading, setLoading] = useState(true);
@@ -45,6 +51,7 @@ export function PlotTable({ selectedProject, onClose }: PlotTableProps) {
     loadPlots();
   }, [selectedProject.id]);
 
+  /**  */
   const updatePlotState = async () => {
     const data = await fetchStagePlotsByProjectId(selectedProject.id);
     setPlots(data);

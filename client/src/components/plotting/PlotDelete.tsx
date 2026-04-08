@@ -7,10 +7,20 @@ interface PlotDeleteProps {
   onClose: () => void;
 }
 
+/**
+ * React component to render a warning to the user about deleting a plot
+ * @param  - PlotDeleteProps, passing the props defined above contains callback functions  
+ * 
+ * @returns - React Portal contianing jsx to render the warning to the user 
+ */
 export const PlotDelete = ({ plotId, onSuccess, onClose }: PlotDeleteProps) => {
 
-  console.log(`Plot delete recieved: PlotId :::`, plotId);
-
+  /**
+   * Handle submit and recieves plotId from parent component to pass the plot to client/api
+   * delete stageplot function 
+   * 
+   * @param e - Form event 
+   */
   const handleSubmit = async (e: React.FormEvent) => {
     if (!plotId) return null;
     e.preventDefault();
