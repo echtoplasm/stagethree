@@ -454,7 +454,7 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
           <div className='stageobjects-overlay'>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <h3>Stage Objects</h3>
-              <button className='btn btn-ghost btn-sm' onClick={() => setObjOverlay(prev => !prev)}>
+              <button className='btn btn-ghost btn-sm' aria-label='expand or close the stage objects overlay' onClick={() => setObjOverlay(prev => !prev)}>
                 {objOverlay ? <Maximize2 size={14} /> : <Minimize2 size={14} />}
               </button>
             </div>
@@ -472,7 +472,7 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
       )}
       {showColorPicker && (
         <div>
-          <button className='pipette' onClick={() => setCustomBackGround(true)}   >
+          <button aria-label='Open the color picker modal.' className='pipette' onClick={() => setCustomBackGround(true)}   >
             <Pipette size={18} />
           </button>
         </div>
@@ -501,8 +501,9 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
       {
         isSandbox && (
           <div className='sandbox-banner'>
-            <span>You are in sandbox mode.</span>
+            <h3>You are in sandbox mode.</h3>
             <button
+              aria-label='Open sandbox mode documentation.'
               onClick={() => setSandBoxHelp(true)} className='btn btn-ghost btn-sm'><ShieldQuestion size={14} /></button>
           </div>
         )

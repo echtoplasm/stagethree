@@ -36,7 +36,7 @@ export function Login({ onClose, onSuccess }: LoginProps) {
             <h2>Sign In</h2>
             <p className="text-secondary">Welcome back to StageThree</p>
           </div>
-          <button className="btn btn-ghost btn-sm" onClick={onClose}>
+          <button aria-label="Close modal." className="btn btn-ghost btn-sm" onClick={onClose}>
             <X size={18} />
           </button>
         </div>

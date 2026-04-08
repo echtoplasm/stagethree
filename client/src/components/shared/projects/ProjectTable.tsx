@@ -165,7 +165,7 @@ export function ProjectTable() {
         <header className="mb-8">
           <h1>Manage Your Projects</h1>
           <p className="text-secondary mb-4">Here are all of the projects associated with your account</p>
-          <button className="btn btn-primary" onClick={() => setProjectCreate(true)}>
+          <button aria-label="Create new project." className="btn btn-primary" onClick={() => setProjectCreate(true)}>
             <Plus size={18} />
             Create New Project
           </button>
@@ -195,10 +195,10 @@ export function ProjectTable() {
                     <span className='name'>{project.name}</span>
                     {project.description && <span className='text-muted' style={{ marginLeft: '0.5rem' }}>— {project.description}</span>}
                   </div>
-                  <button className='btn btn-danger btn-sm' onClick={(e) => { e.stopPropagation(); setSelectedProject(project); setProjectDelete(true); }}>
+                  <button aria-label="Delete project." className='btn btn-danger btn-sm' onClick={(e) => { e.stopPropagation(); setSelectedProject(project); setProjectDelete(true); }}>
                     <Trash size={16} />
                   </button>
-                  <button className='btn btn-update btn-sm' onClick={(e) => { e.stopPropagation(); setSelectedProject(project); setUpdate(true); }}>
+                  <button aria-label="Update project." className='btn btn-update btn-sm' onClick={(e) => { e.stopPropagation(); setSelectedProject(project); setUpdate(true); }}>
                     <Pencil size={16} />
                   </button>
                 </div>
@@ -216,21 +216,21 @@ export function ProjectTable() {
                           <span style={{ flex: 1 }}>{plot.name}</span>
                           <span className='text-muted mr-6'>{plot.gigDate}</span>
                           <span className='text-muted'>{plot.stageName}</span>
-                          <button className='btn btn-danger btn-sm plot-delete'
+                          <button aria-label="Delete stage plot." className='btn btn-danger btn-sm plot-delete'
                             onClick={() => {
                               setSelectedPlot(plot);
                               setPlotDelete(true);
                             }}>
                             <Trash size={14} />
                           </button>
-                          <button className='btn btn-update btn-sm plot-update'
+                          <button aria-label="Update stage plot." className='btn btn-update btn-sm plot-update'
                             onClick={() => {
                               setSelectedPlot(plot);
                               setPlotUpdate(true);
                             }}>
                             <Pencil size={14} />
                           </button>
-                          <button className='btn btn-sm btn-update plot-to-app' onClick={() => {
+                          <button aria-label="Go to plotting application with plot data." className='btn btn-sm btn-update plot-to-app' onClick={() => {
                             setSelectedPlot(plot)
                             selectedPlot && handleGoToAppClick(selectedPlot.id)
                           }}>
@@ -239,7 +239,7 @@ export function ProjectTable() {
                         </div>
                       ))
                     }
-                    < button className='btn btn-ghost btn-sm' style={{ margin: '0.25rem 0.5rem' }} onClick={() => setPlotCreate(true)}>
+                    <button aria-label="Create new plot." className='btn btn-ghost btn-sm' style={{ margin: '0.25rem 0.5rem' }} onClick={() => setPlotCreate(true)}>
                       <Plus size={14} /> Add Plot
                     </button>
                   </div>

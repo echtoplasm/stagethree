@@ -50,7 +50,6 @@ export function ProjectCard({ onStageSelect }: ProjectCardProps) {
   const fetchProjects = async () => {
     if (!user) return null;
     const data = await fetchAllProjectByUserId(user.id);
-    console.log(data);
     setProjects(data);
   }
 
@@ -65,7 +64,6 @@ export function ProjectCard({ onStageSelect }: ProjectCardProps) {
     setSelectedProjectId(projectId);
     const stagePlots = await fetchStagePlotsByProjectId(projectId);
     setPlots(stagePlots);
-    console.log(stagePlots);
   }
 
 
@@ -96,7 +94,6 @@ export function ProjectCard({ onStageSelect }: ProjectCardProps) {
     const fullPlotInfo = await fetchFullStagePlotConfig(plotId);
     onPlotSelect(fullPlotInfo);
     onStageSelect();
-    console.log(fullPlotInfo);
   }
 
   const handlePlotUpdateClick = async (plot: StagePlot) => {
@@ -154,7 +151,10 @@ export function ProjectCard({ onStageSelect }: ProjectCardProps) {
         <p className='alert'>sign in to save projects</p>
       ) : (
         <>
-          <button className="btn btn-primary" onClick={() => setProjectCreate(true)}>
+          <button
+            aria-label='Create new project.'
+            className="btn btn-primary"
+            onClick={() => setProjectCreate(true)}>
             <Plus size={18} />
             Create New Project
           </button>
@@ -167,6 +167,7 @@ export function ProjectCard({ onStageSelect }: ProjectCardProps) {
                 <span className="icon"><Folder size={18} /></span>
                 <span className="name">{project.name}</span>
                 <button
+                  aria-label='Delete this project.'
                   className="delete btn btn-small btn-danger"
                   onClick={(e) => {
                     e.stopPropagation();
@@ -175,13 +176,13 @@ export function ProjectCard({ onStageSelect }: ProjectCardProps) {
                 >
                   <Trash size={18} />
                 </button>
-                <button className='btn btn-update btn-small'
+                <button
+                  aria-label='Update this project.'
+                  className='btn btn-update btn-small'
                   onClick={(e) => {
                     e.stopPropagation();
                     setSelectedProject(project);
                     setProjectUpdate(true);
-                    console.log('selected project', selectedProject);
-                    console.log('project update', projectUpdate);
                   }}>
 
                   <Pencil size={18} />
@@ -192,21 +193,28 @@ export function ProjectCard({ onStageSelect }: ProjectCardProps) {
                   {plots.map((plot) => (
                     <div key={plot.id} className="plot-row" onClick={() => handleStagePlotClick(plot.id)}>
                       <span className="plot-name">{plot.name}</span>
-                      <button className="btn btn-danger btn-sm plot-delete" onClick={(e) => {
-                        e.stopPropagation()
-                        handlePlotDeleteClick(plot.id);
-                      }}>
+                      <button
+                        aria-label='Delete this stage plot.'
+                        className="btn btn-danger btn-sm plot-delete"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          handlePlotDeleteClick(plot.id);
+                        }}>
                         <Trash size={14} />
                       </button>
-                      <button className='btn btn-sm btn-update plot-update' onClick={(e) => {
-                        e.stopPropagation();
-                        handlePlotUpdateClick(plot)
-                      }}>
+                      <button
+                        aria-label='Update this stageplot.'
+                        className='btn btn-sm btn-update plot-update'
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handlePlotUpdateClick(plot)
+                        }}>
                         <Pencil size={14} />
                       </button>
                     </div>
                   ))}
                   <button
+                    aria-label='Create new stage plot.'
                     className="btn btn-ghost btn-sm create-plot-btn"
                     onClick={() => {
                       setCreatePlot(true);

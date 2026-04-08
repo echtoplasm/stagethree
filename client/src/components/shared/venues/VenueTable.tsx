@@ -93,7 +93,7 @@ export function VenueTable() {
         <header className="mb-8">
           <h1>Manage Your Venues and Stages</h1>
           <p className="text-secondary mb-4">Here are all of the Venues associated with your account, click on a venue to see the associated stages with it. You can create venues and stages together in one place here.</p>
-          <button className="btn btn-primary" onClick={() => setVenueCreate(true)}>
+          <button aria-label="Create new venue." className="btn btn-primary" onClick={() => setVenueCreate(true)}>
             <Plus size={18} />
             Create New Venue
           </button>
@@ -125,10 +125,10 @@ export function VenueTable() {
                     {venue.address && <span className='text-muted' style={{ marginLeft: '0.5rem' }}>— {venue.address}</span>}
                   </div>
                   {venue.capacity && <span className='text-secondary' style={{ fontSize: '0.8rem' }}>cap. {venue.capacity.toLocaleString()}</span>}
-                  <button className='btn btn-danger btn-sm' onClick={(e) => { e.stopPropagation(); setSelectedVenue(venue); setVenueDelete(true); }}>
+                  <button aria-label="Delete venue." className='btn btn-danger btn-sm' onClick={(e) => { e.stopPropagation(); setSelectedVenue(venue); setVenueDelete(true); }}>
                     <Trash size={16} />
                   </button>
-                  <button className='btn btn-update btn-sm' onClick={(e) => { e.stopPropagation(); setSelectedVenue(venue); setUpdate(true); }}>
+                  <button aria-label="Update venue." className='btn btn-update btn-sm' onClick={(e) => { e.stopPropagation(); setSelectedVenue(venue); setUpdate(true); }}>
                     <Pencil size={16} />
                   </button>
                 </div>
@@ -139,15 +139,15 @@ export function VenueTable() {
                       <div key={stage.id} className='plot-row'>
                         <span style={{ flex: 1 }}>{stage.name}</span>
                         <span className='text-muted'>{stage.width}ft × {stage.depth}ft × {stage.height}ft</span>
-                        <button className='btn btn-danger btn-sm plot-delete' onClick={() => { setSelectedStage(stage); setStageDelete(true); }}>
+                        <button aria-label="Delete stage." className='btn btn-danger btn-sm plot-delete' onClick={() => { setSelectedStage(stage); setStageDelete(true); }}>
                           <Trash size={14} />
                         </button>
-                        <button className='btn btn-update btn-sm plot-update' onClick={() => { setSelectedStage(stage); setStageUpdate(true); }}>
+                        <button aria-label="Update stage." className='btn btn-update btn-sm plot-update' onClick={() => { setSelectedStage(stage); setStageUpdate(true); }}>
                           <Pencil size={14} />
                         </button>
                       </div>
                     ))}
-                    <button className='btn btn-ghost btn-sm' style={{ margin: '0.25rem 0.5rem' }} onClick={() => setStageCreate(true)}>
+                    <button aria-label="Create new stage." className='btn btn-ghost btn-sm' style={{ margin: '0.25rem 0.5rem' }} onClick={() => setStageCreate(true)}>
                       <Plus size={14} /> Add Stage
                     </button>
                   </div>

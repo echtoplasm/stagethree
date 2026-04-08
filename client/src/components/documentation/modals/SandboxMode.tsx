@@ -16,7 +16,7 @@ export const SandBoxDocs = ({ onClose }: SandBoxModeProps) => {
       <div className="modal modal-wide modal-scrollable">
         <div className="modal-header">
           <h2>Sandbox Mode</h2>
-          <button className="close-btn" onClick={onClose}>
+          <button aria-label='Exit modal.' className="close-btn" onClick={onClose}>
             <X size={18} />
           </button>
         </div>

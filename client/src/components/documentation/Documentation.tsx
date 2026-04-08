@@ -81,7 +81,7 @@ export const Documentation = () => {
               style={{ cursor: 'pointer', textAlign: 'left' }}
             >
               <div className="card-header flex-between">
-                <Icon size={20} color="var(--accent)" />
+                <Icon size={20} color="var(--accent-light)" />
                 <span className="badge badge-success">Docs</span>
               </div>
               <h4 className="mb-2">{title}</h4>

@@ -91,9 +91,6 @@ export function StageRead() {
                   )}
                 </div>
 
-                <div className="stage-card-footer">
-                  <span className="text-muted">ID: {stage.id}</span>
-                </div>
               </article>
             ))}
           </div>

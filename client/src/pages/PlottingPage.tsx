@@ -59,7 +59,7 @@ export function PlottingPage() {
       <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
           <h2>Projects</h2>
-          <button className="close-btn" onClick={() => setSidebarOpen(false)}>
+          <button aria-label='Close the saved projects sidebar.' className="close-btn" onClick={() => setSidebarOpen(false)}>
             <CircleX />
           </button>
         </div>
@@ -78,7 +78,7 @@ export function PlottingPage() {
 
       {/* Main 3D Viewer */}
       <div className="viewer-container">
-        <StageScene ref={stageSceneRef} 
+        <StageScene ref={stageSceneRef}
           showColorPicker={showColorPicker}
           showStageObjects={showStageObjects}
           showCurrentStage={showCurrentStage}
@@ -88,18 +88,21 @@ export function PlottingPage() {
       {/* Bottom Tab Bar */}
       <div className="tab-bar">
         <button
+          aria-label='Open the utilities tab.'
           className={`tab ${activeTab === 'utilities' ? 'active' : ''}`}
           onClick={() => handleTabClick('utilities')}
         >
           Utilities
         </button>
         <button
+          aria-label='Open the elements tab.'
           className={`tab ${activeTab === 'elements' ? 'active' : ''}`}
           onClick={() => handleTabClick('elements')}
         >
           Elements
         </button>
         <button
+          aria-lable='Open the input channels tab.'
           className={`tab ${activeTab === 'inputs' ? 'active' : ''}`}
           onClick={() => handleTabClick('inputs')}
         >
@@ -132,7 +135,7 @@ export function PlottingPage() {
           <div className="drawer-content pb-8">
             {!isSandbox && (
               <div>
-                <button className='btn btn-ghost btn-sm mb-4' onClick={() => setInputChannelModal(true)}>
+                <button aria-label='Expand the input channels in order to edit.' className='btn btn-ghost btn-sm mb-4' onClick={() => setInputChannelModal(true)}>
                   <Maximize2 size={14} />
                   <span className='text-secondary'>expand to edit</span>
                 </button>

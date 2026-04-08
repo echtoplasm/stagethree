@@ -14,7 +14,7 @@ export const PlottingDocModal = ({ onClose }: PlottingDocModalProps) => {
       <div className="modal modal-wide modal-scrollable">
         <div className="modal-header">
           <h2>Plotting</h2>
-          <button className="close-btn" onClick={onClose}>
+          <button aria-label="Exit modal." className="close-btn" onClick={onClose}>
             <X size={18} />
           </button>
         </div>

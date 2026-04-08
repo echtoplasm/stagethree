@@ -18,7 +18,6 @@ export function SignUp({ onClose, onSuccess }: SignUpProps) {
   const [turnstileToken, setTurnstileToken] = useState('');
   const [error, setError] = useState('');
 
-
   const SPECIAL_CHARS = ['!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '_', '+', '=', '[', ']', '{', '}', '|', ';', ':', ',', '.', '?'];
 
   const hasSpecialChar = (password: string) => SPECIAL_CHARS.some(char => password.includes(char));
@@ -27,13 +26,13 @@ export function SignUp({ onClose, onSuccess }: SignUpProps) {
     e.preventDefault();
     try {
       if (password.length < 8 || !hasSpecialChar(password)) {
-        setError('password must contain more than 8 characters, and contain at least one special character');
+        setError('Password must be at least 8 characters and contain at least one special character.');
       } else {
         await createUser({ email, password, firstName, lastName, turnstileToken });
         const res = await loginUser(email, password);
         onSuccess(res.user);
       }
-   } catch (err) {
+    } catch (err) {
       console.error(err);
     }
   };
@@ -47,14 +46,14 @@ export function SignUp({ onClose, onSuccess }: SignUpProps) {
             <h2>Sign Up</h2>
             <p className="text-secondary">Welcome to StageThree</p>
           </div>
-          <button className="btn btn-ghost btn-sm" onClick={onClose}>
+          <button aria-label="Close modal" className="btn btn-ghost btn-sm" onClick={onClose}>
             <X size={18} />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="modal-body">
           <div className="form-group">
-            <label className="form-label" htmlFor="email">First Name</label>
+            <label className="form-label" htmlFor="firstName">First Name</label>
             <input
               id="firstName"
               type="text"
@@ -66,7 +65,7 @@ export function SignUp({ onClose, onSuccess }: SignUpProps) {
             />
           </div>
           <div className="form-group">
-            <label className="form-label" htmlFor="email">Last Name</label>
+            <label className="form-label" htmlFor="lastName">Last Name</label>
             <input
               id="lastName"
               type="text"
@@ -111,6 +110,12 @@ export function SignUp({ onClose, onSuccess }: SignUpProps) {
             />
           </div>
 
+          {error && (
+            <div role="alert" className="alert alert-error mb-4">
+              <span>{error}</span>
+            </div>
+          )}
+
           <div className="modal-footer">
             <button type="button" className="btn btn-ghost" onClick={onClose}>
               Cancel
@@ -121,11 +126,6 @@ export function SignUp({ onClose, onSuccess }: SignUpProps) {
             </button>
           </div>
         </form>
-        {error && (
-          <div className="text-center">
-            <span className="alert-error">{error}</span>
-          </div>
-        )}
       </div>
     </>
   );

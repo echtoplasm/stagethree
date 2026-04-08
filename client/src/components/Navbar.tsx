@@ -104,7 +104,10 @@ export function Navbar({ onThemeToggle, theme }: NavbarProps) {
               </li>
             )}
             <div>
-              <button onClick={onThemeToggle}>
+              <button
+                aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+                onClick={onThemeToggle}
+              >
                 {theme === 'dark' ? <Moon /> : <Sun />}
               </button>
             </div>
@@ -118,10 +121,10 @@ export function Navbar({ onThemeToggle, theme }: NavbarProps) {
         />
       )}
       {showSignUp && (
-        <SignUp 
-          onClose={() => setShowSignUp(false)} 
-          onSuccess={(user) => { evaluateUser(user); setShowSignUp(false) }} 
-         />
+        <SignUp
+          onClose={() => setShowSignUp(false)}
+          onSuccess={(user) => { evaluateUser(user); setShowSignUp(false) }}
+        />
       )}
     </>
   );

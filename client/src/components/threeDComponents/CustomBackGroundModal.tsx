@@ -17,14 +17,15 @@ export const CustomBackGroundModal = ({ onSuccess, onClose, bgColor }: CustomBac
       <div className="modal">
         <div className="modal-header">
           <h2>Custom Background Color</h2>
-          <button className="close-btn" onClick={onClose}>
+          <button aria-label='Close modal.' className="close-btn" onClick={onClose}>
             <X size={18} />
           </button>
         </div>
         <div className="modal-body">
           <div className="form-group">
-            <label className="form-label">Select Color</label>
+            <label className="form-label" htmlFor='bg-color-picker'>Select Color</label>
             <input
+              id="bg-color-picker"
               type="color"
               value={backgroundColor}
               onChange={(e) => setBackgroundColor(e.target.value)}

@@ -15,7 +15,7 @@ export const StageDocsModal = ({ onClose }: StageDocsModalProps) => {
       <div className="modal modal-wide modal-scrollable">
         <div className="modal-header">
           <h2>Stages</h2>
-          <button className="close-btn" onClick={onClose}>
+          <button aria-label='Exit modal button.' className="close-btn" onClick={onClose}>
             <X size={18} />
           </button>
         </div>
