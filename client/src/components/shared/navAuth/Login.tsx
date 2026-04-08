@@ -8,12 +8,25 @@ interface LoginProps {
   onSuccess: (user: User) => void;
 }
 
-
+/**
+ * Modal form for authenticating an existing user.
+ * Displays an error alert on failed login without clearing the form.
+ *
+ * @param onClose - Callback invoked when the modal is dismissed.
+ * @param onSuccess - Callback invoked with the authenticated user on successful login.
+ * @returns The login modal with email/password fields and submit handling.
+ */
 export function Login({ onClose, onSuccess }: LoginProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(false);
 
+/**
+ * Submits email and password credentials to the auth API.
+ * Calls onSuccess with the returned user on success, or sets error state on failure.
+ *
+ * @param e - The form submission event.
+ */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {

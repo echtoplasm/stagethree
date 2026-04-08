@@ -16,6 +16,13 @@ interface ProjectCardProps {
 }
 
 
+/**
+ * Renders the user's projects and stage plots in an accordion layout.
+ * Handles project/plot CRUD operations and loads a selected plot into the Three.js scene.
+ *
+ * @param onStageSelect - Callback invoked when a stage plot is selected, triggering scene navigation.
+ * @returns The projects list UI with nested stage plot rows and CRUD modals.
+ */
 
 export function ProjectCard({ onStageSelect }: ProjectCardProps) {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -43,10 +50,10 @@ export function ProjectCard({ onStageSelect }: ProjectCardProps) {
   } = useStageContext();
 
 
-  /** 
-   * Fetch projects by userid using client/api/ project file with a !user auth guard
-   * calls setProjects state to render all user created projects
-   * */
+  /**
+   * Fetches all projects belonging to the authenticated user and updates local state.
+   * Returns early if no authenticated user is present.
+   */
   const fetchProjects = async () => {
     if (!user) return null;
     const data = await fetchAllProjectByUserId(user.id);
@@ -54,10 +61,9 @@ export function ProjectCard({ onStageSelect }: ProjectCardProps) {
   }
 
   /**
-   * click handler to set state of plots and selected projectId 
+   * Handles project row click by fetching and displaying associated stage plots.
    *
-   *
-   * @param projectId - projectId to updated selectedprojectId state
+   * @param projectId - The ID of the project to expand and load plots for.
    */
   const handleProjectClick = async (projectId: number) => {
     setPlots([]);
@@ -72,10 +78,9 @@ export function ProjectCard({ onStageSelect }: ProjectCardProps) {
 
   //============= FUNCTIONS FOR PASSING DATA TO THREEJS SCENE ===============//
   /**
-   * helper function for handleStagePlotClick that sets stage context provider
-   * that will then be accessible to the three.js scene
+   * Populates StageContext with the full stage plot configuration for scene rendering.
    *
-   * @param data - stagePlotResponse from apiFetch stageplot:full
+   * @param data - The full stage plot response containing elements, input channels, stage, project, and plot metadata.
    */
   const onPlotSelect = (data: FullStagePlotResponse) => {
     setElementPlacements(data.elements);
@@ -87,8 +92,9 @@ export function ProjectCard({ onStageSelect }: ProjectCardProps) {
   }
 
   /**
-   * @param plotId - click handler for fetching full stageplot config 
-   * from API
+   * Fetches the full stage plot configuration by ID and loads it into the Three.js scene.
+   *
+   * @param plotId - The ID of the stage plot to load.
    */
   const handleStagePlotClick = async (plotId: number) => {
     const fullPlotInfo = await fetchFullStagePlotConfig(plotId);
@@ -96,6 +102,11 @@ export function ProjectCard({ onStageSelect }: ProjectCardProps) {
     onStageSelect();
   }
 
+  /**
+   * Opens the plot update modal for the given stage plot.
+   *
+   * @param plot - The stage plot to be updated.
+   */
   const handlePlotUpdateClick = async (plot: StagePlot) => {
     setPlotUpdate(true);
     setSelectedPlot(plot);
@@ -103,20 +114,25 @@ export function ProjectCard({ onStageSelect }: ProjectCardProps) {
   //==================================================================//
 
   /**===================DELETE HANDLERS===============================//
-   * These delete project/plot by id
-   * 
-   * sets the state of project/plot to delete to be passed to the 
-   * Delete modals
-   *
-   * both contain early returns if param are falsy
-   *
-   */
+  
+  /**
+  * Opens the project delete modal for the given project ID.
+  * Returns early if the provided ID is falsy.
+  *
+  * @param idToDelete - The ID of the project to delete.
+  */
   const handleProjectDeleteClick = async (idToDelete: number) => {
     if (!idToDelete) return null;
     setProjectIdToDelete(idToDelete);
     setProjectDelete(true);
   }
 
+  /**
+   * Opens the plot delete modal for the given plot ID.
+   * Returns early if the provided ID is falsy.
+   *
+   * @param plotId - The ID of the stage plot to delete.
+   */
   const handlePlotDeleteClick = async (plotId: number) => {
     if (!plotId) return null;
     setPlotToDelete(plotId);
@@ -126,7 +142,9 @@ export function ProjectCard({ onStageSelect }: ProjectCardProps) {
 
 
 
-
+  /**
+   * Refreshes the project list and closes the project update modal.
+   */
   const projectStateUpdate = async () => {
     await fetchProjects();
     setProjectUpdate(false);
@@ -134,11 +152,10 @@ export function ProjectCard({ onStageSelect }: ProjectCardProps) {
 
 
 
-  /**; 
-   * Use effect to fetch projects on page load
-   * dependency array: user - ensures no projects are rendered
-   * if user is not truthy
-   * */
+  /**
+   * Fetches projects on mount and whenever the authenticated user or projectsVersion changes.
+   * The projectsVersion dependency ensures the list stays in sync after remote mutations.
+   */
   useEffect(() => {
     fetchProjects();
   }, [user, projectsVersion]);

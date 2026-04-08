@@ -9,7 +9,14 @@ interface SignUpProps {
   onSuccess: (user: User) => void;
 }
 
-/**NEED TO IMPLEMENT CAPTCHA**/
+/**
+ * Modal form for registering a new user.
+ * Validates password requirements client-side before creating the account and immediately logging in.
+ *
+ * @param onClose - Callback invoked when the modal is dismissed.
+ * @param onSuccess - Callback invoked with the authenticated user on successful registration.
+ * @returns The sign-up modal with name, email, password fields, and Cloudflare Turnstile CAPTCHA.
+ */
 export function SignUp({ onClose, onSuccess }: SignUpProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -20,8 +27,10 @@ export function SignUp({ onClose, onSuccess }: SignUpProps) {
 
   const SPECIAL_CHARS = ['!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '_', '+', '=', '[', ']', '{', '}', '|', ';', ':', ',', '.', '?'];
 
+  /** Returns true if the given password contains at least one special character. */
   const hasSpecialChar = (password: string) => SPECIAL_CHARS.some(char => password.includes(char));
 
+  /** Validates password requirements, creates the user, and immediately logs them in on success. */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
