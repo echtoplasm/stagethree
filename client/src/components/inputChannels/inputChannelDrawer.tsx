@@ -1,8 +1,18 @@
 import { useStageContext } from "../../contexts/StageContext";
 import { useAuth } from "../../contexts/AuthContext";
 import { Info } from "lucide-react"
+
+/**
+ * Component for inputchannel drawer in the bottom drawer of plotting page
+ * 
+ * @returns JSX to render HTML to browser
+ */
 export const InputChannelDrawer = () => {
+  
+  //grabbing input channels state from stage context provider
   const { inputChannels } = useStageContext();
+  
+  //retrieving authenticated state from context provider
   const { isAuthenticated } = useAuth();
 
   const isSandbox = !isAuthenticated;

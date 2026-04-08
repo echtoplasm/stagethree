@@ -6,6 +6,11 @@ import { createDefaultProjectAndPlot } from "../../api/projects";
 import { useAuth } from "../../contexts/AuthContext";
 import { addInputChannel, type InputChannel } from "../../api/inputChannel";
 
+/**
+ * Element Drawer component that is rendered in the bottom drawer of the plotting page
+ * 
+ * @returns - JSX for rendering html to page 
+ */
 export const ElementsDrawer = () => {
   const [elementTypes, setElementTypes] = useState<ElementType[]>([]);
   const {
@@ -24,12 +29,17 @@ export const ElementsDrawer = () => {
     refreshInputChannels
   } = useStageContext();
 
+
+  /* Authentication provider for global context about auth state */
   const { user, isAuthenticated } = useAuth();
 
+  /** 
+   * Async function for fetcing all element types, 
+   * passed in useEffect to be fired on component mount
+   */
   const fetchElementTypes = async () => {
     const data = await fetchAllElementTypes();
     setElementTypes(data);
-    console.log(elementTypes);
   }
 
 
