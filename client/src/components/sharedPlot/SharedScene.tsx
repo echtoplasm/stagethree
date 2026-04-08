@@ -20,11 +20,14 @@ export function ShareView() {
     fetchPlot();
   }, [uuid]);
 
-return (
-  <div className="plotting-layout">
-    <div className="viewer-container">
-      <StageScene />
+  return (
+    <div className="plotting-layout">
+      <div className="viewer-container">
+        <StageScene
+          showStageObjects={false}
+          showColorPicker={false}
+          showCurrentStage={false} />
+      </div>
     </div>
-  </div>
-);
+  );
 }
