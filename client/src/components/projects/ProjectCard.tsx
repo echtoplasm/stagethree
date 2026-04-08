@@ -3,7 +3,7 @@ import { fetchAllProjectByUserId, type Project } from "../../api/projects";
 import { fetchAllStagePlots, fetchFullStagePlotConfig, fetchStagePlotsByProjectId, type StagePlot, type FullStagePlotResponse } from "../../api/stagePlots";
 import { Folder, Plus, PlusCircle, Trash, Pencil } from 'lucide-react';
 import { ProjectCreate } from './ProjectCreate'
-import { ProjectDelete } from './ProjectDelete';
+import { ProjectDeletePortal } from '../shared/projects/ProjectDelete.tsx';
 import { ProjectUpdate } from '../shared/projects/ProjectUpdate.tsx';
 import { useAuth } from '../../contexts/AuthContext';
 import { PlotCreate } from '../plotting/PlotCreate';
@@ -234,8 +234,8 @@ export function ProjectCard({ onStageSelect }: ProjectCardProps) {
               onClose={() => setProjectCreate(false)}
             />
           )}
-          {projectDelete && (
-            <ProjectDelete
+          {projectDelete && projectIdToDelete && (
+            <ProjectDeletePortal
               projectId={projectIdToDelete}
               onSuccess={() => {
                 fetchProjects();
