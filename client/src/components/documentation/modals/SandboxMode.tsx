@@ -5,10 +5,20 @@ export interface SandBoxModeProps {
   onClose: () => void;
 }
 
+/** 
+ * Divider component for rendering a line break within the modal
+ *
+ */
 const Divider = () => (
   <hr style={{ border: 'none', borderTop: '1px solid var(--border)', margin: '1.5rem 0' }} />
 )
 
+/**
+ * Renders a documentation modal component about Sandbox mode
+ * 
+ * @param  - React props callback function to determine what happens onClose 
+ * @returns - A react portal of JSX for rendering modal 
+ */
 export const SandBoxDocs = ({ onClose }: SandBoxModeProps) => {
   return createPortal(
     <>

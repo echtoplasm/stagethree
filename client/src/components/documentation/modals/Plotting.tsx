@@ -5,8 +5,14 @@ import { Divider } from "../utilityComponents/Divider";
 interface PlottingDocModalProps {
   onClose: () => void;
 }
- 
- 
+
+
+/**
+ * Modal Component for rendering documentation about the plotting scene
+ * 
+ * @param  - onClose React Prop callback function for determining onClose state and actions  
+ * @returns - JSX within a React Portal for rendering HTML modal   
+ */
 export const PlottingDocModal = ({ onClose }: PlottingDocModalProps) => {
   return createPortal(
     <>
@@ -18,9 +24,9 @@ export const PlottingDocModal = ({ onClose }: PlottingDocModalProps) => {
             <X size={18} />
           </button>
         </div>
- 
+
         <div className="modal-body">
- 
+
           {/* Tip banner */}
           <div className="alert alert-success mb-6">
             <Lightbulb size={18} />
@@ -29,7 +35,7 @@ export const PlottingDocModal = ({ onClose }: PlottingDocModalProps) => {
               stage plots, and input channel editing.
             </span>
           </div>
- 
+
           {/* Section: Plotting */}
           <section>
             <h3 className="mb-4">Plotting on the canvas</h3>
@@ -47,9 +53,9 @@ export const PlottingDocModal = ({ onClose }: PlottingDocModalProps) => {
               position in the scene.
             </p>
           </section>
- 
+
           <Divider />
- 
+
           {/* Section: Input Channels */}
           <section>
             <div className="flex-between mb-4">
@@ -71,9 +77,9 @@ export const PlottingDocModal = ({ onClose }: PlottingDocModalProps) => {
               outside.
             </p>
           </section>
- 
+
           <Divider />
- 
+
           {/* Section: Saving projects */}
           <section>
             <div className="flex-between mb-4">
@@ -96,9 +102,9 @@ export const PlottingDocModal = ({ onClose }: PlottingDocModalProps) => {
               details, then click <strong>Save changes</strong> to confirm.
             </p>
           </section>
- 
+
           <Divider />
- 
+
           {/* Section: Creating a new project */}
           <section>
             <h3 className="mb-4">Creating a new project</h3>
@@ -109,9 +115,9 @@ export const PlottingDocModal = ({ onClose }: PlottingDocModalProps) => {
               appear in the file explorer immediately.
             </p>
           </section>
- 
+
           <Divider />
- 
+
           {/* Section: Adding a stage plot */}
           <section>
             <h3 className="mb-4">Adding a stage plot to a project</h3>
@@ -134,9 +140,9 @@ export const PlottingDocModal = ({ onClose }: PlottingDocModalProps) => {
               you add from this point will be saved to your account automatically.
             </p>
           </section>
- 
+
           <Divider />
- 
+
           {/* Section: Autosave */}
           <section>
             <h3 className="mb-4">Autosave</h3>
@@ -148,11 +154,11 @@ export const PlottingDocModal = ({ onClose }: PlottingDocModalProps) => {
               </span>
             </div>
           </section>
- 
+
         </div>
       </div>
     </>,
     document.body
   )
 }
- 
+

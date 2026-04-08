@@ -6,10 +6,18 @@ interface ControlsDocModalProps {
   onClose: () => void;
 }
 
+/** 
+ * Component for visual styling and line breaks
+ */
 const Divider = () => (
   <hr style={{ border: 'none', borderTop: '1px solid var(--border)', margin: '1.5rem 0' }} />
 )
 
+/**
+ * Component for rendering logos that look like keyboard keys 
+ * 
+ * @param  - label the key letter to be rendered 
+ */
 const KeyBadge = ({ label }: { label: string }) => (
   <kbd style={{
     display: 'inline-block',
@@ -24,6 +32,13 @@ const KeyBadge = ({ label }: { label: string }) => (
   }}>{label}</kbd>
 )
 
+/**
+ * A component that renders information about the keyboard controls within the 
+ * Three scene
+ *
+ * @param  - onClose a React props callback function for determining where/what happens on modal close 
+ * @returns - A react Portal containing JSX that renders the modal 
+ */
 export const ControlsDocModal = ({ onClose }: ControlsDocModalProps) => {
   return createPortal(
     <>

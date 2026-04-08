@@ -5,10 +5,22 @@ export interface UserPortalDocProps {
   onClose: () => void;
 }
 
+/** 
+ * A divider component for visual line breaks
+ *
+ */
 const Divider = () => (
   <hr style={{ border: 'none', borderTop: '1px solid var(--border)', margin: '1.5rem 0' }} />
 )
 
+/**
+ * A documentation component for rendering information about the user portal
+ * 
+ * @param  - onClose React Props callback function for determining what happens within the parent 
+ * component on child component close
+ *
+ * @returns - A React Portal containing JSX for rendering html in a modal
+ */
 export const UserPortalDocModal = ({ onClose }: UserPortalDocProps) => {
   return createPortal(
     <>

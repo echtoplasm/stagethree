@@ -31,19 +31,19 @@ const docs = [
     icon: LayoutTemplate,
   },
   {
-    key: 'cameraControls', 
+    key: 'cameraControls',
     title: 'Camera/Keyboard Controls While Plotting',
     description: 'These documents describe how to best use the camera/directional controls in the plotting scene',
     icon: Camera
   },
   {
-   key: 'sandboxMode',
-   title: 'Sandbox Mode',
-   description: 'These documents describe the limitations of sandbox mode',
-   icon: BookCheck 
+    key: 'sandboxMode',
+    title: 'Sandbox Mode',
+    description: 'These documents describe the limitations of sandbox mode',
+    icon: BookCheck
   },
   {
-    key: 'exportPdf', 
+    key: 'exportPdf',
     title: 'Exporting to PDF',
     description: 'How to get the best use out of the export to PDF feature found in the utilities drawer',
     icon: FileText
@@ -52,10 +52,14 @@ const docs = [
     key: 'sharingPlots',
     title: 'Sharing Plots',
     description: 'How the share feature found in the utilites drawer works',
-    icon: Waypoints 
+    icon: Waypoints
   }
 ];
 
+/**
+ * Documentation Page Orchestrator page containing cards of docs modals
+ * 
+ */
 export const Documentation = () => {
   const [open, setOpen] = useState<string | null>(null);
 
@@ -181,7 +185,7 @@ export const Documentation = () => {
           </div>
         </>
       )}
-      
+
       {open === 'sandboxMode' && (
         <>
           <div className="modal-backdrop" onClick={() => setOpen(null)} />

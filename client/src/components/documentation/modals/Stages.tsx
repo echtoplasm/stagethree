@@ -1,5 +1,5 @@
 import { createPortal } from 'react-dom';
-import { X, Lightbulb, MessageCircleWarning, Check, Info} from 'lucide-react';
+import { X, Lightbulb, MessageCircleWarning, Check, Info } from 'lucide-react';
 import { Divider } from '../utilityComponents/Divider';
 
 export interface StageDocsModalProps {
@@ -7,6 +7,12 @@ export interface StageDocsModalProps {
 }
 
 
+/**
+ * A component that renders a react portal about the Stages within the app
+ * 
+ * @param  - A react props callback for determining what happens on close from within the parent component
+ * @returns - A react portal containing JSX to render the modal to the screen 
+ */
 export const StageDocsModal = ({ onClose }: StageDocsModalProps) => {
 
   return createPortal(
@@ -156,5 +162,5 @@ export const StageDocsModal = ({ onClose }: StageDocsModalProps) => {
     document.body
   )
 }
- 
+
 
