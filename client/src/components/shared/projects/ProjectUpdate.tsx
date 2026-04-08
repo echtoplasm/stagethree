@@ -7,7 +7,14 @@ interface ProjectUpdateProps {
   onClose: () => void;
 }
 
-
+/**
+ * Portal-rendered modal form for updating an existing project's name and description.
+ * Initializes form state from the provided project and calls onClose after a successful update.
+ *
+ * @param project - The project to edit, used to seed initial form state.
+ * @param onClose - Callback invoked when the modal is dismissed or the update completes.
+ * @returns An update modal portal mounted to document.body.
+ */
 export function ProjectUpdate({ project, onClose }: ProjectUpdateProps) {
   const [projectForm, setProjectForm] = useState<Project>({
     id: project.id,
@@ -18,7 +25,7 @@ export function ProjectUpdate({ project, onClose }: ProjectUpdateProps) {
     updatedAt: project.updatedAt
   });
 
-
+  /** Submits the updated project form and calls onClose on completion. */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     await updateProject(projectForm.id, projectForm);

@@ -7,11 +7,20 @@ interface ProjectDeleteProps {
   onClose: () => void;
 }
 
-
+/**
+ * Portal-rendered confirmation modal for deleting a project.
+ * Returns null if no projectId is provided.
+ *
+ * @param projectId - The ID of the project to delete.
+ * @param onSuccess - Callback invoked after the project is successfully deleted.
+ * @param onClose - Callback invoked when the modal is dismissed.
+ * @returns A confirmation modal portal mounted to document.body.
+ */
 export function ProjectDeletePortal({ projectId, onSuccess, onClose }: ProjectDeleteProps) {
 
   if (!projectId) return null;
-
+  
+  /** Deletes the project by ID and calls onSuccess on completion. */
   const handleDelete = async () => {
     await deleteProject(projectId);
     onSuccess();
@@ -20,7 +29,6 @@ export function ProjectDeletePortal({ projectId, onSuccess, onClose }: ProjectDe
 
   return createPortal(
     <>
-      {/* Backdrop */}
       <div
         className="modal-backdrop"
         onClick={onClose}

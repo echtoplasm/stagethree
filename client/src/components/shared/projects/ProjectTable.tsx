@@ -13,6 +13,14 @@ import { PlotCreate } from '../../../components/plotting/PlotCreate';
 import { useStageContext } from '../../../contexts/StageContext';
 import { useNavigate } from 'react-router-dom';
 
+
+/**
+ * Displays all projects belonging to the authenticated user with expandable stage plot rows.
+ * Handles project/plot CRUD operations and navigates to the plotting page with full scene context.
+ * Returns null if no authenticated user is present.
+ *
+ * @returns The project table UI with nested plot rows and CRUD modals.
+ */
 export function ProjectTable() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
@@ -25,7 +33,6 @@ export function ProjectTable() {
   const [projectCreate, setProjectCreate] = useState(false);
 
   /* *** ==== *** PLOT STATE MANAGEMENT ***  ==== *** */
-
   //plot array/object assignment states
   const [renderPlots, setRenderPlots] = useState(false);
   const [plots, setPlots] = useState<StagePlotWithStageName[] | null>(null)
@@ -65,7 +72,12 @@ export function ProjectTable() {
 
   const navigate = useNavigate();
 
-  //used to load plots upon project click
+  /**
+   * Fetches stage plots for the given project and updates plot state.
+   * Returns early if no project is currently selected.
+   *
+   * @param projectId - The ID of the project to load plots for.
+   */
   const loadPlots = async (projectId: number) => {
     try {
       if (!selectedProject) return;
@@ -79,21 +91,30 @@ export function ProjectTable() {
     }
   }
 
-  //used to updated plot state after any crud action
+  /** Refreshes the plot list for the currently selected project after any CRUD operation. */
   const updatePlotState = async () => {
     if (!selectedProject) return;
     const data = await fetchStagePlotsByProjectId(selectedProject.id);
     setPlots(data);
   }
 
-  //gets full plot config for selected stage plot
+  /**
+   * Fetches the full stage plot configuration by ID.
+   *
+   * @param plotId - The ID of the stage plot to fetch.
+   * @returns The full plot configuration, or undefined if the ID is falsy.
+   */
   const getFullPlotConfig = async (plotId: number) => {
     if (!plotId) return;
     const data = await fetchFullStagePlotConfig(plotId);
     return data;
   }
 
-  //sets context provider for /app page
+  /**
+   * Populates StageContext with full plot configuration data for scene rendering.
+   *
+   * @param data - The full stage plot response containing elements, input channels, stage, project, and plot metadata.
+   */
   const setPlotContext = (data: FullStagePlotResponse) => {
     setElementPlacements(data.elements);
     setInputChannels(data.inputChannels);
@@ -107,10 +128,11 @@ export function ProjectTable() {
     navigate('/app');
   }
 
-  //click listener for stageplots in "table"
-  // -gets getFullPlotConfig
-  // -sets stagecontext with getFullPlotConfig
-  // -navigates to /app that now has context to render with
+  /**
+   * Fetches full plot config, loads it into StageContext, and navigates to the plotting page.
+   *
+   * @param plotId - The ID of the stage plot to open in the app.
+   */
   const handleGoToAppClick = async (plotId: number) => {
     if (!plotId) return;
     const data = await getFullPlotConfig(plotId);
@@ -121,7 +143,10 @@ export function ProjectTable() {
 
 
 
-
+  /**
+   * Fetches all projects for the authenticated user on mount.
+   * Sets loading and error state accordingly.
+   */
   useEffect(() => {
     const loadProjects = async () => {
       try {

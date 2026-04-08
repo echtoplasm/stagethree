@@ -9,6 +9,15 @@ export interface ProjectCreateProps {
   onSuccess: () => void;
 }
 
+
+/**
+ * Portal-rendered modal form for creating a new project.
+ * Returns null if no authenticated user is present.
+ *
+ * @param onClose - Callback invoked when the modal is dismissed.
+ * @param onSuccess - Callback invoked after the project is successfully created.
+ * @returns A modal portal mounted to document.body with name and description fields.
+ */
 export function ProjectCreate({ onClose, onSuccess }: ProjectCreateProps) {
   const { user } = useAuth();
   const [projectForm, setProjectForm] = useState({
@@ -17,7 +26,8 @@ export function ProjectCreate({ onClose, onSuccess }: ProjectCreateProps) {
   });
 
   if (!user) return null;
-
+  
+  /** Submits the project form and calls onSuccess on completion. */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     await createNewProject({ ...projectForm, userId: user.id });
