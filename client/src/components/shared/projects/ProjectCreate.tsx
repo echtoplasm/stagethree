@@ -4,7 +4,7 @@ import { createNewProject } from '../../../api/projects';
 import { useAuth } from '../../../contexts/AuthContext';
 import { createPortal } from 'react-dom';
 
-interface ProjectCreateProps {
+export interface ProjectCreateProps {
   onClose: () => void;
   onSuccess: () => void;
 }
