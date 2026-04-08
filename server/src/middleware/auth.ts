@@ -12,11 +12,13 @@ export interface AuthRequest extends Request {
 }
 
 /**
- * Authenticate the users token in order enable protected routes
- *
- * @param req - request of type AuthRequest that has extended Express Req
- * @param res - response to the user 
- * @param next - function to be passed next
+ * Middleware for protecting routes via JWT authentication and role-based access control.
+ * Tokens are read from the httpOnly cookie set during login.
+ */
+
+/**
+ * Verifies the JWT from the request cookie and attaches the decoded user payload to req.user.
+ * Responds 401 if the token is missing, invalid, or expired.
  */
 export const authenticateToken = (req: AuthRequest, res: Response, next: NextFunction): void => {
   const token = req.cookies.token;
@@ -41,9 +43,8 @@ export const authenticateToken = (req: AuthRequest, res: Response, next: NextFun
 };
 
 /**
- * @param req - 
- * @param res - 
- * @param next - 
+ * Guards admin-only routes by verifying the authenticated user's roleId meets the minimum threshold.
+ * Responds 403 if the user is unauthenticated or has insufficient role privileges.
  */
 export const authenticateAdmin = (req: AuthRequest, res: Response, next: NextFunction): void => {
   if (!req.user || req.user.roleId < ADMIN_ROLE_ID) {

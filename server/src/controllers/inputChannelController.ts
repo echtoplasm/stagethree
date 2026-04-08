@@ -10,8 +10,13 @@ import {
 const incTable = 'input_channel_inc';
 
 /**
+ * Input channel controller — CRUD handlers for stage plot input channel records.
+ * Transforms between DB column naming (suffix _inc) and API format via incToApi/incToDb.
+ */
+
+/**
  * GET /api/inputchannels/
- * Fetch all inputchannels
+ * Returns all input channels.
  */
 export const getAllInputChannels = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -28,9 +33,8 @@ export const getAllInputChannels = async (req: Request, res: Response): Promise<
 
 /**
  * GET /api/inputchannels/:id
- * Fetch inputChannel by ID
+ * Returns a single input channel by ID, or 404 if not found.
  */
-
 export const getInputChannelById = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
@@ -54,8 +58,7 @@ export const getInputChannelById = async (req: Request, res: Response): Promise<
 
 /**
  * POST /api/inputchannels
- * Create inputChannel
- *
+ * Creates a new input channel record.
  */
 
 export const createInputChannel = async (req: Request, res: Response): Promise<void> => {
@@ -75,7 +78,7 @@ export const createInputChannel = async (req: Request, res: Response): Promise<v
 
 /**
  * PUT /api/inputchannels/:id
- * updated inputChannel by id
+ * Replaces an input channel record by ID.
  */
 
 export const updateInputChannel = async (req: Request, res: Response): Promise<void> => {
@@ -101,7 +104,7 @@ export const updateInputChannel = async (req: Request, res: Response): Promise<v
 
 /**
  * DELETE /api/inputchannels/:id
- * delete inputChannel by id
+ * Deletes an input channel by ID, or 404 if not found.
  */
 
 export const deleteInputChannel = async (req: Request, res: Response): Promise<void> => {
@@ -138,8 +141,8 @@ export const deleteInputChannel = async (req: Request, res: Response): Promise<v
 };
 
 /**
- *  GET /api/inputchannels/stageplot/:id
- *  get inputchannel by stage plot id
+ * GET /api/inputchannels/stageplot/:id
+ * Returns all input channels associated with a given stage plot ID.
  */
 
 export const getInputChannelByStagePlotId = async (req: Request, res: Response): Promise<void> => {
@@ -160,8 +163,8 @@ export const getInputChannelByStagePlotId = async (req: Request, res: Response):
 };
 
 /**
- * PATCH /api/inputchannels/:inputChannelId
- * partial update to inputchannels for changing the inputchannelnumber
+ * PATCH /api/inputchannels/:id
+ * Partially updates an input channel record by ID, or 404 if not found.
  */
 
 export const partialUpdateInputChannel = async (req: Request, res: Response): Promise<void> => {

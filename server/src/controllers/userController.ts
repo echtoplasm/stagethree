@@ -6,8 +6,16 @@ import jwt from 'jsonwebtoken';
 import db from '../db/knex';
 
 /**
+ * User controller — CRUD handlers for user records.
+ * Registration verifies Cloudflare Turnstile before creating the account and hashes
+ * the password via bcrypt before insertion.
+ * Transforms between DB column naming (suffix _usr) and API format via dbUserToApi/apiUserToDb.
+ */
+
+
+/**
  * GET /api/users
- * Fetch all users
+ * Returns all users.
  */
 export const getAllUsers = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -22,7 +30,7 @@ export const getAllUsers = async (req: Request, res: Response): Promise<void> =>
 
 /**
  * GET /api/users/:id
- * Fetch a single user by ID
+ * Returns a single user by ID, or 404 if not found.
  */
 export const getUserById = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -43,7 +51,9 @@ export const getUserById = async (req: Request, res: Response): Promise<void> =>
 
 /**
  * POST /api/users
- * Create a new user
+ * Creates a new user after verifying the Cloudflare Turnstile token.
+ * Hashes the password before insertion.
+ * Responds 400 if captcha fails or any required fields are missing.
  */
 export const createUser = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -97,7 +107,8 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
 
 /**
  * PUT /api/users/:id
- * Update a user (full update)
+ * Replaces a user's profile fields by ID.
+ * Responds 404 if not found, 400 if no valid fields are provided.
  */
 export const updateUser = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -134,7 +145,8 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
 
 /**
  * PATCH /api/users/:id
- * Partially update a user
+ * Partially updates a user's profile fields by ID.
+ * Responds 404 if not found, 400 if no valid fields are provided.
  */
 export const patchUser = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -169,7 +181,7 @@ export const patchUser = async (req: Request, res: Response): Promise<void> => {
 
 /**
  * DELETE /api/users/:id
- * Delete a user
+ * Deletes a user by ID, or 404 if not found.
  */
 export const deleteUser = async (req: Request, res: Response): Promise<void> => {
   try {

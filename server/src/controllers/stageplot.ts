@@ -20,8 +20,16 @@ import {
 const plotTable = 'stage_plot_stp';
 
 /**
+ * Stage plot controller — CRUD handlers for stage plot records.
+ * Transforms between DB column naming (suffix _stp) and API format via dbStagePlotToApi/apiStagePlotToDb.
+ * The getFullStagePlotInfo and getStagePlotByUUID handlers aggregate elements, input channels,
+ * stage, and project data into a single response for scene hydration.
+ */
+
+
+/**
  * GET /api/stageplots/
- * Fetch all stageplots
+ * Returns all stage plots.
  */
 export const getAllStagePlots = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -38,7 +46,7 @@ export const getAllStagePlots = async (req: Request, res: Response): Promise<voi
 
 /**
  * GET /api/stageplots/:id
- * Fetch stageplot by ID
+ * Returns a single stage plot by ID, or 404 if not found.
  */
 
 export const getStagePlotById = async (req: Request, res: Response): Promise<void> => {
@@ -61,7 +69,7 @@ export const getStagePlotById = async (req: Request, res: Response): Promise<voi
 
 /**
  * GET /api/stageplots/projects/:id
- * fetch stageplots by project id
+ * Returns all stage plots for a given project ID, joined with their stage name.
  */
 
 export const getAllStagePlotsByProjectId = async (req: Request, res: Response): Promise<void> => {
@@ -88,9 +96,9 @@ export const getAllStagePlotsByProjectId = async (req: Request, res: Response): 
 
 /**
  * POST /api/stageplots
- * Create stageplot
+ * Creates a new stage plot with a server-generated UUID for public share links.
+ * Responds 400 if projectId, stageId, or name are missing.
  */
-
 export const createStagePlot = async (req: Request, res: Response): Promise<void> => {
   try {
     const { projectId, stageId, name, gigDate } = req.body;
@@ -124,7 +132,8 @@ export const createStagePlot = async (req: Request, res: Response): Promise<void
 
 /**
  * PUT /api/stageplots/:id
- * updated stageplot by id
+ * Updates a stage plot's name, project, and stage by ID.
+ * Responds 400 if projectId or name are missing.
  */
 
 export const updateStagePlot = async (req: Request, res: Response): Promise<void> => {
@@ -160,7 +169,7 @@ export const updateStagePlot = async (req: Request, res: Response): Promise<void
 
 /**
  * DELETE /api/stageplots/:id
- * delete stageplot by id
+ * Deletes a stage plot by ID, or 404 if not found.
  */
 
 export const deleteStagePlot = async (req: Request, res: Response): Promise<void> => {
@@ -199,17 +208,14 @@ export const deleteStagePlot = async (req: Request, res: Response): Promise<void
 };
 
 /**
- * GET /api/stageplots/share/:uuid
- * get stage plot and element placements with stageplot id
+ * GET /api/stageplots/share/:id
+ * Returns the full stage plot configuration by ID for scene hydration.
+ * Aggregates element placements (joined with element type and model path),
+ * input channels, stage, and project into a single response.
  */
 export const getFullStagePlotInfo = async (req: Request, res: Response): Promise<void> => {
   try {
-    /**
-     * Wrote these specific type conversions since this endpoint is using data
-     * that is extremely use case specific and very unlikely that data will be
-     * returned and formatted like this elsewhere
-     *
-     */
+
     interface dbElement {
       created_at_elp: string;
       id_elp: number;
@@ -307,8 +313,9 @@ export const getFullStagePlotInfo = async (req: Request, res: Response): Promise
 };
 
 /**
- * @param req - 
- * @param res - 
+ * GET /api/stageplots/share/:uuid
+ * Returns the full stage plot configuration by public UUID for unauthenticated share link access.
+ * Aggregates element placements, input channels, stage, and project into a single response.
  */
 export const getStagePlotByUUID = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -417,6 +424,10 @@ export const getStagePlotByUUID = async (req: Request, res: Response): Promise<v
   }
 };
 
+/**
+ * GET /api/stageplots/user/:id
+ * Returns all stage plots belonging to a given user ID via their associated projects.
+ */
 export const getAllStagePlotsByUserId = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;

@@ -3,7 +3,6 @@ import db from '../db/knex';
 import {
   dbEquipmentTypeToApi as equipToApi,
   EquipmentTypeDB,
-  StageDB,
 } from '../utils/transformers';
 
 const equipTable = 'equipment_type_eqt';
@@ -50,12 +49,6 @@ export const getEquipmentById = async (req: Request, res: Response): Promise<voi
   }
 };
 
-/*=======Personal Notes ============
- * 
- * I am not sure that we will need a update or post
- * route since Ideally the app will provide the equipment
- * a user needs
- *
- ===================================*/
+
 
 

@@ -5,9 +5,16 @@ import { apiStageToDb, dbStagePlotToApi, dbStageToApi, StageDB } from '../utils/
 const stageTable = 'stage_stg';
 
 /**
+ * Stage controller — CRUD handlers for stage records.
+ * Soft deletes are implemented via deleted_at_stg; all read queries exclude soft-deleted rows.
+ * Transforms between DB column naming (suffix _stg) and API format via dbStageToApi/apiStageToDb.
+ */
+
+
+
+/**
  * GET /api/stages/
- * Get all stages
- *
+ * Returns all stages excluding soft-deleted records.
  */
 export const getAllStages = async (req: Request, res: Response): Promise<void> => {
   console.log('getAllStages called');
@@ -26,8 +33,7 @@ export const getAllStages = async (req: Request, res: Response): Promise<void> =
 
 /**
  * GET /api/stages/public
- *  get all publically available stages
- *
+ * Returns all public stages excluding soft-deleted records.
  */
 
 export const getAllPublicStages = async (req: Request, res: Response): Promise<void> => {
@@ -52,8 +58,7 @@ export const getAllPublicStages = async (req: Request, res: Response): Promise<v
 
 /**
  * GET /api/stages/:id
- * Get stage by ID
- *
+ * Returns a single stage by ID, or 500 if not found or soft-deleted.
  */
 export const getStageById = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -85,8 +90,7 @@ export const getStageById = async (req: Request, res: Response): Promise<void> =
 
 /**
  * POST /api/stages
- * Create stages
- *
+ * Creates a new stage. Responds 400 if any required fields are missing.
  */
 
 export const createStage = async (req: Request, res: Response): Promise<void> => {
@@ -116,8 +120,8 @@ export const createStage = async (req: Request, res: Response): Promise<void> =>
 
 /**
  * DELETE /api/stages/:id
- * delete stage by id
- *
+ * Soft deletes a stage by setting deleted_at_stg to the current timestamp.
+ * Responds 404 if no stage with the given ID exists.
  */
 
 export const deleteStage = async (req: Request, res: Response): Promise<void> => {
@@ -148,7 +152,8 @@ export const deleteStage = async (req: Request, res: Response): Promise<void> =>
 
 /**
  * PUT /api/stages/:id
- * Update stage by id
+ * Updates a stage's name and dimensions by ID.
+ * Responds 400 if no valid fields are provided.
  */
 
 export const updateStage = async (req: Request, res: Response): Promise<void> => {
@@ -192,7 +197,7 @@ export const updateStage = async (req: Request, res: Response): Promise<void> =>
 
 /**
  * GET /api/stages/user/:userId
- * get all stages by created_by in order to populate userPortal
+ * Returns all non-deleted stages created by the given user ID.
  */
 
 export const getAllStagesByCreatedBy = async (req: Request, res: Response): Promise<void> => {
@@ -219,8 +224,8 @@ export const getAllStagesByCreatedBy = async (req: Request, res: Response): Prom
 };
 
 /**
- * get /api/stages/venue/:venueId
- * get stages by venue id
+ * GET /api/stages/venue/:venueId
+ * Returns all stages associated with the given venue ID.
  */
 
 export const getStagesByVenueId = async (req: Request, res: Response): Promise<void> => {

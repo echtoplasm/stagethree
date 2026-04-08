@@ -10,8 +10,14 @@ import {
 const elpTable = 'element_placement_elp';
 
 /**
+ * Element placement controller — CRUD handlers for stage element placements.
+ * All handlers transform between DB column naming (suffix _elp) and API format via elpToApi/elpToDb.
+ */
+
+
+/**
  * GET /api/elp/
- * Fetch all elementplacements
+ * Returns all element placements.
  */
 export const getAllElp = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -27,9 +33,8 @@ export const getAllElp = async (req: Request, res: Response): Promise<void> => {
 
 /**
  * GET /api/elp/:id
- * Fetch elementplacement by ID
+ * Returns a single element placement by ID, or 404 if not found.
  */
-
 export const getElpById = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
@@ -52,9 +57,11 @@ export const getElpById = async (req: Request, res: Response): Promise<void> => 
   }
 };
 
-/**elementPla
+/**
  * POST /api/elp
- * Create element placement
+ * Creates a new element placement.
+ * Applies per-type default scale overrides for element types 1 and 2.
+ * Responds 400 if stagePlotId or elementTypeId are missing.
  */
 export const createElp = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -92,7 +99,7 @@ export const createElp = async (req: Request, res: Response): Promise<void> => {
 
 /**
  * PUT /api/elp/:id
- * Update element placement
+ * Replaces an element placement by ID, or 404 if not found.
  */
 export const updateElp = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -118,9 +125,8 @@ export const updateElp = async (req: Request, res: Response): Promise<void> => {
 
 /**
  * DELETE /api/elp/:id
- * delete element placement by id
+ * Deletes an element placement by ID, or 404 if not found.
  */
-
 export const deleteElp = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
@@ -155,8 +161,8 @@ export const deleteElp = async (req: Request, res: Response): Promise<void> => {
 
 /**
  * PATCH /api/elp/:id
+ * Partially updates an element placement's position (X, Y, Z) by ID, or 404 if not found.
  */
-
 export const partialUpdateElp = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;

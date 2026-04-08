@@ -5,6 +5,8 @@ import multer from 'multer';
 import { S3Client } from '@aws-sdk/client-s3';
 import { PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 
+
+
 //S3 client init for r2 communication
 export const s3 = new S3Client({
   region: 'auto',
@@ -15,9 +17,16 @@ export const s3 = new S3Client({
   },
 });
 
+
+/**
+ * Image/model controller — handlers for managing 3D model assets stored in Cloudflare R2.
+ * Create and delete operations are mirrored between the R2 bucket and the image_img table.
+ * Create additionally inserts a corresponding element_type_elt record in a transaction.
+ */
+
 /**
  * GET /api/images
- * get all images/models
+ * Returns all images joined with their element type scale defaults.
  */
 
 export const getAllImages = async (req: Request, res: Response) => {
@@ -46,9 +55,8 @@ export const getAllImages = async (req: Request, res: Response) => {
 
 /**
  * DELETE /api/images/:id
- *
- * delete image by id
- * adding delete s3 command to delete from r2 bucket
+ * Deletes an image record from the database and its corresponding object from R2.
+ * Responds 404 if no image with the given ID exists.
  */
 export const deleteImageById = async (req: Request, res: Response) => {
   try {
@@ -77,10 +85,9 @@ export const deleteImageById = async (req: Request, res: Response) => {
 };
 
 /**
- * CREATE new image
  * POST /api/images
- *
- * req.body = name, category
+ * Uploads a 3D model file to R2 and creates image_img and element_type_elt records in a transaction.
+ * Responds 400 if name, description, or file are missing.
  */
 
 export const createNewImage = async (req: Request, res: Response) => {
@@ -130,9 +137,9 @@ export const createNewImage = async (req: Request, res: Response) => {
   }
 };
 
-/*
- * CREATE AN IMAGE UPDATE ENDPOINT
+/**
  * PATCH /api/images/:id
+ * Updates an image's name and its associated element type's name and default scale values in a transaction.
  */
 
 export const updateImageById = async (req: Request, res: Response) => {

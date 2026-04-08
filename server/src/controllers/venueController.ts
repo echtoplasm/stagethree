@@ -48,8 +48,6 @@ export const getVenueById = async (req: Request, res: Response): Promise<void> =
  * create a new venue
  *
  *
- * *** NEED TO ADD USER ID FOR CREATED BY***
- * *** ALSO PROBABLY GOING TO NEED TO ADD THE SAME DELETE LOGIC THAT STAGE HAS ***
  */
 export const createVenue = async (req: Request, res: Response): Promise<void> => {
   try {

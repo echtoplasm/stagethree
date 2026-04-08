@@ -15,8 +15,13 @@ import {
 const projectTable = 'project_prj';
 
 /**
- * GET api/projects
- * get all projects
+ * Project controller — CRUD handlers for project records.
+ * Transforms between DB column naming (suffix _prj) and API format via dbProjectToApi/apiProjectToDb.
+ */
+
+/**
+ * GET /api/projects
+ * Returns all projects.
  */
 export const getAllProjects = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -51,11 +56,11 @@ export const getProjectById = async (req: Request, res: Response): Promise<void>
  */
 export const createProject = async (req: Request, res: Response): Promise<void> => {
   try {
-    const {userId, name} = req.body
-    if(!userId || !name){
+    const { userId, name } = req.body;
+    if (!userId || !name) {
       res.status(400).json({
-        message: "Fields cannot be empty",
-      })
+        message: 'Fields cannot be empty',
+      });
       return;
     }
     const dbData = apiProjectToDb(req.body);
@@ -161,8 +166,8 @@ export const getProjectByUserId = async (req: Request, res: Response): Promise<v
 
 /**
  * POST /api/projects/default
- * Create default project and plots for authenticated user who has not set
- * a project and plot while plotting
+ * Creates a default project, stage, and stage plot in a single transaction.
+ * Intended for users who begin plotting without an existing project selected.
  */
 
 export const createDefaultPlotAndProject = async (req: Request, res: Response): Promise<void> => {

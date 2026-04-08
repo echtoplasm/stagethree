@@ -45,10 +45,4 @@ export const getElementById = async (req: Request, res: Response): Promise<void>
   }
 };
 
-/*=======Personal Notes ============
- * 
- * I am not sure that we will need a update or post
- * route since Ideally the app will provide the equipment
- * a user needs
- *
- ===================================*/
+
