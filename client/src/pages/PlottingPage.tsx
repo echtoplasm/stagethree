@@ -14,6 +14,13 @@ import { ScreenSizeModal } from '../components/userUI/ScreenSizeModal';
 import { type StageSceneHandle } from '../components/ThreeD';
 import { UtilitiesDrawer } from '../components/projectUtilities/UtilitiesDrawer';
 
+/**
+ * Main plotting application page composing the Three.js scene, project sidebar,
+ * bottom tab drawer, and overlay controls for elements, input channels, and utilities.
+ * Renders a screen size warning modal on viewports 768px and below.
+ *
+ * @returns The full plotting layout with sidebar, scene viewer, tab bar, and drawer.
+ */
 export function PlottingPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<string | null>(null);
@@ -31,16 +38,19 @@ export function PlottingPage() {
 
   const { width } = useWindowSize();
 
+  /** Fetches all available element types and updates local state for the elements drawer. */
   const fetchElementTypes = async () => {
     const data = await fetchAllElementTypes();
     setElementTypes(data);
     console.log(elementTypes);
   }
 
+  /** Toggles the active tab, closing it if the same tab is clicked again. */
   const handleTabClick = (tab: string) => {
     setActiveTab(activeTab === tab ? null : tab);
   };
 
+  /** Fetches element types on mount and syncs sandbox mode with authentication state. */
   useEffect(() => {
     fetchElementTypes();
     if (isAuthenticated) setIsSandbox(false);

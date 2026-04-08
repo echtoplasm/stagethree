@@ -28,7 +28,14 @@ interface StageContextType {
 
 const StageContext = createContext<StageContextType | undefined>(undefined);
 
-
+/**
+ * Provides shared stage plot state to the component tree, acting as the bridge
+ * between the user portal, plotting page, and Three.js scene.
+ * Manages active project, stage, plot, element placements, and input channels.
+ *
+ * @param children - The component subtree that will have access to stage context.
+ * @returns The StageContext provider wrapping the given children.
+ */
 export function StageProvider({ children }: { children: React.ReactNode }) {
   const [elementPlacements, setElementPlacements] = useState<ElementPlacement[]>([]);
   const [activeProject, setActiveProject] = useState<Project | null>(null);
@@ -39,7 +46,10 @@ export function StageProvider({ children }: { children: React.ReactNode }) {
   const [projectsVersion, setProjectsVersion] = useState(0);
   const [inputChannelsVersion, setInputChannelsVersion] = useState(0);
 
+  /** Increments projectsVersion to trigger dependent project list refetches. */
   const refreshProjects = () => setProjectsVersion(prev => prev + 1);
+
+  /** Increments inputChannelsVersion to trigger dependent input channel list refetches. */
   const refreshInputChannels = () => setInputChannelsVersion(prev => prev + 1);
   return (
     <StageContext.Provider value={{
@@ -67,6 +77,10 @@ export function StageProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
+/**
+ * Returns the current stage context.
+ * @throws If called outside of a StageProvider.
+ */
 export const useStageContext = () => {
   const context = useContext(StageContext);
   if (!context) throw new Error('useStage must be used within StageProvider');

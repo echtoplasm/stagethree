@@ -3,15 +3,27 @@ import { Link } from 'react-router-dom';
 import { LucideInfinity, List, Rotate3d, Spotlight } from 'lucide-react';
 import { SignUp } from '../components/shared/navAuth/Signup';
 
+
+/**
+ * Marketing landing page with an animated canvas background and feature highlights.
+ * Triggers a fade-in on mount and surfaces the sign-up modal from CTA buttons.
+ *
+ * @returns The landing page with hero section, feature grid, and bottom CTA.
+ */
 export const LandingPage = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [visible, setVisible] = useState(false);
   const [promptSignUp, setPromptSignUp] = useState(false);
 
+  /** Sets visible to true on mount to trigger CSS fade-in transitions. */
   useEffect(() => {
     setVisible(true);
   }, []);
 
+  /**
+   * Renders an animated scrolling grid with intersection dots onto the canvas background.
+   * Handles canvas sizing on mount and window resize, and cancels the animation loop on unmount.
+   */
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;

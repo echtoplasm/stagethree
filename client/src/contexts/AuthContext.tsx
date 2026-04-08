@@ -11,10 +11,18 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+/**
+ * Provides authentication state and actions to the component tree.
+ * Rehydrates session on mount by calling the /auth/me endpoint.
+ *
+ * @param children - The component subtree that will have access to auth context.
+ * @returns The AuthContext provider wrapping the given children.
+ */
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
+  /** Fetches the current session from the API on mount and populates user state if authenticated. */
   useEffect(() => {
     fetchAuthMe()
       .then(res => {
@@ -24,7 +32,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       .finally(() => setLoading(false))
   }, []);
 
+  /** Sets the authenticated user in state. */
   const login = (user: User) => setUser(user);
+
+  /** Clears user state, calls the logout API, and redirects to the home page. */
   const logout = async () => {
     try {
       await logoutUser()
@@ -47,6 +58,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
+/**
+ * Returns the current auth context.
+ * @throws If called outside of an AuthProvider.
+ */
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) throw new Error('useAuth must be used within AuthProvider');

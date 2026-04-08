@@ -13,8 +13,16 @@ const PlottingPage = lazy(() => import('./pages/PlottingPage').then(m => ({ defa
 const AdminPage = lazy(() => import('./pages/AdminPage').then(m => ({ default: m.AdminPage })));
 const UserPortal = lazy(() => import('./pages/UserPortal').then(m => ({ default: m.UserPortal })));
 const Documentation = lazy(() => import('./components/documentation/Documentation').then(m => ({ default: m.Documentation })));
-const ShareView = lazy(() => import('./components/sharedPlot/SharedScene').then(m => ({ default: m.ShareView})))
+const ShareView = lazy(() => import('./components/sharedPlot/SharedScene').then(m => ({ default: m.ShareView })))
 
+
+/**
+ * Renders the application route tree within a Suspense boundary.
+ * Blocks rendering until auth state is resolved to prevent redirect flicker.
+ * Guards the /admin route behind a roleId check.
+ *
+ * @returns The route tree, or a loading indicator while auth state is resolving.
+ */
 function AppRoutes() {
   const { user, loading } = useAuth();
   if (loading) {
@@ -38,13 +46,24 @@ function AppRoutes() {
   );
 }
 
+/**
+ * Root application component wrapping the tree with AuthProvider, StageProvider, and Router.
+ * Manages light/dark theme state and applies it to the document root via a data attribute.
+ *
+ * @returns The full application with context providers, navbar, and route tree.
+ */
 function App() {
   const [theme, setTheme] = useState('dark');
+
+
+  /** Toggles between light and dark theme and applies the selection to the document root. */
   const toggleTheme = () => {
     const next = theme === 'dark' ? 'light' : 'dark';
     setTheme(next);
     document.documentElement.setAttribute('data-theme', next);
   };
+
+  /** Applies the initial theme to the document root on mount. */
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
   }, []);

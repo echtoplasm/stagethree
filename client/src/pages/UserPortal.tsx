@@ -3,11 +3,21 @@ import { ProjectTable } from '../components/shared/projects/ProjectTable';
 import { User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
-import {VenueTable} from '../components/shared/venues/VenueTable'
+import { VenueTable } from '../components/shared/venues/VenueTable'
+
+/**
+ * Authenticated user portal displaying account info, projects, and venues.
+ * Redirects to the home page if the user is not authenticated.
+ *
+ * @returns The user portal layout with account details, ProjectTable, and VenueTable.
+ */
+
 
 export const UserPortal = () => {
   const { user, isAuthenticated } = useAuth();
   const navigate = useNavigate();
+
+  /** Redirects to the home page when the user is no longer authenticated. */
   useEffect(() => {
     if (!isAuthenticated) {
       navigate('/')
