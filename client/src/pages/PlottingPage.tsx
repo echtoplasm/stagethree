@@ -36,8 +36,6 @@ export function PlottingPage() {
 
   const { width } = useWindowSize();
 
-
-
   /** Toggles the active tab, closing it if the same tab is clicked again. */
   const handleTabClick = (tab: string) => {
     setActiveTab(activeTab === tab ? null : tab);

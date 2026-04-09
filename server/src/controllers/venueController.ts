@@ -63,7 +63,6 @@ export const createVenue = async (req: Request, res: Response): Promise<void> =>
       name,
       address,
       city,
-      countryId,
       stateId,
       capacity,
       createdBy,
@@ -121,7 +120,7 @@ export const getVenuesByUserId = async (req: Request, res: Response): Promise<vo
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      message: 'unable to fetch all venues by user id'
-    })
+      message: 'unable to fetch all venues by user id',
+    });
   }
 };
