@@ -14,13 +14,11 @@ export async function seed(knex: Knex): Promise<void> {
     TRUNCATE TABLE
       input_channel_inc,
       element_placement_elp,
-      equipment_placement_eqp,
       stage_plot_stp,
       project_prj,
       stage_stg,
       venue_ven,
-      user_usr,
-      equipment_type_eqt,
+      user_usr, 
       element_type_elt,
       image_category_imc,
       role_rol,
@@ -37,16 +35,6 @@ export async function seed(knex: Knex): Promise<void> {
     { name_rol: 'regular', description_rol: 'Standard user permissions' },
     { name_rol: 'admin', description_rol: 'Administrative privileges' },
     { name_rol: 'superuser', description_rol: 'Full system access' },
-  ]);
-
-  // ============================================
-  // COUNTRIES
-  // ============================================
-  await knex('country_cty').insert([
-    { code_cty: 'US', name_cty: 'United States' },
-    { code_cty: 'CA', name_cty: 'Canada' },
-    { code_cty: 'MX', name_cty: 'Mexico' },
-    { code_cty: 'GB', name_cty: 'United Kingdom' },
   ]);
 
   // ============================================
@@ -188,63 +176,6 @@ export async function seed(knex: Knex): Promise<void> {
     lightingRigId,
     wedgeMonitorId,
   ] = imageRows.map((row: { id_img: number }) => row.id_img);
- 
-
-  // ============================================
-  // EQUIPMENT TYPES
-  // ============================================
-  await knex('equipment_type_eqt').insert([
-    {
-      name_eqt: 'SM57',
-      description_eqt: 'Shure SM57 Dynamic Microphone',
-      default_color_eqt: '#2C2C2C',
-    },
-    {
-      name_eqt: 'SM58',
-      description_eqt: 'Shure SM58 Vocal Microphone',
-      default_color_eqt: '#1C1C1C',
-    },
-    {
-      name_eqt: 'Beta 58A',
-      description_eqt: 'Shure Beta 58A Supercardioid Vocal Mic',
-      default_color_eqt: '#3A3A3A',
-    },
-    {
-      name_eqt: 'KSM32',
-      description_eqt: 'Shure KSM32 Condenser Microphone',
-      default_color_eqt: '#C0C0C0',
-    },
-    {
-      name_eqt: 'DI Box',
-      description_eqt: 'Direct injection box for instruments',
-      default_color_eqt: '#4A4A4A',
-    },
-    {
-      name_eqt: 'Line Array Speaker',
-      description_eqt: 'Main PA line array speaker',
-      default_color_eqt: '#000000',
-    },
-    {
-      name_eqt: 'Subwoofer',
-      description_eqt: 'Low frequency speaker cabinet',
-      default_color_eqt: '#1A1A1A',
-    },
-    {
-      name_eqt: 'Stage Monitor',
-      description_eqt: 'Active stage monitor wedge',
-      default_color_eqt: '#2A2A2A',
-    },
-    {
-      name_eqt: 'Speaker Stack',
-      description_eqt: 'Full range speaker stack',
-      default_color_eqt: '#000000',
-    },
-    {
-      name_eqt: 'Mixer',
-      description_eqt: 'Front of house mixing console',
-      default_color_eqt: '#3C3C3C',
-    },
-  ]);
 
   // ============================================
   // ELEMENT TYPES
@@ -252,7 +183,7 @@ export async function seed(knex: Knex): Promise<void> {
   await knex('element_type_elt').insert([
     {
       name_elt: 'Drum Set',
-      description_elt: 'Elevated platform for drum kit',
+      description_elt: 'An unelevated drumset',
       default_color_elt: '#8B4513',
       id_img_elt: drumSetId,
       default_scale_x_elt: 1,

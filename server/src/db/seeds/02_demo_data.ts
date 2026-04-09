@@ -201,43 +201,6 @@ export async function seed(knex: Knex): Promise<void> {
   });
 
   // ============================================
-  // EQUIPMENT PLACEMENTS
-  // ============================================
-  const speakerStack = await knex('equipment_type_eqt').where('name_eqt', 'Speaker Stack').first();
-  const mixer = await knex('equipment_type_eqt').where('name_eqt', 'Mixer').first();
-
-  if (speakerStack) {
-    await knex('equipment_placement_eqp').insert([
-      {
-        id_stp_eqp: stagePlot1.id_stp,
-        id_eqt_eqp: speakerStack.id_eqt,
-        position_x_eqp: -25,
-        position_y_eqp: 0,
-        position_z_eqp: 0,
-        scale_y_eqp: 3,
-      },
-      {
-        id_stp_eqp: stagePlot1.id_stp,
-        id_eqt_eqp: speakerStack.id_eqt,
-        position_x_eqp: 25,
-        position_y_eqp: 0,
-        position_z_eqp: 0,
-        scale_y_eqp: 3,
-      },
-    ]);
-  }
-
-  if (mixer) {
-    await knex('equipment_placement_eqp').insert({
-      id_stp_eqp: stagePlot1.id_stp,
-      id_eqt_eqp: mixer.id_eqt,
-      position_x_eqp: 0,
-      position_y_eqp: -15,
-      position_z_eqp: 0,
-    });
-  }
-
-  // ============================================
   // ELEMENT PLACEMENTS
   // ============================================
   const drumRiser = await knex('element_type_elt').where('name_elt', 'Drum Riser').first();
