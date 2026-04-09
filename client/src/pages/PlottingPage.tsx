@@ -42,7 +42,6 @@ export function PlottingPage() {
   const fetchElementTypes = async () => {
     const data = await fetchAllElementTypes();
     setElementTypes(data);
-    console.log(elementTypes);
   }
 
   /** Toggles the active tab, closing it if the same tab is clicked again. */
@@ -112,7 +111,7 @@ export function PlottingPage() {
           Elements
         </button>
         <button
-          aria-lable='Open the input channels tab.'
+          aria-label='Open the input channels tab.'
           className={`tab ${activeTab === 'inputs' ? 'active' : ''}`}
           onClick={() => handleTabClick('inputs')}
         >

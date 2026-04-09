@@ -196,7 +196,6 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
       return next;
     });
 
-    console.log(objects);
     setContextMenu(null);
   };
 
@@ -208,7 +207,6 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
     if (selected) {
       setObjects(prev => {
         const next = prev.map(obj => {
-          console.log(obj.id)
           if (obj.mesh === selected) {
             if (!isSandbox) {
               updateElementPlacement(obj.placementId, {
@@ -236,7 +234,6 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
     if (!mountRef.current) return;
 
 
-    console.log(elementPlacements);
     // Scene setup
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(backgroundColor);
@@ -315,7 +312,6 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
     scene.add(directionalLight);
 
     // Stage floor (grid)
-    console.log('stage state:', stage);
     const gridHelper = new THREE.GridHelper(stage?.width ?? 20, stage?.depth ?? 20, 0x444444, 0x222222);
     scene.add(gridHelper);
 
@@ -418,7 +414,6 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
       event.preventDefault();
       if (!mountRef.current || !cameraRef.current || !sceneRef.current) return;
 
-      console.log('current objects ref', objectsRef.current);
       const rect = mountRef.current.getBoundingClientRect();
       mouseRef.current.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
       mouseRef.current.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
@@ -586,8 +581,6 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
             <div className="context-menu__header">{contextMenu.object.name}</div>
             <ul className="context-menu__list">
               <li className="context-menu__item context-menu__item--danger" onClick={() => {
-                console.log(contextMenu.object.mesh);
-                console.log(sceneRef.current?.children)
                 if (!isSandbox) {
                   handleDeleteObject(contextMenu.object)
                 } else {
@@ -626,7 +619,6 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
           <ElementPositionModal
             initialPosition={selectedElementPosition}
             onSuccess={(x, y, z) => {
-              console.log('selected object firing within onsuccess of modal', selectedObject)
               selectedObject?.mesh.position.set(x, y, z);
               setObjects(prev => {
                 const next = prev.map(obj =>
@@ -638,7 +630,6 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
                 return next;
               });
 
-              console.log('after set:', selectedObject?.mesh.position);
               if (!isSandbox && selectedObject?.placementId) {
                 updateElementPlacement(selectedObject?.placementId, {
                   positionX: x,

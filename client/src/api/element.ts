@@ -14,6 +14,5 @@ export interface ElementType {
 
 export const fetchAllElementTypes = async (): Promise<ElementType[]> => {
   const elementTypes = await apiFetch('/api/elements');
-  console.log(elementTypes);
   return elementTypes;
 };

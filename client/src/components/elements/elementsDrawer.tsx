@@ -70,24 +70,10 @@ export const ElementsDrawer = () => {
         scaleZ: elt.defaultScaleZ
       }
 
-     //stupid hacky way of handling model differences in sandbox mode
-     // After testing the admin update option of the default scale and the new baseline default scales I can probably remove this 
-      if (data.elementTypeId > 2) {
-        setElementPlacements([...elementPlacements, { ...data, id: Date.now() }])
-      } else {
-        if (data.elementTypeId == 2) {
-          data.scaleX = 0.175;
-          data.scaleY = 0.15;
-          data.scaleZ = 0.175;
-          setElementPlacements([...elementPlacements, { ...data, id: Date.now() }]);
-        } else {
-          data.positionY = .5;
-          setElementPlacements([...elementPlacements, { ...data, id: Date.now() }])
-        }
-      }
 
+
+      setElementPlacements([...elementPlacements, { ...data, id: Date.now() }]);
     } else {
-      console.log('stagePlot', stagePlot, 'stage', stage, 'isSandbox', isSandbox)
       if (!user) return null;
       let currentStagePlot = stagePlot;
 
@@ -98,7 +84,6 @@ export const ElementsDrawer = () => {
         setActiveProject(defaults.project);
         refreshProjects();
         currentStagePlot = defaults.stagePlot;
-        console.log('currentStagePlot', currentStagePlot);
       }
 
       const data: ElementPlacement = {
@@ -122,7 +107,6 @@ export const ElementsDrawer = () => {
 
       setElementPlacements([...elementPlacements, { ...newPlacement, name: elt.name, filePathImg: elt.filePathImg }]);
 
-      console.log('elementPlacements::::', elementPlacements);
 
 
       if (!data.stagePlotId) return null;
@@ -135,7 +119,6 @@ export const ElementsDrawer = () => {
       const newInputChannel = await addInputChannel(inputChannel);
       setInputChannels([...inputChannels, { ...newInputChannel }]);
       refreshInputChannels();
-      console.log(inputChannels);
     }
   }
 

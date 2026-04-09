@@ -22,7 +22,6 @@ export function StageRead() {
       try {
         setLoading(true);
         const data = await fetchAllPublicStages();
-        console.log(data);
         setStages(data);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to fetch stages');
