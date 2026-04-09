@@ -11,21 +11,21 @@ export async function seed(knex: Knex): Promise<void> {
   // CLEAR ALL DATA
   // ============================================
   await knex.raw(`
-    TRUNCATE TABLE
-      input_channel_inc,
-      element_placement_elp,
-      stage_plot_stp,
-      project_prj,
-      stage_stg,
-      venue_ven,
-      user_usr, 
-      element_type_elt,
-      image_category_imc,
-      role_rol,
-      state_sta,
-      image_img
-   RESTART IDENTITY CASCADE
-  `);
+  TRUNCATE TABLE
+    input_channel_inc,
+    element_placement_elp,
+    stage_plot_stp,
+    project_prj,
+    stage_stg,
+    venue_ven,
+    user_usr,
+    element_type_elt,
+    element_category_emc,
+    role_rol,
+    state_sta,
+    image_img
+  RESTART IDENTITY CASCADE
+`);
 
   // ============================================
   // ROLES
@@ -93,16 +93,6 @@ export async function seed(knex: Knex): Promise<void> {
   ]);
 
   // ============================================
-  // IMAGE CATEGORIES
-  // ============================================
-  await knex('image_category_imc').insert([
-    { name_imc: 'Equipment' },
-    { name_imc: 'Stage Element' },
-    { name_imc: 'Venue' },
-    { name_imc: 'Other' },
-  ]);
-
-  // ============================================
   // IMAGE FILES
   // ============================================
 
@@ -112,29 +102,21 @@ export async function seed(knex: Knex): Promise<void> {
         name_img: 'Drum Set',
         file_path_img: `${r2}/drum-set.glb`,
         file_type_img: 'glb',
-        category_img: 1,
-        id_imc_img: 1,
       },
       {
         name_img: 'Grand Piano',
         file_path_img: `${r2}/grand-piano.glb`,
         file_type_img: 'glb',
-        category_img: 1,
-        id_imc_img: 1,
       },
       {
         name_img: 'Mic Stand',
         file_path_img: `${r2}/micstand.glb`,
         file_type_img: 'glb',
-        category_img: 2,
-        id_imc_img: 2,
       },
       {
         name_img: 'Speaker',
         file_path_img: `${r2}/speaker.glb`,
         file_type_img: 'glb',
-        category_img: 1,
-        id_imc_img: 1,
       },
       {
         name_img: 'Drums On Riser',
@@ -177,6 +159,25 @@ export async function seed(knex: Knex): Promise<void> {
   ] = imageRows.map((row: { id_img: number }) => row.id_img);
 
   // ============================================
+  // ELEMENT CATEGORIES
+  // ============================================
+
+  const categoryRows = await knex('element_category_emc')
+    .insert([
+      { name_emc: 'Percussion' },
+      { name_emc: 'Keys' },
+      { name_emc: 'Strings' },
+      { name_emc: 'Microphones' },
+      { name_emc: 'Monitors' },
+      { name_emc: 'Lighting' },
+      { name_emc: 'Other' },
+    ])
+    .returning('id_emc');
+
+  const [percussionId, keysId, stringsId, microphonesId, monitorsId, lightingId, otherId] =
+    categoryRows.map((row: { id_emc: number }) => row.id_emc);
+
+  // ============================================
   // ELEMENT TYPES
   // ============================================
   await knex('element_type_elt').insert([
@@ -185,6 +186,7 @@ export async function seed(knex: Knex): Promise<void> {
       description_elt: 'An unelevated drumset',
       default_color_elt: '#8B4513',
       id_img_elt: drumSetId,
+      id_emc_elt: percussionId,
       default_scale_x_elt: 1,
       default_scale_y_elt: 1,
       default_scale_z_elt: 1,
@@ -194,6 +196,7 @@ export async function seed(knex: Knex): Promise<void> {
       description_elt: 'Grand or upright piano',
       default_color_elt: '#000000',
       id_img_elt: grandPianoId,
+      id_emc_elt: keysId,
       default_scale_x_elt: 1,
       default_scale_y_elt: 1,
       default_scale_z_elt: 1,
@@ -203,6 +206,7 @@ export async function seed(knex: Knex): Promise<void> {
       description_elt: 'Microphone stand',
       default_color_elt: '#C0C0C0',
       id_img_elt: micStandId,
+      id_emc_elt: microphonesId,
       default_scale_x_elt: 1,
       default_scale_y_elt: 1,
       default_scale_z_elt: 1,
@@ -212,6 +216,7 @@ export async function seed(knex: Knex): Promise<void> {
       description_elt: 'Floor monitor speaker',
       default_color_elt: '#3C3C3C',
       id_img_elt: speakerId,
+      id_emc_elt: monitorsId,
       default_scale_x_elt: 1.25,
       default_scale_y_elt: 1.25,
       default_scale_z_elt: 1.25,
@@ -221,6 +226,7 @@ export async function seed(knex: Knex): Promise<void> {
       description_elt: 'Drums on an elevated riser',
       default_color_elt: '#000000',
       id_img_elt: drumsOnRiserId,
+      id_emc_elt: percussionId,
       default_scale_x_elt: 0.02,
       default_scale_y_elt: 0.02,
       default_scale_z_elt: 0.02,
@@ -230,6 +236,7 @@ export async function seed(knex: Knex): Promise<void> {
       description_elt: 'Music stand',
       default_color_elt: '#000000',
       id_img_elt: musicStandId,
+      id_emc_elt: otherId,
       default_scale_x_elt: 0.03,
       default_scale_y_elt: 0.03,
       default_scale_z_elt: 0.03,
@@ -239,6 +246,7 @@ export async function seed(knex: Knex): Promise<void> {
       description_elt: 'Electric guitar',
       default_color_elt: '#000000',
       id_img_elt: electricGuitarId,
+      id_emc_elt: stringsId,
       default_scale_x_elt: 2,
       default_scale_y_elt: 2,
       default_scale_z_elt: 2,
@@ -248,6 +256,7 @@ export async function seed(knex: Knex): Promise<void> {
       description_elt: 'Lighting rig for center stage',
       default_color_elt: '#000000',
       id_img_elt: lightingRigId,
+      id_emc_elt: lightingId,
       default_scale_x_elt: 1.25,
       default_scale_y_elt: 1.25,
       default_scale_z_elt: 1.25,
@@ -257,6 +266,7 @@ export async function seed(knex: Knex): Promise<void> {
       description_elt: 'Wedge monitor speaker',
       default_color_elt: '#000000',
       id_img_elt: wedgeMonitorId,
+      id_emc_elt: monitorsId,
       default_scale_x_elt: 0.025,
       default_scale_y_elt: 0.025,
       default_scale_z_elt: 0.025,

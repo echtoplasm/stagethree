@@ -50,15 +50,11 @@ export async function seed(knex: Knex): Promise<void> {
   // ============================================
   // VENUES
   // ============================================
-  const usCountry = await knex('country_cty').where('code_cty', 'US').first();
-  const caCountry = await knex('country_cty').where('code_cty', 'CA').first();
-
   const [redRocksVenue] = await knex('venue_ven')
     .insert({
       name_ven: 'Red Rocks Amphitheatre',
       address_ven: '18300 W Alameda Pkwy',
       city_ven: 'Morrison',
-      id_cty_ven: usCountry.id_cty,
       capacity_ven: 9525,
     })
     .returning('*');
@@ -68,18 +64,34 @@ export async function seed(knex: Knex): Promise<void> {
       name_ven: 'Madison Square Garden',
       address_ven: '4 Pennsylvania Plaza',
       city_ven: 'New York',
-      id_cty_ven: usCountry.id_cty,
       capacity_ven: 20789,
     })
     .returning('*');
 
-  const [rogersArenaVenue] = await knex('venue_ven')
+  const [riverbendVenue] = await knex('venue_ven')
     .insert({
-      name_ven: 'Rogers Arena',
-      address_ven: '800 Griffiths Way',
-      city_ven: 'Vancouver',
-      id_cty_ven: caCountry.id_cty,
-      capacity_ven: 18910,
+      name_ven: 'Riverbend Music Center',
+      address_ven: '6295 Kellogg Ave',
+      city_ven: 'Cincinnati',
+      capacity_ven: 20500,
+    })
+    .returning('*');
+
+  const [rymVenue] = await knex('venue_ven')
+    .insert({
+      name_ven: 'Ryman Auditorium',
+      address_ven: '116 5th Ave N',
+      city_ven: 'Nashville',
+      capacity_ven: 2362,
+    })
+    .returning('*');
+
+  const [fillmoreVenue] = await knex('venue_ven')
+    .insert({
+      name_ven: 'The Fillmore',
+      address_ven: '1805 Geary Blvd',
+      city_ven: 'San Francisco',
+      capacity_ven: 1150,
     })
     .returning('*');
 
@@ -110,14 +122,38 @@ export async function seed(knex: Knex): Promise<void> {
     })
     .returning('*');
 
-  const [rogersStage] = await knex('stage_stg')
+  const [riverbendStage] = await knex('stage_stg')
     .insert({
-      id_ven_stg: rogersArenaVenue.id_ven,
-      name_stg: 'Rogers Main Stage',
+      id_ven_stg: riverbendVenue.id_ven,
+      name_stg: 'Riverbend Main Stage',
       width_stg: 55,
-      depth_stg: 38,
-      height_stg: 2.8,
-      created_by_stg: 3,
+      depth_stg: 35,
+      height_stg: 2.5,
+      created_by_stg: 1,
+      is_public_stg: true,
+    })
+    .returning('*');
+
+  const [rymStage] = await knex('stage_stg')
+    .insert({
+      id_ven_stg: rymVenue.id_ven,
+      name_stg: 'Ryman Main Stage',
+      width_stg: 30,
+      depth_stg: 20,
+      height_stg: 1.5,
+      created_by_stg: 1,
+      is_public_stg: true,
+    })
+    .returning('*');
+
+  const [fillmoreStage] = await knex('stage_stg')
+    .insert({
+      id_ven_stg: fillmoreVenue.id_ven,
+      name_stg: 'Fillmore Main Stage',
+      width_stg: 25,
+      depth_stg: 18,
+      height_stg: 1.2,
+      created_by_stg: 1,
       is_public_stg: true,
     })
     .returning('*');
@@ -143,7 +179,6 @@ export async function seed(knex: Knex): Promise<void> {
       is_public_stg: false,
     })
     .returning('*');
-
   // ============================================
   // PROJECTS
   // ============================================
@@ -185,6 +220,7 @@ export async function seed(knex: Knex): Promise<void> {
       id_prj_stp: project1.id_prj,
       id_stg_stp: redRocksStage.id_stg,
       name_stp: 'Main Stage Layout - Rock Show',
+      uuid_stp: knex.raw('gen_random_uuid()'),
     })
     .returning('*');
 
@@ -192,19 +228,23 @@ export async function seed(knex: Knex): Promise<void> {
     id_prj_stp: project2.id_prj,
     id_stg_stp: genericStage.id_stg,
     name_stp: 'Corporate Presentation Setup',
+    uuid_stp: knex.raw('gen_random_uuid()'),
   });
 
   await knex('stage_plot_stp').insert({
     id_prj_stp: project3.id_prj,
     id_stg_stp: genericStage.id_stg,
     name_stp: 'Jazz Quartet Configuration',
+    uuid_stp: knex.raw('gen_random_uuid()'),
   });
 
   // ============================================
   // ELEMENT PLACEMENTS
   // ============================================
-  const drumRiser = await knex('element_type_elt').where('name_elt', 'Drum Riser').first();
-  const lighting = await knex('element_type_elt').where('name_elt', 'Lighting Truss').first();
+  const drumRiser = await knex('element_type_elt').where('name_elt', 'Drums On Riser').first();
+  const lighting = await knex('element_type_elt')
+    .where('name_elt', 'Lighting Rig Center Stage')
+    .first();
 
   if (drumRiser) {
     await knex('element_placement_elp').insert({
