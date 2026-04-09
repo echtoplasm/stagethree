@@ -22,7 +22,6 @@ export async function seed(knex: Knex): Promise<void> {
       element_type_elt,
       image_category_imc,
       role_rol,
-      country_cty,
       state_sta,
       image_img
    RESTART IDENTITY CASCADE
