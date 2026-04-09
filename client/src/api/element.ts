@@ -10,6 +10,7 @@ export interface ElementType {
   defaultScaleX: number;
   defaultScaleY: number;
   defaultScaleZ: number;
+  elementCategoryId: number;
 }
 
 export const fetchAllElementTypes = async (): Promise<ElementType[]> => {

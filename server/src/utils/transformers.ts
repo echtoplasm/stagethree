@@ -129,7 +129,6 @@ export interface VenueDB {
   address_ven?: string;
   city_ven?: string;
   id_sta_ven?: number;
-  id_cty_ven?: number;
   capacity_ven?: number;
   created_by_ven?: number;
   created_at_ven: Date | string;
@@ -141,7 +140,6 @@ export interface VenueAPI {
   address?: string;
   city?: string;
   stateId?: number;
-  countryId?: number;
   capacity?: number;
   createdBy?: number;
   createdAt: string;
@@ -159,7 +157,6 @@ export const dbVenueToApi = (dbVenue: VenueDB): VenueAPI => ({
   address: dbVenue.address_ven || undefined,
   city: dbVenue.city_ven || undefined,
   stateId: dbVenue.id_sta_ven || undefined,
-  countryId: dbVenue.id_cty_ven || undefined,
   capacity: dbVenue.capacity_ven || undefined,
   createdBy: dbVenue.created_by_ven,
   createdAt:
@@ -179,7 +176,6 @@ export const apiVenueToDb = (apiVenue: Partial<VenueAPI>): Partial<VenueDB> => (
   ...(apiVenue.address && { address_ven: apiVenue.address }),
   ...(apiVenue.city && { city_ven: apiVenue.city }),
   ...(apiVenue.stateId && { id_sta_ven: apiVenue.stateId }),
-  ...(apiVenue.countryId && { id_cty_ven: apiVenue.countryId }),
   ...(apiVenue.capacity && { capacity_ven: apiVenue.capacity }),
   ...(apiVenue.createdBy && { created_by_ven: apiVenue.createdBy }),
 });
@@ -290,11 +286,11 @@ export const dbStagePlotToApi = (dbStagePlot: StagePlotDB): StagePlotAPI => ({
   gigDate:
     dbStagePlot.gig_date_stp === null
       ? null
-      :new Date(dbStagePlot.gig_date_stp).toLocaleDateString('en-US', { dateStyle: 'medium' }),
+      : new Date(dbStagePlot.gig_date_stp).toLocaleDateString('en-US', { dateStyle: 'medium' }),
   createdAt:
     typeof dbStagePlot.created_at_stp === 'string'
       ? dbStagePlot.created_at_stp
-      : new Date(dbStagePlot.created_at_stp).toLocaleDateString('en-US', {dateStyle: 'medium'}),
+      : new Date(dbStagePlot.created_at_stp).toLocaleDateString('en-US', { dateStyle: 'medium' }),
 });
 
 /**
@@ -309,104 +305,6 @@ export const apiStagePlotToDb = (apiStagePlot: Partial<StagePlotAPI>): Partial<S
   ...(apiStagePlot.stageId && { id_stg_stp: apiStagePlot.stageId }),
   ...(apiStagePlot.name && { name_stp: apiStagePlot.name }),
   ...(apiStagePlot.gigDate && { gig_date_stp: apiStagePlot.gigDate }),
-});
-
-// ============================================
-// EQUIPMENT PLACEMENT
-// ============================================
-export interface EquipmentPlacementDB {
-  id_eqp: number;
-  id_stp_eqp: number;
-  id_eqt_eqp: number;
-  position_x_eqp: number;
-  position_y_eqp: number;
-  position_z_eqp: number;
-  rotation_x_eqp: number;
-  rotation_y_eqp: number;
-  rotation_z_eqp: number;
-  scale_x_eqp: number;
-  scale_y_eqp: number;
-  scale_z_eqp: number;
-  created_at_eqp: Date | string;
-}
-
-export interface EquipmentPlacementAPI {
-  id: number;
-  stagePlotId: number;
-  equipmentTypeId: number;
-  positionX: number;
-  positionY: number;
-  positionZ: number;
-  rotationX: number;
-  rotationY: number;
-  rotationZ: number;
-  scaleX: number;
-  scaleY: number;
-  scaleZ: number;
-  createdAt: string;
-}
-
-/**
- * Converts EquipmentPlacement data from database naming conventions to API/JavaScript naming conventions
- *
- * @param dbEquipmentPlacement - The EquipmentPlacement object retrieved from the database
- * @returns The same EquipmentPlacement object converted to JavaScript naming conventions
- */
-export const dbEquipmentPlacementToApi = (
-  dbEquipmentPlacement: EquipmentPlacementDB
-): EquipmentPlacementAPI => ({
-  id: dbEquipmentPlacement.id_eqp,
-  stagePlotId: dbEquipmentPlacement.id_stp_eqp,
-  equipmentTypeId: dbEquipmentPlacement.id_eqt_eqp,
-  positionX: dbEquipmentPlacement.position_x_eqp,
-  positionY: dbEquipmentPlacement.position_y_eqp,
-  positionZ: dbEquipmentPlacement.position_z_eqp,
-  rotationX: dbEquipmentPlacement.rotation_x_eqp,
-  rotationY: dbEquipmentPlacement.rotation_y_eqp,
-  rotationZ: dbEquipmentPlacement.rotation_z_eqp,
-  scaleX: dbEquipmentPlacement.scale_x_eqp,
-  scaleY: dbEquipmentPlacement.scale_y_eqp,
-  scaleZ: dbEquipmentPlacement.scale_z_eqp,
-  createdAt:
-    typeof dbEquipmentPlacement.created_at_eqp === 'string'
-      ? dbEquipmentPlacement.created_at_eqp
-      : dbEquipmentPlacement.created_at_eqp.toISOString(),
-});
-
-/**
- * Converts EquipmentPlacement data from API/JavaScript naming conventions to database naming conventions
- *
- * @param apiEquipmentPlacement - Partial EquipmentPlacement object with API naming to be stored in database
- * @returns Partial EquipmentPlacement object converted to database column naming
- */
-export const apiEquipmentPlacementToDb = (
-  apiEquipmentPlacement: Partial<EquipmentPlacementAPI>
-): Partial<EquipmentPlacementDB> => ({
-  ...(apiEquipmentPlacement.stagePlotId && { id_stp_eqp: apiEquipmentPlacement.stagePlotId }),
-  ...(apiEquipmentPlacement.equipmentTypeId && {
-    id_eqt_eqp: apiEquipmentPlacement.equipmentTypeId,
-  }),
-  ...(apiEquipmentPlacement.positionX !== undefined && {
-    position_x_eqp: apiEquipmentPlacement.positionX,
-  }),
-  ...(apiEquipmentPlacement.positionY !== undefined && {
-    position_y_eqp: apiEquipmentPlacement.positionY,
-  }),
-  ...(apiEquipmentPlacement.positionZ !== undefined && {
-    position_z_eqp: apiEquipmentPlacement.positionZ,
-  }),
-  ...(apiEquipmentPlacement.rotationX !== undefined && {
-    rotation_x_eqp: apiEquipmentPlacement.rotationX,
-  }),
-  ...(apiEquipmentPlacement.rotationY !== undefined && {
-    rotation_y_eqp: apiEquipmentPlacement.rotationY,
-  }),
-  ...(apiEquipmentPlacement.rotationZ !== undefined && {
-    rotation_z_eqp: apiEquipmentPlacement.rotationZ,
-  }),
-  ...(apiEquipmentPlacement.scaleX !== undefined && { scale_x_eqp: apiEquipmentPlacement.scaleX }),
-  ...(apiEquipmentPlacement.scaleY !== undefined && { scale_y_eqp: apiEquipmentPlacement.scaleY }),
-  ...(apiEquipmentPlacement.scaleZ !== undefined && { scale_z_eqp: apiEquipmentPlacement.scaleZ }),
 });
 
 // ============================================
@@ -446,43 +344,6 @@ export const apiStateToDb = (apiState: Partial<StateAPI>): Partial<StateDB> => (
   ...(apiState.name && { name_sta: apiState.name }),
   ...(apiState.abbreviation && { abbreviation_sta: apiState.abbreviation }),
 });
-// ============================================
-// COUNTRIES
-// ============================================
-export interface CountryDB {
-  id_cty: number;
-  code_cty: string;
-  name_cty: string;
-}
-
-export interface CountryAPI {
-  id: number;
-  code: string;
-  name: string;
-}
-
-/**
- * Converts Country data from database naming conventions to API/JavaScript naming conventions
- *
- * @param dbCountry - The Country object retrieved from the database
- * @returns The same Country object converted to JavaScript naming conventions
- */
-export const dbCountryToApi = (dbCountry: CountryDB): CountryAPI => ({
-  id: dbCountry.id_cty,
-  code: dbCountry.code_cty,
-  name: dbCountry.name_cty,
-});
-
-/**
- * Converts Country data from API/JavaScript naming conventions to database naming conventions
- *
- * @param apiCountry - Partial Country object with API naming to be stored in database
- * @returns Partial Country object converted to database column naming
- */
-export const apiCountryToDb = (apiCountry: Partial<CountryAPI>): Partial<CountryDB> => ({
-  ...(apiCountry.name && { name_cty: apiCountry.name }),
-  ...(apiCountry.code && { code_cty: apiCountry.code }),
-});
 
 // ============================================
 // IMAGES
@@ -492,7 +353,7 @@ export interface ImageDB {
   name_img: string;
   file_path_img: string;
   file_type_img: string | null;
-  category_img: string | null;
+
   created_at_img: Date | string;
 }
 
@@ -501,7 +362,7 @@ export interface ImageAPI {
   name: string;
   filePath: string;
   fileType?: string;
-  category?: string;
+
   createdAt: string;
 }
 
@@ -535,7 +396,6 @@ export const dbImageToApi = (dbImage: ImageDB): ImageAPI => ({
   name: dbImage.name_img,
   filePath: dbImage.file_path_img,
   fileType: dbImage.file_type_img || undefined,
-  category: dbImage.category_img || undefined,
   createdAt:
     typeof dbImage.created_at_img === 'string'
       ? dbImage.created_at_img
@@ -552,55 +412,6 @@ export const apiImageToDb = (apiImage: Partial<ImageAPI>): Partial<ImageDB> => (
   ...(apiImage.name && { name_img: apiImage.name }),
   ...(apiImage.filePath && { file_path_img: apiImage.filePath }),
   ...(apiImage.fileType && { file_type_img: apiImage.fileType }),
-  ...(apiImage.category && { category_img: apiImage.category }),
-});
-
-// ============================================
-// EQUIPMENT TYPE
-// ============================================
-export interface EquipmentTypeDB {
-  id_eqt: number;
-  name_eqt: string;
-  description_eqt: string | null;
-  id_img_eqt: number | null;
-  default_color_eqt: string | null;
-}
-
-export interface EquipmentTypeAPI {
-  id: number;
-  name: string;
-  description?: string;
-  imageId?: number;
-  defaultColor?: string;
-}
-
-/**
- * Converts EquipmentType data from database naming conventions to API/JavaScript naming conventions
- *
- * @param dbEquipmentType - The EquipmentType object retrieved from the database
- * @returns The same EquipmentType object converted to JavaScript naming conventions
- */
-export const dbEquipmentTypeToApi = (dbEquipmentType: EquipmentTypeDB): EquipmentTypeAPI => ({
-  id: dbEquipmentType.id_eqt,
-  name: dbEquipmentType.name_eqt,
-  description: dbEquipmentType.description_eqt || undefined,
-  imageId: dbEquipmentType.id_img_eqt || undefined,
-  defaultColor: dbEquipmentType.default_color_eqt || undefined,
-});
-
-/**
- * Converts EquipmentType data from API/JavaScript naming conventions to database naming conventions
- *
- * @param apiEquipmentType - Partial EquipmentType object with API naming to be stored in database
- * @returns Partial EquipmentType object converted to database column naming
- */
-export const apiEquipmentTypeToDb = (
-  apiEquipmentType: Partial<EquipmentTypeAPI>
-): Partial<EquipmentTypeDB> => ({
-  ...(apiEquipmentType.name && { name_eqt: apiEquipmentType.name }),
-  ...(apiEquipmentType.description && { description_eqt: apiEquipmentType.description }),
-  ...(apiEquipmentType.imageId && { id_img_eqt: apiEquipmentType.imageId }),
-  ...(apiEquipmentType.defaultColor && { default_color_eqt: apiEquipmentType.defaultColor }),
 });
 
 // ============================================
@@ -616,6 +427,7 @@ export interface ElementTypeDB {
   default_scale_x_elt: number;
   default_scale_y_elt: number;
   default_scale_z_elt: number;
+  id_emc_elt: number;
 }
 
 export interface ElementTypeAPI {
@@ -628,6 +440,7 @@ export interface ElementTypeAPI {
   defaultScaleX: number;
   defaultScaleY: number;
   defaultScaleZ: number;
+  elementCategoryId: number;
 }
 
 /**
@@ -646,6 +459,7 @@ export const dbElementTypeToApi = (dbElementType: ElementTypeDB): ElementTypeAPI
   defaultScaleX: dbElementType.default_scale_x_elt,
   defaultScaleY: dbElementType.default_scale_y_elt,
   defaultScaleZ: dbElementType.default_scale_z_elt,
+  elementCategoryId: dbElementType.id_emc_elt,
 });
 
 /**
@@ -665,6 +479,7 @@ export const apiElementTypeToDb = (
   ...(apiElementType.defaultScaleX && { default_scale_x_elt: apiElementType.defaultScaleX }),
   ...(apiElementType.defaultScaleY && { default_scale_y_elt: apiElementType.defaultScaleY }),
   ...(apiElementType.defaultScaleZ && { default_scale_z_elt: apiElementType.defaultScaleZ }),
+  ...(apiElementType.elementCategoryId && { id_emc_elt: apiElementType.elementCategoryId }),
 });
 
 // ============================================
@@ -768,6 +583,29 @@ export const apiElementPlacementToDb = (
   ...(apiElementPlacement.scaleZ !== undefined && {
     scale_z_elp: apiElementPlacement.scaleZ.toString(),
   }),
+});
+
+// ============================================
+// ELEMENT CATEGORY
+// ============================================
+
+export interface ElementCategoryDB {
+  id_emc: number;
+  name_emc: string;
+  created_at_emc: Date | string;
+}
+
+export interface ElementCategoryAPI {
+  id: number;
+  name: string;
+  createdAt: string;
+}
+
+export const dbElementCategoryToApi = (db: ElementCategoryDB): ElementCategoryAPI => ({
+  id: db.id_emc,
+  name: db.name_emc,
+  createdAt:
+    typeof db.created_at_emc === 'string' ? db.created_at_emc : db.created_at_emc.toISOString(),
 });
 
 // ============================================

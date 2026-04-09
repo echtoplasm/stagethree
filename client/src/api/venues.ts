@@ -5,7 +5,6 @@ export interface Venue {
   address?: string;
   city?: string;
   stateId?: number | null;
-  countryId?: number;
   capacity?: number;
   createdAt: string;
   createdBy: number;

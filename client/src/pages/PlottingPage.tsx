@@ -2,7 +2,6 @@ import { useRef, useState } from 'react';
 import { ProjectCard } from '../components/projects/ProjectCard';
 import { StageScene } from '../components/ThreeD';
 import { ArrowRight, CircleX, Maximize2 } from 'lucide-react';
-import { fetchAllElementTypes, type ElementType } from '../api/element';
 import { useEffect } from 'react';
 import { InputChannelDrawer } from '../components/inputChannels/inputChannelDrawer';
 import { InputChannelModal } from '../components/inputChannels/inputChannelsModal';
@@ -24,7 +23,6 @@ import { UtilitiesDrawer } from '../components/projectUtilities/UtilitiesDrawer'
 export function PlottingPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<string | null>(null);
-  const [elementTypes, setElementTypes] = useState<ElementType[]>([]);
   const [inputChannelModal, setInputChannelModal] = useState(false);
   const { setIsSandbox } = useStageContext();
   const { isAuthenticated } = useAuth();
@@ -38,11 +36,7 @@ export function PlottingPage() {
 
   const { width } = useWindowSize();
 
-  /** Fetches all available element types and updates local state for the elements drawer. */
-  const fetchElementTypes = async () => {
-    const data = await fetchAllElementTypes();
-    setElementTypes(data);
-  }
+
 
   /** Toggles the active tab, closing it if the same tab is clicked again. */
   const handleTabClick = (tab: string) => {
@@ -51,7 +45,7 @@ export function PlottingPage() {
 
   /** Fetches element types on mount and syncs sandbox mode with authentication state. */
   useEffect(() => {
-    fetchElementTypes();
+
     if (isAuthenticated) setIsSandbox(false);
   }, [isAuthenticated]);
 

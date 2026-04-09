@@ -40,14 +40,11 @@ app.use('/api/users', userRoutes);
 app.use('/api/stages', stageRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/venues', venueRoutes);
-app.use('/api/equipment', equipmentRoutes);
 app.use('/api/stageplots', stagePlotRoutes);
 app.use('/api/elements', elementRoutes);
 app.use('/api/states', stateRoutes);
-app.use('/api/countries', countryRoutes);
 app.use('/api/inputchannels', inputChannelRoutes);
 app.use('/api/elp', elpRoutes);
-app.use('/api/eqp', eqpRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/images', imgRoutes);
 
