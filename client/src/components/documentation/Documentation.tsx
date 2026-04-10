@@ -1,11 +1,18 @@
 import { useState } from 'react';
-import { SlidersHorizontal, CircleUser, Theater, LayoutTemplate, Camera, BookCheck, FileText, Waypoints } from 'lucide-react';
+import { SlidersHorizontal, CircleUser, Theater, LayoutTemplate, Camera, BookCheck, FileText, Waypoints, MessageSquareQuote } from 'lucide-react';
 import { PlottingDocModal } from './modals/Plotting';
 import { UserPortalDocModal } from './modals/UserPortal'
 import { ControlsDocModal } from './modals/KeyboardControls';
+import { AttributionModal } from './modals/Attribution';
 import { SandBoxDocs } from './modals/SandboxMode';
 
 const docs = [
+  {
+    key: 'attribution',
+    title: 'Model Attribution',
+    description: 'These are the attributions for the 3d model authors who self-lessly posted their work online for free.',
+    icon: MessageSquareQuote,
+  },
   {
     key: 'plotting',
     title: 'Plotting',
@@ -198,6 +205,23 @@ export const Documentation = () => {
               <button className="close-btn" onClick={() => setOpen(null)}>✕</button>
             </div>
             <SandBoxDocs
+              onClose={() => setOpen(null)}
+            />
+          </div>
+        </>
+      )}
+      {open === 'attribution' && (
+        <>
+          <div className="modal-backdrop" onClick={() => setOpen(null)} />
+          <div className="modal modal-wide modal-scrollable">
+            <div className="modal-header">
+              <div>
+                <h2>Camera Controls</h2>
+                <p className="text-muted">Attribution</p>
+              </div>
+              <button className="close-btn" onClick={() => setOpen(null)}>✕</button>
+            </div>
+            <AttributionModal
               onClose={() => setOpen(null)}
             />
           </div>
