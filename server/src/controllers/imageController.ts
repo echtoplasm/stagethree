@@ -1,11 +1,17 @@
 import { Request, Response } from 'express';
 import db from '../db/knex';
-import { dbImageToApi, apiImageToDb, ImageDB, ImageAPI, ImageWithScaleDB, ImageWithScaleAPI, dbImageWithScaleToApi } from '../utils/transformers';
+import {
+  dbImageToApi,
+  apiImageToDb,
+  ImageDB,
+  ImageAPI,
+  ImageWithScaleDB,
+  ImageWithScaleAPI,
+  dbImageWithScaleToApi,
+} from '../utils/transformers';
 import multer from 'multer';
 import { S3Client } from '@aws-sdk/client-s3';
 import { PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
-
-
 
 //S3 client init for r2 communication
 export const s3 = new S3Client({
@@ -16,7 +22,6 @@ export const s3 = new S3Client({
     secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
   },
 });
-
 
 /**
  * Image/model controller — handlers for managing 3D model assets stored in Cloudflare R2.
@@ -38,7 +43,6 @@ export const getAllImages = async (req: Request, res: Response) => {
         'name_img',
         'file_path_img',
         'file_type_img',
-        'category_img',
         'created_at_img',
         'default_scale_x_elt',
         'default_scale_y_elt',

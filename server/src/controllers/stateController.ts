@@ -10,8 +10,8 @@ const stateTable = 'state_sta';
  */
 export const getAllStates = async (req: Request, res: Response): Promise<void> => {
   try {
-    const [results]: StateDB[] = await db(stateTable).select('*');
-    res.json(dbStateToApi(results));
+    const results: StateDB[] = await db(stateTable).select('*');
+    res.json(results.map(dbStateToApi));
   } catch (err) {
     console.error('unable to get all states', err);
   }

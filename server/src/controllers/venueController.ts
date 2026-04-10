@@ -46,17 +46,16 @@ export const getVenueById = async (req: Request, res: Response): Promise<void> =
 /**
  * POST /api/equipment/
  * create a new venue
- *
- *
  */
 export const createVenue = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { name, address, city, countryId, stateId, capacity, createdBy } = req.body;
+    const { name, address, city, stateId, capacity, createdBy } = req.body;
 
-    if (!name || !address || !city || !countryId || !stateId || !capacity) {
-      res.status(401).json({
-        error: 'Missing one of required fields',
+    if (!name || !address || !city || !stateId || !capacity) {
+      res.status(400).json({
+        message: 'Missing one of required fields',
       });
+      return;
     }
 
     const dbVenueData = apiVenueToDb({

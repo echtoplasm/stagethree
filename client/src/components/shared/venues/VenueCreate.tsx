@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { createVenue, type Venue } from '../../../api/venues';
 import { useAuth } from '../../../contexts/AuthContext';
 import { ErrorMessage } from '../../../components/userUI/ErrorMessage';
-
+import { getAllStates, type State } from '../../../api/states';
 
 interface VenueCreateProps {
   onClose: () => void;
@@ -25,7 +25,10 @@ export function VenueCreate({ onClose, onSuccess }: VenueCreateProps) {
   if (!user) return null
 
   //STATE MANAGEMENT
-  const [stageForm, setVenueForm] = useState<Omit<Venue, 'id' | 'createdAt'>>({
+  const [states, setStates] = useState<State[]>([]);
+
+
+  const [venueForm, setVenueForm] = useState<Omit<Venue, 'id' | 'createdAt'>>({
     name: '',
     address: '',
     city: '',
@@ -41,12 +44,21 @@ export function VenueCreate({ onClose, onSuccess }: VenueCreateProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     try {
       e.preventDefault();
-      await createVenue(stageForm);
+      await createVenue(venueForm);
       onSuccess();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Missing One or 2 fields for form submission')
     }
   };
+
+  const fetchStates = async () => {
+    const states = await getAllStates();
+    setStates(states);
+  }
+
+  useEffect(() => {
+    fetchStates();
+  }, [])
 
   return (
     <>
@@ -70,23 +82,34 @@ export function VenueCreate({ onClose, onSuccess }: VenueCreateProps) {
         <form onSubmit={handleSubmit} className="modal-body">
           <div className="form-group">
             <label className="form-label" htmlFor="name">Venue Name</label>
-            <input id="name" className="form-input" type="text" value={stageForm.name}
-              onChange={(e) => setVenueForm({ ...stageForm, name: e.target.value })} />
+            <input id="name" className="form-input" type="text" value={venueForm.name}
+              onChange={(e) => setVenueForm({ ...venueForm, name: e.target.value })} />
           </div>
           <div className="form-group">
             <label className="form-label" htmlFor="address">Address</label>
-            <input id="address" className="form-input" type="text" value={stageForm.address}
-              onChange={(e) => setVenueForm({ ...stageForm, address: e.target.value })} />
+            <input id="address" className="form-input" type="text" value={venueForm.address}
+              onChange={(e) => setVenueForm({ ...venueForm, address: e.target.value })} />
           </div>
           <div className="form-group">
             <label className="form-label" htmlFor="city">City</label>
-            <input id="city" className="form-input" type="text" value={stageForm.city}
-              onChange={(e) => setVenueForm({ ...stageForm, city: e.target.value })} />
+            <input id="city" className="form-input" type="text" value={venueForm.city}
+              onChange={(e) => setVenueForm({ ...venueForm, city: e.target.value })} />
           </div>
           <div className="form-group">
             <label className="form-label" htmlFor="capacity">Capacity</label>
-            <input id="capacity" className="form-input" type="number" max={100000} value={stageForm.capacity}
-              onChange={(e) => setVenueForm({ ...stageForm, capacity: Number(e.target.value) })} />
+            <input id="capacity" className="form-input" type="number" max={100000} value={venueForm.capacity}
+              onChange={(e) => setVenueForm({ ...venueForm, capacity: Number(e.target.value) })} />
+          </div>
+          <div className='form-group'>
+            <label className='form-label' htmlFor='state'>States</label>
+            <select value={venueForm.stateId ?? ''} onChange={(e) => setVenueForm({...venueForm, stateId: Number(e.target.value)})}>
+              <option value="" disabled>Select a state</option>
+              {states.map((state) => (
+                <option key={state.id} value={Number(state.id)}>
+                  {state.name}
+                </option>
+              ))}
+            </select>
           </div>
           <div className="modal-footer">
             <button type="button" className="btn btn-ghost" onClick={onClose}>Cancel</button>

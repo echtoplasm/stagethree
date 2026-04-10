@@ -127,13 +127,36 @@ export const ElementsDrawer = () => {
     if (!isAuthenticated) setIsSandbox(true);
   }, [isAuthenticated])
 
+  const categoryLabels: Record<number, string> = {
+    1: 'Percussion',
+    2: 'Keys',
+    3: 'Strings',
+    4: 'Microphones',
+    5: 'Monitors',
+    6: 'Lighting',
+    7: 'Other',
+  };
 
+  const grouped: Record<string, ElementType[]> = {};
+  for (const elt of elementTypes) {
+    const category = categoryLabels[elt.elementCategoryId] ?? 'Other';
+    if (!grouped[category]) grouped[category] = [];
+    grouped[category].push(elt);
+  }
   return (
-    <div className="element-row">
-      {elementTypes.map((elt: any) => (
-        <div key={elt.id} className='element-item' onClick={() => handleElementClick(elt)}>{elt.name}</div>
+    <div className="element-drawer">
+      {Object.entries(grouped).map(([category, elements]) => (
+        <div key={category} className="element-group">
+          <p className="element-group-label">{category}</p>
+          <div className="element-row">
+            {elements.map((elt) => (
+              <div key={elt.id} className="element-item" onClick={() => handleElementClick(elt)}>
+                {elt.name}
+              </div>
+            ))}
+          </div>
+        </div>
       ))}
-
     </div>
-  )
+  );
 }
