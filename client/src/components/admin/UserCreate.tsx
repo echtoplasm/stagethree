@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState} from 'react';
 import { createUser } from '../../api/users';
 import { UserPlus, X } from 'lucide-react';
 interface UserCreateProps {
