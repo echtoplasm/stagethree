@@ -26,7 +26,6 @@ const plotTable = 'stage_plot_stp';
  * stage, and project data into a single response for scene hydration.
  */
 
-
 /**
  * GET /api/stageplots/
  * Returns all stage plots.
@@ -34,7 +33,6 @@ const plotTable = 'stage_plot_stp';
 export const getAllStagePlots = async (req: Request, res: Response): Promise<void> => {
   try {
     const rows: StagePlotDB[] = await db(plotTable).select('*');
-    console.log('All stage plot results', rows);
 
     const stagePlots = rows.map(dbStagePlotToApi);
     res.json(stagePlots);
@@ -85,7 +83,6 @@ export const getAllStagePlotsByProjectId = async (req: Request, res: Response): 
       stageName: plot.stage_name,
     }));
 
-    console.log(apiPlots);
 
     res.json(apiPlots);
   } catch (error) {
@@ -215,7 +212,6 @@ export const deleteStagePlot = async (req: Request, res: Response): Promise<void
  */
 export const getFullStagePlotInfo = async (req: Request, res: Response): Promise<void> => {
   try {
-
     interface dbElement {
       created_at_elp: string;
       id_elp: number;
@@ -441,7 +437,6 @@ export const getAllStagePlotsByUserId = async (req: Request, res: Response): Pro
 
     res.status(200).json(stagePlotsApi);
   } catch (err) {
-    console.log('error in getAllStagePlotsByUserId', err);
     res.status(500).json({
       error: err,
     });

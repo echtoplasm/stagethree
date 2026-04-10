@@ -25,7 +25,6 @@ export const createNewElementPlacement = async (
     method: 'POST',
     body: data,
   });
-  console.log(newPlacement);
   return newPlacement.newPlacement;
 };
 

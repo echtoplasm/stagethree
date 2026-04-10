@@ -31,7 +31,6 @@ export function Login({ onClose, onSuccess }: LoginProps) {
     e.preventDefault();
     try {
       const res = await loginUser(email, password);
-      console.log(res);
       setError(false);
       onSuccess(res.user);
     } catch (err) {

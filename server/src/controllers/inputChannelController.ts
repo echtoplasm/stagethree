@@ -21,7 +21,6 @@ const incTable = 'input_channel_inc';
 export const getAllInputChannels = async (req: Request, res: Response): Promise<void> => {
   try {
     const rows: InputChannelDB[] = await db(incTable).select('*');
-    console.log('All input channel results', rows);
 
     const inputchannels = rows.map(incToApi);
     res.json(inputchannels);

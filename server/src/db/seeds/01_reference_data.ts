@@ -284,5 +284,4 @@ export async function seed(knex: Knex): Promise<void> {
     { name_stg: 'Outdoor Festival', width_stg: 25, depth_stg: 40, height_stg: 10 },
   ]);
 
-  console.log(' Reference data seeded successfully!');
 }

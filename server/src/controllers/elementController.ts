@@ -9,12 +9,10 @@ const elemTable = 'element_type_elt';
  * Fetch all elements
  */
 export const getAllElements = async (req: Request, res: Response): Promise<void> => {
-  console.log('getAllElements called');
   try {
     const rows = await db('element_type_elt')
       .leftJoin('image_img', 'element_type_elt.id_img_elt', 'image_img.id_img')
       .select('element_type_elt.*', 'image_img.file_path_img');
-    console.log('element result', rows);
 
     const elements = rows.map(elementToApi);
     res.json(elements);

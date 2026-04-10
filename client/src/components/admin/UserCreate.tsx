@@ -15,9 +15,6 @@ export const UserCreate = ({ onClose, onSuccess }: UserCreateProps) => {
   const [loading, setLoading] = useState(false);
 
 
-  useEffect(() => {
-    console.log('UserCreate called');
-  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

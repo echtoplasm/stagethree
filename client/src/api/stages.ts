@@ -16,7 +16,6 @@ export interface Stage {
  */
 export const fetchAllStages = async (): Promise<Stage[]> => {
   const response = await fetch(`${API_URL}/api/stages`);
-  console.log('fetching all stages');
   if (!response.ok) {
     console.error('unable to fetch all stages');
   }

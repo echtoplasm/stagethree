@@ -34,7 +34,6 @@ export const UtilitiesDrawer = ({ sceneRef, setShowColorPicker, setShowCurrentSt
   const [copied, setCopied] = useState(false);
   const isSandbox = !isAuthenticated;
 
-  console.log(stagePlot);
 
   /**
    * Generates and downloads a PDF containing a Three.js scene snapshot,

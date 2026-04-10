@@ -42,7 +42,6 @@ export const fetchFullStagePlotConfig = async (plotId: number): Promise<FullStag
 
 export const fetchFullStagePlotByUUID = async (uuid: string): Promise<FullStagePlotResponse> => {
   const stageplotUUID = apiFetch(`/api/stageplots/share/${uuid}`);
-  console.log(stageplotUUID);
   return stageplotUUID;
 };
 

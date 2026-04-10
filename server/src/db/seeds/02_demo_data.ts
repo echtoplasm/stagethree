@@ -386,9 +386,4 @@ export async function seed(knex: Knex): Promise<void> {
     },
   ]);
 
-  console.log('✅ Demo data seeded successfully!');
-  console.log('demo@stagethree.com      / demo123');
-  console.log('admin@stagethree.com     / admin123');
-  console.log('user@stagethree.com      / user123');
-  console.log('superuser@stagethree.com / sudo123');
 }

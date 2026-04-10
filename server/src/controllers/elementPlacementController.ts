@@ -22,7 +22,6 @@ const elpTable = 'element_placement_elp';
 export const getAllElp = async (req: Request, res: Response): Promise<void> => {
   try {
     const rows: ElpDB[] = await db(elpTable).select('*');
-    console.log('All element placement results', rows);
     const stagePlots = rows.map(elpToApi);
     res.json(stagePlots);
   } catch (err) {
@@ -106,8 +105,6 @@ export const updateElp = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
     const dbData = elpToDb(req.body);
 
-    console.log('Request body: ', req.body);
-    console.log('Transformed dbData: ', dbData);
 
     const [updated] = await db(elpTable).where({ id_elp: id }).update(dbData).returning('*');
 
@@ -195,7 +192,6 @@ export const partialUpdateElp = async (req: Request, res: Response): Promise<voi
 
     const apiResult = elpToApi(result);
 
-    console.log('successfully updated element placement via paritalUpdateElp');
 
     res.status(200).json({
       message: 'successful element placement update',

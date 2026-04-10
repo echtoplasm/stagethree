@@ -17,11 +17,9 @@ const stageTable = 'stage_stg';
  * Returns all stages excluding soft-deleted records.
  */
 export const getAllStages = async (req: Request, res: Response): Promise<void> => {
-  console.log('getAllStages called');
   try {
     // Check which database we're connected to
     const rows: StageDB[] = await db(stageTable).select('*').whereNull('deleted_at_stg');
-    console.log('stage result', rows);
 
     const stages = rows.map(dbStageToApi);
     res.json(stages);
@@ -37,7 +35,6 @@ export const getAllStages = async (req: Request, res: Response): Promise<void> =
  */
 
 export const getAllPublicStages = async (req: Request, res: Response): Promise<void> => {
-  console.log('getAllPublicStages called');
   try {
     const rows: StageDB[] = await db(stageTable)
       .select('*')

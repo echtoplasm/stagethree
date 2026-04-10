@@ -9,10 +9,8 @@ const venueTable = 'venue_ven';
  * Fetch all venues
  */
 export const getAllVenues = async (req: Request, res: Response): Promise<void> => {
-  console.log('getAllStages called');
   try {
     const rows: VenueDB[] = await db(venueTable).select('*');
-    console.log('venues result', rows);
 
     const venues = rows.map(dbVenueToApi);
     res.json(venues);

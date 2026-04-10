@@ -1,6 +1,5 @@
 import { Pool } from 'pg';
 
-
 const pool = new Pool({
   user: process.env.DB_USER,
   host: process.env.DB_HOST,
@@ -12,8 +11,6 @@ const pool = new Pool({
 pool.query('SELECT NOW()', (err, res) => {
   if (err) {
     console.error('Database connection error', err);
-  } else {
-    console.log('Database connected', res.rows[0]);
   }
 });
 

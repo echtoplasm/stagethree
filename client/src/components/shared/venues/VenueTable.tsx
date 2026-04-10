@@ -79,7 +79,6 @@ export function VenueTable() {
   const getVenueStages = async (venueId: number) => {
     const data = await getStagesByVenueId(venueId);
     setStages(data);
-    console.log(stages);
     setShowStages(true);
   }
 
