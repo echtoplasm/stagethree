@@ -769,6 +769,8 @@ nav ul button:hover::after {
   box-shadow: var(--shadow-lg);
   width: 100%;
   max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
   z-index: 201;
   animation: modalIn 0.2s ease;
 }
@@ -1556,7 +1558,7 @@ input[type='number']::-webkit-inner-spin-button {
 }
 
 .pipette {
-  color: #cccccc;
+  color: var(--text-primary);
   position: absolute;
   top: 20px;
   left: 5%;
@@ -2096,5 +2098,41 @@ input[type='number']::-webkit-inner-spin-button {
   nav ul a span,
   nav ul button span {
     display: none;
+  }
+}
+
+@media (max-height: 700px) {
+  .modal {
+    max-height: 95vh;
+  }
+  
+  .modal-body {
+    padding: 1rem;
+  }
+  
+  .modal-header,
+  .modal-footer {
+    padding: 0.75rem 1.5rem;
+  }
+}
+
+@media (max-height: 800px) {
+  .drawer.open {
+    height: 40%;
+  }
+
+  .sidebar-toggle {
+    top: calc(50% - 60px); 
+  }
+  
+  .sidebar-toggle:hover {
+    transform: translateY(-50%) translateX(4px);
+  }
+}
+
+
+@media (max-height: 650px) {
+  .drawer.open {
+    height: 50%;
   }
 }
