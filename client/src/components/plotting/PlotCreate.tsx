@@ -146,15 +146,18 @@ export const PlotCreate = ({ onClose, onSuccess, projectId }: PlotCreateProps) =
           </div>
 
           <div className="form-group">
-            <label className="form-label" htmlFor="bool-gig-date">Add Gig Date?</label>
-            <input
-              id="bool-gig-date"
-              className="form-input"
-              type="checkbox"
-              checked={gigDateBool}
-              onChange={(e) => setGigDateBool(e.target.checked)}
-            />
+            <div className="checkbox-group">
+              <input
+                id="bool-gig-date"
+                type="checkbox"
+                className="checkbox-input"
+                checked={gigDateBool}
+                onChange={e => setGigDateBool(e.target.checked)}
+              />
+              <label htmlFor="bool-gig-date" className="checkbox-label">Add Gig Date?</label>
+            </div>
           </div>
+
 
           {gigDateBool && (
             <div className="form-group">
