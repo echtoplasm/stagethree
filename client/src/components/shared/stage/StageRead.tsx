@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Box, Ruler, Layers } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Box, Ruler, Layers, Users } from 'lucide-react';
 import { fetchAllPublicStages, type PublicStage } from '../../../api/stages';
-
-
+import { PlotCreateFromPublicStage } from '../../../components/plotting/PublicPlotCreate';
 /**
  * Displays a grid of all publicly available stage templates with their dimensions.
  * Renders loading and error states while fetching.
@@ -16,6 +16,8 @@ export function StageRead() {
   const [search, setSearch] = useState('');
   const [minWidth, setMinWidth] = useState('');
   const [minDepth, setMinDepth] = useState('');
+  const [createStagePlot, setCreateStagePlot] = useState(false);
+  const [selectedStage, setSelectedStage] = useState<PublicStage | null>(null);
 
   const filteredStages = stages.filter(stage => {
     const matchesName = stage.name.toLowerCase().includes(search.toLowerCase());
@@ -23,6 +25,10 @@ export function StageRead() {
     const matchesDepth = minDepth === '' || stage.depth >= Number(minDepth);
     return matchesName && matchesWidth && matchesDepth;
   });
+
+
+  const navigate = useNavigate();
+
 
   /**
    * Fetches all public stages on mount and updates loading and error state accordingly.
@@ -150,14 +156,41 @@ export function StageRead() {
                   )}
                   {stage.capacity && (
                     <div className="dimension">
-                      <Layers size={16} />
+                      <Users size={16} />
                       <span className="dimension-label">Capacity</span>
                       <span className="dimension-value">{stage.capacity.toLocaleString()}</span>
                     </div>
                   )}
                 </div>
-              </article>))}
+                <div className="stage-card-footer">
+                  <button
+                    aria-label={`Use ${stage.name} as your stage template`}
+                    className="btn btn-primary btn-sm"
+                    onClick={() => {
+                      setCreateStagePlot(true);
+                      setSelectedStage(stage);
+                    }}
+                  >
+                    Use This Stage
+                  </button>
+                </div>
+              </article>
+            ))}
           </div>
+        )}
+        {createStagePlot && selectedStage && (
+          <PlotCreateFromPublicStage
+            stage={selectedStage}
+            onClose={() => {
+              setCreateStagePlot(false);
+              setSelectedStage(null);
+            }}
+            onSuccess={() => {
+              setCreateStagePlot(false);
+              setSelectedStage(null);
+              navigate('/app');
+            }}
+          />
         )}
       </div>
     </div>

@@ -2,11 +2,11 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 import { apiFetch } from '../utils/api';
 export interface Stage {
   id: number;
-  venueId: number;
+  venueId?: number;
   name: string;
   width: number;
   depth: number;
-  height: number;
+  height?: number;
   isPublic: boolean;
   createdBy: number;
 }
