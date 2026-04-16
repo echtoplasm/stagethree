@@ -13,6 +13,16 @@ export function StageRead() {
   const [stages, setStages] = useState<Stage[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [search, setSearch] = useState('');
+  const [minWidth, setMinWidth] = useState('');
+  const [minDepth, setMinDepth] = useState('');
+
+  const filteredStages = stages.filter(stage => {
+    const matchesName = stage.name.toLowerCase().includes(search.toLowerCase());
+    const matchesWidth = minWidth === '' || stage.width >= Number(minWidth);
+    const matchesDepth = minDepth === '' || stage.depth >= Number(minDepth);
+    return matchesName && matchesWidth && matchesDepth;
+  });
 
   /**
    * Fetches all public stages on mount and updates loading and error state accordingly.
@@ -59,37 +69,71 @@ export function StageRead() {
       <div className="content-wrapper">
         <header className="mb-8">
           <h1>Stage Templates</h1>
-          <p className="text-secondary">Browse available stage configurations</p>
+          <p className="text-secondary">Browse available public stage configurations</p>
+          <div className="stage-search">
+            <div className="stage-search-name">
+              <label htmlFor="searchStage" className="form-label">Stage Name</label>
+              <input
+                type="text"
+                id="searchStage"
+                className="form-input"
+                placeholder="Filter by name..."
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+              />
+            </div>
+            <div className="stage-search-dimension">
+              <label htmlFor="minWidth" className="form-label">Min Width (ft)</label>
+              <input
+                type="number"
+                id="minWidth"
+                className="form-input"
+                placeholder="Any"
+                value={minWidth}
+                onChange={e => setMinWidth(e.target.value)}
+              />
+            </div>
+            <div className="stage-search-dimension">
+              <label htmlFor="minDepth" className="form-label">Min Depth (ft)</label>
+              <input
+                type="number"
+                id="minDepth"
+                className="form-input"
+                placeholder="Any"
+                value={minDepth}
+                onChange={e => setMinDepth(e.target.value)}
+              />
+            </div>
+          </div>
         </header>
-
-        {stages.length === 0 ? (
+        {filteredStages.length === 0 ? (
           <div className="empty-state">
             <Box size={64} />
-            <p>No stage templates found</p>
+            <p>
+              {stages.length === 0
+                ? 'No stage templates found'
+                : 'No stages match your search'}
+            </p>
           </div>
         ) : (
           <div className="stages-grid">
-            {stages.map(stage => (
+            {filteredStages.map(stage => (
               <article key={stage.id} className="stage-card">
                 <div className="stage-card-header">
                   <Box size={24} />
                   <h2>{stage.name}</h2>
-
                 </div>
-
                 <div className="stage-dimensions">
                   <div className="dimension">
                     <Ruler size={16} />
                     <span className="dimension-label">Width</span>
                     <span className="dimension-value">{stage.width} ft</span>
                   </div>
-
                   <div className="dimension">
                     <Ruler size={16} />
                     <span className="dimension-label">Depth</span>
                     <span className="dimension-value">{stage.depth} ft</span>
                   </div>
-
                   {stage.height && (
                     <div className="dimension">
                       <Layers size={16} />
@@ -98,7 +142,6 @@ export function StageRead() {
                     </div>
                   )}
                 </div>
-
               </article>
             ))}
           </div>
