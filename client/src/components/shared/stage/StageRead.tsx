@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Box, Ruler, Layers } from 'lucide-react';
-import { fetchAllPublicStages, type Stage } from '../../../api/stages';
+import { fetchAllPublicStages, type PublicStage } from '../../../api/stages';
 
 
 /**
@@ -10,7 +10,7 @@ import { fetchAllPublicStages, type Stage } from '../../../api/stages';
  * @returns The stage templates grid, or a loading/error state.
  */
 export function StageRead() {
-  const [stages, setStages] = useState<Stage[]>([]);
+  const [stages, setStages] = useState<PublicStage[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState('');
@@ -121,7 +121,14 @@ export function StageRead() {
               <article key={stage.id} className="stage-card">
                 <div className="stage-card-header">
                   <Box size={24} />
-                  <h2>{stage.name}</h2>
+                  <div>
+                    <h2>{stage.name}</h2>
+                    {stage.venueName && (
+                      <p className="text-muted">
+                        {stage.venueName}{stage.city && `, ${stage.city}`}{stage.state && `, ${stage.state}`}
+                      </p>
+                    )}
+                  </div>
                 </div>
                 <div className="stage-dimensions">
                   <div className="dimension">
@@ -141,9 +148,15 @@ export function StageRead() {
                       <span className="dimension-value">{stage.height} ft</span>
                     </div>
                   )}
+                  {stage.capacity && (
+                    <div className="dimension">
+                      <Layers size={16} />
+                      <span className="dimension-label">Capacity</span>
+                      <span className="dimension-value">{stage.capacity.toLocaleString()}</span>
+                    </div>
+                  )}
                 </div>
-              </article>
-            ))}
+              </article>))}
           </div>
         )}
       </div>

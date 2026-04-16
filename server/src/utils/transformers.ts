@@ -209,6 +209,28 @@ export interface StageAPI {
   createdAt: string;
 }
 
+export interface PublicStageAPI extends StageAPI {
+  venueName: string | null;
+  city: string | null;
+  capacity: number | null;
+  state: string | null;
+}
+
+export interface PublicStageDB extends StageDB {
+  name_ven: string | null;
+  city_ven: string | null;
+  capacity_ven: number | null;
+  abbreviation_sta: string | null;
+}
+
+export const dbPublicStageToApi = (row: PublicStageDB): PublicStageAPI => ({
+  ...dbStageToApi(row),
+  venueName: row.name_ven ?? null,
+  city: row.city_ven ?? null,
+  capacity: row.capacity_ven ?? null,
+  state: row.abbreviation_sta ?? null,
+});
+
 /**
  * Converts Stage data from database naming conventions to API/JavaScript naming conventions
  *

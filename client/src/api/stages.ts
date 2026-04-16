@@ -11,6 +11,22 @@ export interface Stage {
   createdBy: number;
 }
 
+
+export interface PublicStage {
+  id: number;
+  venueId?: number;
+  name: string;
+  width: number;
+  depth: number;
+  height?: number;
+  isPublic: boolean;
+  createdBy: number;
+  venueName: string | null;
+  city: string | null;
+  capacity: number | null;
+  state: string | null;
+}
+
 /**
  * @returns
  */
@@ -27,7 +43,7 @@ export const fetchAllStages = async (): Promise<Stage[]> => {
  * fetch all publically available stages
  */
 
-export const fetchAllPublicStages = async (): Promise<Stage[]> => {
+export const fetchAllPublicStages = async (): Promise<PublicStage[]> => {
   return apiFetch('/api/stages/public', {
     method: 'GET',
   });

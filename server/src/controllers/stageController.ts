@@ -1,7 +1,14 @@
 import { Request, Response } from 'express';
 import db from '../db/knex';
-import { apiStageToDb, dbStagePlotToApi, dbStageToApi, StageDB } from '../utils/transformers';
-
+import {
+  apiStageToDb,
+  dbStagePlotToApi,
+  dbStageToApi,
+  StageDB,
+  PublicStageAPI,
+  PublicStageDB,
+  dbPublicStageToApi,
+} from '../utils/transformers';
 const stageTable = 'stage_stg';
 
 /**
@@ -9,8 +16,6 @@ const stageTable = 'stage_stg';
  * Soft deletes are implemented via deleted_at_stg; all read queries exclude soft-deleted rows.
  * Transforms between DB column naming (suffix _stg) and API format via dbStageToApi/apiStageToDb.
  */
-
-
 
 /**
  * GET /api/stages/
@@ -36,14 +41,20 @@ export const getAllStages = async (req: Request, res: Response): Promise<void> =
 
 export const getAllPublicStages = async (req: Request, res: Response): Promise<void> => {
   try {
-    const rows: StageDB[] = await db(stageTable)
-      .select('*')
-      .where({
-        is_public_stg: 't',
-      })
+    const rows = await db('stage_stg')
+      .leftJoin('venue_ven', 'stage_stg.id_ven_stg', 'venue_ven.id_ven')
+      .leftJoin('state_sta', 'venue_ven.id_sta_ven', 'state_sta.id_sta')
+      .select(
+        'stage_stg.*',
+        'venue_ven.name_ven',
+        'venue_ven.city_ven',
+        'venue_ven.capacity_ven',
+        'state_sta.abbreviation_sta'
+      )
+      .where({ is_public_stg: 't' })
       .whereNull('deleted_at_stg');
 
-    const publicStages = rows.map(dbStageToApi);
+    const publicStages = rows.map(dbPublicStageToApi);
     res.json(publicStages);
   } catch (err) {
     console.error('error in getAllPublicStages', err);
@@ -205,8 +216,7 @@ export const getAllStagesByCreatedBy = async (req: Request, res: Response): Prom
       .where({
         created_by_stg: userId,
       })
-      .whereNull('deleted_at_stg')
-      
+      .whereNull('deleted_at_stg');
 
     const apiResults = results.map(dbStageToApi);
 
