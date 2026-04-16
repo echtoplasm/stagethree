@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Box, Ruler, Layers, Users } from 'lucide-react';
 import { fetchAllPublicStages, type PublicStage } from '../../../api/stages';
 import { PlotCreateFromPublicStage } from '../../../components/plotting/PublicPlotCreate';
+import { useAuth } from '../../../contexts/AuthContext';
 /**
  * Displays a grid of all publicly available stage templates with their dimensions.
  * Renders loading and error states while fetching.
@@ -28,6 +29,7 @@ export function StageRead() {
 
 
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
 
 
   /**
@@ -162,18 +164,20 @@ export function StageRead() {
                     </div>
                   )}
                 </div>
-                <div className="stage-card-footer">
-                  <button
-                    aria-label={`Use ${stage.name} as your stage template`}
-                    className="btn btn-primary btn-sm"
-                    onClick={() => {
-                      setCreateStagePlot(true);
-                      setSelectedStage(stage);
-                    }}
-                  >
-                    Use This Stage
-                  </button>
-                </div>
+                {isAuthenticated && (
+                  <div className="stage-card-footer">
+                    <button
+                      aria-label={`Use ${stage.name} as your stage template`}
+                      className="btn btn-primary btn-sm"
+                      onClick={() => {
+                        setCreateStagePlot(true);
+                        setSelectedStage(stage);
+                      }}
+                    >
+                      Use This Stage
+                    </button>
+                  </div>
+                )}
               </article>
             ))}
           </div>
