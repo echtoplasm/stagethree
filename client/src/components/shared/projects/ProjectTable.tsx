@@ -13,7 +13,6 @@ import { PlotCreate } from '../../../components/plotting/PlotCreate';
 import { useStageContext } from '../../../contexts/StageContext';
 import { useNavigate } from 'react-router-dom';
 
-
 /**
  * Displays all projects belonging to the authenticated user with expandable stage plot rows.
  * Handles project/plot CRUD operations and navigates to the plotting page with full scene context.
@@ -26,29 +25,19 @@ export function ProjectTable() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [update, setUpdate] = useState(false);
-
   const [deleteProject, setProjectDelete] = useState(false);
-
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null)
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [projectCreate, setProjectCreate] = useState(false);
 
-  /* *** ==== *** PLOT STATE MANAGEMENT ***  ==== *** */
-  //plot array/object assignment states
-  const [renderPlots, setRenderPlots] = useState(false);
-  const [plots, setPlots] = useState<StagePlotWithStageName[] | null>(null)
+  /* *** ==== *** PLOT STATE MANAGEMENT *** ==== *** */
+  const [plots, setPlots] = useState<StagePlotWithStageName[] | null>(null);
   const [selectedPlot, setSelectedPlot] = useState<StagePlotWithStageName | null>(null);
-
-  //plot component state
   const [plotUpdate, setPlotUpdate] = useState(false);
   const [plotDelete, setPlotDelete] = useState(false);
   const [plotCreate, setPlotCreate] = useState(false);
   const [plotsLoading, setPlotsLoading] = useState(false);
 
   /* *** === *** STAGE CONTEXT PROVIDER *** === *** */
-  /* this is for passing context about the plot to the provider in
-     in order to redirect from the user portal to the /app and provide
-     the clicked plots details and populate the three scene */
-
   const {
     setActiveProject,
     setElementPlacements,
@@ -57,32 +46,26 @@ export function ProjectTable() {
     setStagePlot
   } = useStageContext();
 
-
   /* *** === *** AUTH STATE MANAGEMENT *** === *** */
   const { user } = useAuth();
   if (!user) return null;
 
+  const navigate = useNavigate();
 
-  //used to update the project state after any CRUD action
   const updateProjectState = async () => {
     const data = await fetchAllProjectByUserId(user.id);
     setProjects(data);
   }
 
-
-  const navigate = useNavigate();
-
   /**
    * Fetches stage plots for the given project and updates plot state.
-   * Returns early if no project is currently selected.
    *
-   * @param projectId - The ID of the project to load plots for.
+   * @param project - The project to load plots for.
    */
-  const loadPlots = async (projectId: number) => {
+  const loadPlots = async (project: Project) => {
     try {
-      if (!selectedProject) return;
       setPlotsLoading(true);
-      const data = await fetchStagePlotsByProjectId(projectId);
+      const data = await fetchStagePlotsByProjectId(project.id);
       setPlots(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch plots for user');
@@ -118,14 +101,9 @@ export function ProjectTable() {
   const setPlotContext = (data: FullStagePlotResponse) => {
     setElementPlacements(data.elements);
     setInputChannels(data.inputChannels);
-    setStage(data.stage)
+    setStage(data.stage);
     setActiveProject(data.project);
     setStagePlot(data.stagePlot);
-  }
-
-  //navigates to app page
-  const handleAppPageNavigate = () => {
-    navigate('/app');
   }
 
   /**
@@ -138,10 +116,8 @@ export function ProjectTable() {
     const data = await getFullPlotConfig(plotId);
     if (!data) return;
     setPlotContext(data);
-    handleAppPageNavigate();
+    navigate('/app');
   }
-
-
 
   /**
    * Fetches all projects for the authenticated user on mount.
@@ -198,27 +174,27 @@ export function ProjectTable() {
         {projects.length === 0 ? (
           <div className="empty-state">
             <Box size={64} />
-            <p>No project templates found</p>
+            <p>No projects found</p>
           </div>
-        ) : /* currently the onclick here is not working properly*/ (
+        ) : (
           <div className='card'>
-
             {projects.map(project => (
               <div key={project.id}>
                 <div className='project-row' onClick={() => {
-                  const isSelected = selectedProject?.id === project.id && renderPlots;
-                  if (isSelected) {
-                    setRenderPlots(false);
+                  if (selectedProject?.id === project.id) {
+                    setSelectedProject(null);
+                    setPlots(null);
                   } else {
                     setSelectedProject(project);
-                    loadPlots(project.id);
-                    setRenderPlots(true);
+                    loadPlots(project);
                   }
                 }}>
                   <span className='icon'><Box size={18} /></span>
                   <div style={{ flex: 1 }}>
                     <span className='name'>{project.name}</span>
-                    {project.description && <span className='text-muted' style={{ marginLeft: '0.5rem' }}>— {project.description}</span>}
+                    {project.description && (
+                      <span className='text-muted' style={{ marginLeft: '0.5rem' }}>— {project.description}</span>
+                    )}
                   </div>
                   <button aria-label="Delete project." className='btn btn-danger btn-sm' onClick={(e) => { e.stopPropagation(); setSelectedProject(project); setProjectDelete(true); }}>
                     <Trash size={16} />
@@ -228,14 +204,14 @@ export function ProjectTable() {
                   </button>
                 </div>
 
-                {renderPlots && selectedProject?.id === project.id && plots && (
+                {selectedProject?.id === project.id && plots && (
                   <div style={{ marginLeft: '2.75rem', borderLeft: '1px solid var(--border-accent)', paddingBottom: '0.5rem' }}>
                     {plotsLoading ? (
                       <div className='plot-row'>
                         <div className='spinner' style={{ width: '16px', height: '16px' }} />
                         <span className='text-muted'>Loading plots...</span>
                       </div>
-                    ) :
+                    ) : (
                       plots.map(plot => (
                         <div key={plot.id} className='plot-row'>
                           <span style={{ flex: 1 }}>{plot.name}</span>
@@ -248,7 +224,8 @@ export function ProjectTable() {
                           <span>
                             <span className='text-tertiary font-small'>Stage: </span>
                             <span className='text-muted font-small'>{plot.stageName}</span>
-                          </span>                          <button aria-label="Delete stage plot." className='btn btn-danger btn-sm plot-delete'
+                          </span>
+                          <button aria-label="Delete stage plot." className='btn btn-danger btn-sm plot-delete'
                             onClick={() => {
                               setSelectedPlot(plot);
                               setPlotDelete(true);
@@ -263,14 +240,13 @@ export function ProjectTable() {
                             <Pencil size={14} />
                           </button>
                           <button aria-label="Go to plotting application with plot data." className='btn btn-sm btn-update plot-to-app' onClick={() => {
-                            setSelectedPlot(plot)
-                            selectedPlot && handleGoToAppClick(selectedPlot.id)
+                            handleGoToAppClick(plot.id);
                           }}>
                             To App
                           </button>
                         </div>
                       ))
-                    }
+                    )}
                     <button aria-label="Create new plot." className='btn btn-ghost btn-sm' style={{ margin: '0.25rem 0.5rem' }} onClick={() => setPlotCreate(true)}>
                       <Plus size={14} /> Add Plot
                     </button>
@@ -282,82 +258,63 @@ export function ProjectTable() {
         )}
       </div>
 
-      {
-        update && selectedProject && (
-          <ProjectUpdate
-            project={selectedProject}
-            onClose={() => { updateProjectState(); setUpdate(false); setSelectedProject(null); }}
-          />
-        )
-      }
+      {update && selectedProject && (
+        <ProjectUpdate
+          project={selectedProject}
+          onClose={() => { updateProjectState(); setUpdate(false); setSelectedProject(null); }}
+        />
+      )}
 
-      {
-        deleteProject && selectedProject && (
-          <ProjectDeletePortal
-            projectId={selectedProject.id}
-            onSuccess={async () => { updateProjectState(); setProjectDelete(false); }}
-            onClose={() => { setProjectDelete(false); setSelectedProject(null); }}
-          />
-        )
-      }
+      {deleteProject && selectedProject && (
+        <ProjectDeletePortal
+          projectId={selectedProject.id}
+          onSuccess={async () => { updateProjectState(); setProjectDelete(false); }}
+          onClose={() => { setProjectDelete(false); setSelectedProject(null); }}
+        />
+      )}
 
-      {
-        projectCreate && (
-          <ProjectCreate
-            onSuccess={async () => { updateProjectState(); setProjectCreate(false); }}
-            onClose={() => setProjectCreate(false)}
-          />
-        )
-      }
+      {projectCreate && (
+        <ProjectCreate
+          onSuccess={async () => { updateProjectState(); setProjectCreate(false); }}
+          onClose={() => setProjectCreate(false)}
+        />
+      )}
 
-      {
-        plotUpdate && selectedPlot && (
-          <PlotUpdate
-            plot={selectedPlot}
-            onClose={() => {
-              setSelectedProject(null);
-              setSelectedPlot(null);
-              setPlotUpdate(false);
-            }}
+      {plotUpdate && selectedPlot && (
+        <PlotUpdate
+          plot={selectedPlot}
+          onClose={() => {
+            setSelectedPlot(null);
+            setPlotUpdate(false);
+          }}
+        />
+      )}
 
-          />
-        )
-      }
+      {plotDelete && selectedPlot && (
+        <PlotDelete
+          plotId={selectedPlot.id}
+          onClose={() => {
+            setSelectedPlot(null);
+            setPlotDelete(false);
+          }}
+          onSuccess={() => {
+            updatePlotState();
+            setSelectedPlot(null);
+            setPlotDelete(false);
+          }}
+        />
+      )}
 
-      {
-        plotDelete && selectedPlot && (
-          <PlotDelete
-            plotId={selectedPlot.id}
-            onClose={() => {
-              setSelectedProject(null);
-              setSelectedPlot(null);
-              setPlotDelete(false);
-            }}
-            onSuccess={() => {
-              updatePlotState();
-              setSelectedProject(null);
-              setSelectedPlot(null);
-              setPlotDelete(false);
-            }}
-          />
-        )
-      }
-
-      {
-        plotCreate && selectedProject && (
-          <PlotCreate
-            projectId={selectedProject.id}
-            onSuccess={() => {
-              updatePlotState();
-              setPlotCreate(false);
-            }}
-            onClose={() => {
-              setPlotCreate(false);
-            }}
-          />
-        )
-      }
-    </div >
+      {plotCreate && selectedProject && (
+        <PlotCreate
+          projectId={selectedProject.id}
+          onSuccess={() => {
+            updatePlotState();
+            setPlotCreate(false);
+          }}
+          onClose={() => setPlotCreate(false)}
+        />
+      )}
+    </div>
   );
 }
-
