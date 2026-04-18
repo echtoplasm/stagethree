@@ -150,8 +150,6 @@ export function ProjectCard({ onStageSelect }: ProjectCardProps) {
     setProjectUpdate(false);
   }
 
-
-
   /**
    * Fetches projects on mount and whenever the authenticated user or projectsVersion changes.
    * The projectsVersion dependency ensures the list stays in sync after remote mutations.

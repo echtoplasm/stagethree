@@ -19,14 +19,16 @@ export function StageRead() {
   const [minDepth, setMinDepth] = useState('');
   const [createStagePlot, setCreateStagePlot] = useState(false);
   const [selectedStage, setSelectedStage] = useState<PublicStage | null>(null);
+  const [selectedState, setSelectedState] = useState('');
 
   const filteredStages = stages.filter(stage => {
     const matchesName = stage.name.toLowerCase().includes(search.toLowerCase());
     const matchesWidth = minWidth === '' || stage.width >= Number(minWidth);
     const matchesDepth = minDepth === '' || stage.depth >= Number(minDepth);
-    return matchesName && matchesWidth && matchesDepth;
+    const matchesState = selectedState === '' || stage.state === selectedState;
+    return matchesName && matchesWidth && matchesDepth && matchesState;
   });
-
+  const availableStates = [...new Set(stages.map(s => s.state).filter(Boolean))] as string[];
 
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
@@ -89,6 +91,20 @@ export function StageRead() {
                 value={search}
                 onChange={e => setSearch(e.target.value)}
               />
+            </div>
+            <div className="stage-search-dimension">
+              <label htmlFor="filterState" className="form-label">State</label>
+              <select
+                id="filterState"
+                className="form-input"
+                value={selectedState}
+                onChange={e => setSelectedState(e.target.value)}
+              >
+                <option value="">Any</option>
+                {availableStates.map(state => (
+                  <option key={state} value={state}>{state}</option>
+                ))}
+              </select>
             </div>
             <div className="stage-search-dimension">
               <label htmlFor="minWidth" className="form-label">Min Width (ft)</label>

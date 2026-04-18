@@ -100,12 +100,17 @@ export function VenueCreate({ onClose, onSuccess }: VenueCreateProps) {
             <input id="capacity" className="form-input" type="number" max={100000} value={venueForm.capacity}
               onChange={(e) => setVenueForm({ ...venueForm, capacity: Number(e.target.value) })} />
           </div>
-          <div className='form-group'>
-            <label className='form-label' htmlFor='state'>States</label>
-            <select value={venueForm.stateId ?? ''} onChange={(e) => setVenueForm({...venueForm, stateId: Number(e.target.value)})}>
-              <option value="" disabled>Select a state</option>
-              {states.map((state) => (
-                <option key={state.id} value={Number(state.id)}>
+          <div className="form-group">
+            <label className="form-label" htmlFor="state">State</label>
+            <select
+              id="state"
+              className="form-input"
+              value={venueForm.stateId ?? ''}
+              onChange={e => setVenueForm({ ...venueForm, stateId: Number(e.target.value) })}
+            >
+              <option value="">Select a state</option>
+              {states.map(state => (
+                <option key={state.id} value={state.id?.toString()}>
                   {state.name}
                 </option>
               ))}
