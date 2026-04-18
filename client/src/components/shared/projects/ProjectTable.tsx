@@ -239,9 +239,16 @@ export function ProjectTable() {
                       plots.map(plot => (
                         <div key={plot.id} className='plot-row'>
                           <span style={{ flex: 1 }}>{plot.name}</span>
-                          <span className='text-muted mr-6'>{plot.gigDate}</span>
-                          <span className='text-muted'>{plot.stageName}</span>
-                          <button aria-label="Delete stage plot." className='btn btn-danger btn-sm plot-delete'
+                          {plot.gigDate && (
+                            <span className='mr-6'>
+                              <span className='text-tertiary font-small'>Gig Date: </span>
+                              <span className='text-muted font-small'>{plot.gigDate}</span>
+                            </span>
+                          )}
+                          <span>
+                            <span className='text-tertiary font-small'>Stage: </span>
+                            <span className='text-muted font-small'>{plot.stageName}</span>
+                          </span>                          <button aria-label="Delete stage plot." className='btn btn-danger btn-sm plot-delete'
                             onClick={() => {
                               setSelectedPlot(plot);
                               setPlotDelete(true);

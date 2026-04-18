@@ -103,14 +103,14 @@ export const getStageById = async (req: Request, res: Response): Promise<void> =
 
 export const createStage = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { name, width, depth, height, createdBy, venueId } = req.body;
+    const { name, width, depth, height, createdBy, venueId, isPublic } = req.body;
     if (!name || !width || !depth || !height || !createdBy) {
       res.status(400).json({
         message: 'missing one of required fields',
       });
     }
 
-    const data = { name, width, depth, height, createdBy, venueId };
+    const data = { name, width, depth, height, createdBy, venueId, isPublic };
 
     const dbdata = apiStageToDb(data);
 
@@ -240,10 +240,8 @@ export const getStagesByVenueId = async (req: Request, res: Response): Promise<v
     const { venueId } = req.params;
     const results: StageDB[] = await db(stageTable)
       .select()
-      .where({
-        id_ven_stg: venueId,
-      })
-      .returning('*');
+      .where({ id_ven_stg: venueId })
+      .whereNull('deleted_at_stg');
 
     const apiResults = results.map(dbStageToApi);
 
