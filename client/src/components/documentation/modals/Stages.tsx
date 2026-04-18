@@ -1,157 +1,99 @@
 import { createPortal } from 'react-dom';
-import { X, Lightbulb, MessageCircleWarning, Check, Info } from 'lucide-react';
+import { X, Info, Theater, Lock } from 'lucide-react';
 import { Divider } from '../utilityComponents/Divider';
-
-export interface StageDocsModalProps {
+export interface StagesDocsProps {
   onClose: () => void;
 }
 
 
 /**
- * A component that renders a react portal about the Stages within the app
- * 
- * @param  - A react props callback for determining what happens on close from within the parent component
- * @returns - A react portal containing JSX to render the modal to the screen 
+ * Renders a documentation modal component about managing stages
+ *
+ * @param onClose - React props callback function to determine what happens onClose
+ * @returns A react portal of JSX for rendering modal
  */
-export const StageDocsModal = ({ onClose }: StageDocsModalProps) => {
-
+export const StagesDocs = ({ onClose }: StagesDocsProps) => {
   return createPortal(
     <>
       <div className="modal-backdrop" onClick={onClose} />
       <div className="modal modal-wide modal-scrollable">
         <div className="modal-header">
           <h2>Stages</h2>
-          <button aria-label='Exit modal button.' className="close-btn" onClick={onClose}>
+          <button aria-label="Exit modal." className="close-btn" onClick={onClose}>
             <X size={18} />
           </button>
         </div>
-
         <div className="modal-body">
 
-          {/* Tip banner */}
-          <div className="alert alert-success mb-6">
-            <Lightbulb size={18} />
+          <div className="alert mb-6">
+            <Info size={18} />
             <span>
-              Create an account to unlock the full StageThree experience, including saved projects,
-              stage plots, and input channel editing.
+              A stage is the physical platform your plot is built on. Every stage plot in
+              StageThree requires a stage — it defines the dimensions of your 3D scene.
             </span>
           </div>
 
-          {/* Section: Plotting */}
+          {/* Section: Stage Templates */}
           <section>
-            <h3 className="mb-4">Plotting on the canvas</h3>
-            <p className="text-secondary mb-2">
-              Navigate to the app via the <strong>App</strong> button in the navigation bar. You will be
-              greeted by a blank 3D canvas, ready for your stage plot.
-            </p>
-            <p className="text-secondary mb-2">
-              To start adding elements, open the <strong>Elements tray</strong> from the bottom of the
-              screen. Here you will find all currently available stage elements.
+            <h3 className="mb-4">Stage Templates</h3>
+            <p className="text-secondary mb-4">
+              The <strong>Stage Templates</strong> page is accessible from the navigation bar and
+              displays all publicly available stages. These are real-world venues and standard
+              configurations contributed by StageThree users. You can filter templates by name,
+              minimum width, and minimum depth to find one that fits your needs.
             </p>
             <p className="text-secondary">
-              Clicking any element will place it into the 3D scene. As you add elements, the{' '}
-              <strong>Stage Objects</strong> overlay in the top right will track each object and its
-              position in the scene.
+              Once you find a stage you want to use, click <strong>Use This Stage</strong> on the
+              card. You'll be prompted to select an existing project or create a new one, name your
+              plot, and optionally add a gig date. After confirming, you'll be taken directly into
+              the 3D plotting environment with that stage loaded.
             </p>
           </section>
 
           <Divider />
 
-          {/* Section: Input Channels */}
           <section>
-            <div className="flex-between mb-4">
-              <h3>Input channels</h3>
-              <span className="badge badge-success">Login required</span>
-            </div>
-            <p className="text-secondary mb-2">
-              With at least one element in the scene, open the <strong>Input Channels tray</strong>. You
-              will see an input channel has been automatically created for your element.
-            </p>
-            <p className="text-secondary mb-2">
-              Click the <strong>Expand to edit</strong> icon to open the full input channel list. From
-              there, click any channel to reveal its editable fields and configure it to your needs.
+            <h3 className="mb-4">Managing Your Own Stages</h3>
+            <p className="text-secondary mb-4">
+              You can create and manage your own stages from the <strong>User Portal</strong> under
+              the Venues section. Stages in StageThree are associated with a venue — to create a
+              stage you first need a venue to attach it to.
             </p>
             <p className="text-secondary">
-              Inside an expanded channel card you will find two controls in the top left: a{' '}
-              <strong>sort button</strong> to toggle ascending or descending order, and an{' '}
-              <strong>X button</strong> to close the card. You can also close it by clicking anywhere
-              outside.
+              When creating a stage you'll provide a name, width, depth, and height in feet. You
+              can also set the stage visibility to <strong>Public</strong> or <strong>Private</strong>.
+              Public stages will appear in the Stage Templates page and be available to all users.
+              Private stages are only visible to you.
             </p>
           </section>
 
           <Divider />
 
-          {/* Section: Saving projects */}
           <section>
-            <div className="flex-between mb-4">
-              <h3>Saving projects</h3>
-              <span className="badge badge-success">Login required</span>
-            </div>
-            <p className="text-secondary mb-2">
-              Open the <strong>Saved Projects</strong> tab on the left side of the canvas. When signed
-              in, StageThree automatically creates a default project and plot as soon as you start
-              plotting.
-            </p>
-            <div className="alert mb-4">
-              <MessageCircleWarning size={18} />
+            <h3 className="mb-4">Stage Dimensions</h3>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              {[
+                { label: 'Width', description: 'The left-to-right measurement of the stage in feet.' },
+                { label: 'Depth', description: 'The front-to-back measurement of the stage in feet.' },
+                { label: 'Height', description: 'The height of the stage platform from the floor in feet.' },
+              ].map((item) => (
+                <li key={item.label} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }} className="text-secondary">
+                  <Theater size={14} style={{ marginTop: '3px', flexShrink: 0 }} />
+                  <span><strong>{item.label}:</strong> {item.description}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <Divider />
+
+          <section>
+            <h3 className="mb-4">Sandbox Limitations</h3>
+            <div className="alert">
+              <Lock size={18} />
               <span>
-                Rename your default project and plot as soon as possible to avoid confusion later on.
-              </span>
-            </div>
-            <p className="text-secondary">
-              Click the <strong>pencil icon</strong> next to any project or plot name to edit its
-              details, then click <strong>Save changes</strong> to confirm.
-            </p>
-          </section>
-
-          <Divider />
-
-          {/* Section: Creating a new project */}
-          <section>
-            <h3 className="mb-4">Creating a new project</h3>
-            <p className="text-secondary">
-              From the <strong>Saved Projects</strong> tab, click the{' '}
-              <strong>Create a new project</strong> button at the top. Fill out the project details in
-              the card that appears, then click <strong>Create Project</strong>. Your new project will
-              appear in the file explorer immediately.
-            </p>
-          </section>
-
-          <Divider />
-
-          {/* Section: Adding a stage plot */}
-          <section>
-            <h3 className="mb-4">Adding a stage plot to a project</h3>
-            <p className="text-secondary mb-2">
-              Click your project in the file explorer to expand it, then click{' '}
-              <strong>Create new plot</strong>. In the Create StagePlot card, choose a stage from the
-              available options and give your plot a name.
-            </p>
-            <div className="alert mb-4">
-              <Info size={18} />
-              <span>
-                You can associate any publicly available stage with your plot here. For importing your
-                own custom stages, see the <strong>Stages</strong> documentation.
-              </span>
-            </div>
-            <p className="text-secondary">
-              Select the standard <strong>40x20 stage</strong> and click{' '}
-              <strong>Create StagePlot</strong>. Once created, click your new plot to load it. The{' '}
-              <strong>Current Stage</strong> overlay will update to reflect the active plot. Any elements
-              you add from this point will be saved to your account automatically.
-            </p>
-          </section>
-
-          <Divider />
-
-          {/* Section: Autosave */}
-          <section>
-            <h3 className="mb-4">Autosave</h3>
-            <div className="alert alert-success">
-              <Check size={18} />
-              <span>
-                StageThree automatically saves your work. Adding elements or dragging them to a new
-                position within an active plot is saved instantly, no manual save required.
+                Creating and managing stages requires an account. In sandbox mode you can browse
+                public stage templates but cannot create, edit, or delete stages.
               </span>
             </div>
           </section>
@@ -160,7 +102,5 @@ export const StageDocsModal = ({ onClose }: StageDocsModalProps) => {
       </div>
     </>,
     document.body
-  )
-}
-
-
+  );
+};

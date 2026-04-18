@@ -1,16 +1,21 @@
 import { useState } from 'react';
-import { SlidersHorizontal, CircleUser, Theater, LayoutTemplate, Camera, BookCheck, FileText, Waypoints, MessageSquareQuote } from 'lucide-react';
+import { SlidersHorizontal, CircleUser, Theater, LayoutTemplate, Camera, BookCheck, FileText, Waypoints, MessageSquareQuote, MapPin } from 'lucide-react';
 import { PlottingDocModal } from './modals/Plotting';
-import { UserPortalDocModal } from './modals/UserPortal'
+import { UserPortalDocModal } from './modals/UserPortal';
 import { ControlsDocModal } from './modals/KeyboardControls';
 import { AttributionModal } from './modals/Attribution';
 import { SandBoxDocs } from './modals/SandboxMode';
+import { SharePlotDocs } from './modals/SharingPlots';
+import { PdfExportDocs } from './modals/PdfExport';
+import { StagesDocs } from './modals/Stages';
+import { VenuesDocs } from './modals/Venues';
+import { StagePlotsDocs } from './modals/StagePlots';
 
 const docs = [
   {
     key: 'attribution',
     title: 'Model Attribution',
-    description: 'These are the attributions for the 3d model authors who self-lessly posted their work online for free.',
+    description: 'Attributions for the 3D model authors who posted their work online for free.',
     icon: MessageSquareQuote,
   },
   {
@@ -26,6 +31,12 @@ const docs = [
     icon: CircleUser,
   },
   {
+    key: 'venues',
+    title: 'Venues',
+    description: 'Create and manage venues that house your stages.',
+    icon: MapPin,
+  },
+  {
     key: 'stages',
     title: 'Stages',
     description: 'Browse available stages, import custom stages, and manage stage dimensions.',
@@ -39,42 +50,40 @@ const docs = [
   },
   {
     key: 'cameraControls',
-    title: 'Camera/Keyboard Controls While Plotting',
-    description: 'These documents describe how to best use the camera/directional controls in the plotting scene',
-    icon: Camera
+    title: 'Camera & Keyboard Controls',
+    description: 'How to best use the camera and directional controls in the plotting scene.',
+    icon: Camera,
   },
   {
     key: 'sandboxMode',
     title: 'Sandbox Mode',
-    description: 'These documents describe the limitations of sandbox mode',
-    icon: BookCheck
+    description: 'The limitations of sandbox mode and how to exit it.',
+    icon: BookCheck,
   },
   {
     key: 'exportPdf',
     title: 'Exporting to PDF',
-    description: 'How to get the best use out of the export to PDF feature found in the utilities drawer',
-    icon: FileText
+    description: 'How to get the best use out of the export to PDF feature in the utilities drawer.',
+    icon: FileText,
   },
   {
     key: 'sharingPlots',
     title: 'Sharing Plots',
-    description: 'How the share feature found in the utilites drawer works',
-    icon: Waypoints
-  }
+    description: 'How the share feature in the utilities drawer works.',
+    icon: Waypoints,
+  },
 ];
 
 /**
- * Documentation Page Orchestrator page containing cards of docs modals
- * 
+ * Documentation page — grid of doc cards, each opening its respective modal.
  */
 export const Documentation = () => {
   const [open, setOpen] = useState<string | null>(null);
+  const close = () => setOpen(null);
 
   return (
     <div className="page-container">
       <div className="content-wrapper-narrow">
-
-        {/* Header */}
         <div className="mb-8">
           <h2 className="mb-2">Documentation</h2>
           <p className="text-secondary">
@@ -82,7 +91,6 @@ export const Documentation = () => {
           </p>
         </div>
 
-        {/* Doc cards */}
         <div className="grid grid-cols-2">
           {docs.map(({ key, title, description, icon: Icon }) => (
             <button
@@ -102,131 +110,61 @@ export const Documentation = () => {
         </div>
       </div>
 
-      {/* Modals */}
       {open === 'plotting' && (
         <>
-          <div className="modal-backdrop" onClick={() => setOpen(null)} />
+          <div className="modal-backdrop" onClick={close} />
           <div className="modal modal-wide modal-scrollable">
             <div className="modal-header">
               <div>
                 <h2>Plotting</h2>
                 <p className="text-muted">The application and plotting page</p>
               </div>
-              <button className="close-btn" onClick={() => setOpen(null)}>✕</button>
+              <button className="close-btn" onClick={close}>✕</button>
             </div>
-            <PlottingDocModal
-              onClose={() => setOpen(null)}
-            />
+            <PlottingDocModal onClose={close} />
           </div>
         </>
       )}
 
       {open === 'userPortal' && (
         <>
-          <div className="modal-backdrop" onClick={() => setOpen(null)} />
+          <div className="modal-backdrop" onClick={close} />
           <div className="modal modal-wide modal-scrollable">
             <div className="modal-header">
               <div>
                 <h2>User Portal</h2>
                 <p className="text-muted">Account management and settings</p>
               </div>
-              <button className="close-btn" onClick={() => setOpen(null)}>✕</button>
+              <button className="close-btn" onClick={close}>✕</button>
             </div>
-            <UserPortalDocModal
-              onClose={() => setOpen(null)}
-            />
-          </div>
-        </>
-      )}
-
-      {open === 'stages' && (
-        <>
-          <div className="modal-backdrop" onClick={() => setOpen(null)} />
-          <div className="modal modal-wide modal-scrollable">
-            <div className="modal-header">
-              <div>
-                <h2>Stages</h2>
-                <p className="text-muted">Stage data and management</p>
-              </div>
-              <button className="close-btn" onClick={() => setOpen(null)}>✕</button>
-            </div>
-            <div className="modal-body">
-              <p className="text-secondary">Stages documentation coming soon.</p>
-            </div>
-          </div>
-        </>
-      )}
-
-      {open === 'stagePlots' && (
-        <>
-          <div className="modal-backdrop" onClick={() => setOpen(null)} />
-          <div className="modal modal-wide modal-scrollable">
-            <div className="modal-header">
-              <div>
-                <h2>Stage Plots</h2>
-                <p className="text-muted">Stage plot data and management</p>
-              </div>
-              <button className="close-btn" onClick={() => setOpen(null)}>✕</button>
-            </div>
-            <div className="modal-body">
-              <p className="text-secondary">Stage plots documentation coming soon.</p>
-            </div>
+            <UserPortalDocModal onClose={close} />
           </div>
         </>
       )}
 
       {open === 'cameraControls' && (
         <>
-          <div className="modal-backdrop" onClick={() => setOpen(null)} />
+          <div className="modal-backdrop" onClick={close} />
           <div className="modal modal-wide modal-scrollable">
             <div className="modal-header">
               <div>
-                <h2>Camera Controls</h2>
-                <p className="text-muted">Account management and settings</p>
+                <h2>Camera & Keyboard Controls</h2>
+                <p className="text-muted">Navigating the 3D scene</p>
               </div>
-              <button className="close-btn" onClick={() => setOpen(null)}>✕</button>
+              <button className="close-btn" onClick={close}>✕</button>
             </div>
-            <ControlsDocModal
-              onClose={() => setOpen(null)}
-            />
+            <ControlsDocModal onClose={close} />
           </div>
         </>
       )}
 
-      {open === 'sandboxMode' && (
-        <>
-          <div className="modal-backdrop" onClick={() => setOpen(null)} />
-          <div className="modal modal-wide modal-scrollable">
-            <div className="modal-header">
-              <div>
-                <h2>Camera Controls</h2>
-                <p className="text-muted">Sandbox Mode</p>
-              </div>
-              <button className="close-btn" onClick={() => setOpen(null)}>✕</button>
-            </div>
-            <SandBoxDocs
-              onClose={() => setOpen(null)}
-            />
-          </div>
-        </>
-      )}
-      {open === 'attribution' && (
-        <>
-          <div className="modal-backdrop" onClick={() => setOpen(null)} />
-          <div className="modal modal-wide modal-scrollable">
-            <div className="modal-header">
-              <div>
-                <h2>Camera Controls</h2>
-                <p className="text-muted">Attribution</p>
-              </div>
-              <button className="close-btn" onClick={() => setOpen(null)}>✕</button>
-            </div>
-            <AttributionModal
-              onClose={() => setOpen(null)}
-            />
-          </div>
-        </>
-      )}
+      {open === 'attribution' && <AttributionModal onClose={close} />}
+      {open === 'sandboxMode' && <SandBoxDocs onClose={close} />}
+      {open === 'exportPdf' && <PdfExportDocs onClose={close} />}
+      {open === 'sharingPlots' && <SharePlotDocs onClose={close} />}
+      {open === 'stages' && <StagesDocs onClose={close} />}
+      {open === 'venues' && <VenuesDocs onClose={close} />}
+      {open === 'stagePlots' && <StagePlotsDocs onClose={close} />}
     </div>
   );
 };
