@@ -406,6 +406,35 @@ nav ul button:hover::after {
 }
 
 /* ==========================================
+   NOT FOUND
+   ========================================== */
+
+.not-found {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-height: 100vh;
+  justify-content: center;
+  text-align: center;
+}
+
+.not-found-code {
+  color: var(--text-tertiary);
+  font-size: 6rem;
+  font-weight: 800;
+  line-height: 1;
+  margin: 0;
+}
+
+.not-found-logo {
+  font-size: 1.25rem;
+  height: 48px;
+  margin: 0 auto;
+  width: 48px;
+}
+
+/* ==========================================
    AVATAR
    ========================================== */
 

@@ -5,13 +5,12 @@ import { UserCreate } from "./UserCreate"
 import { UserUpdate } from "./UserUpdate";
 import { Plus, Trash, Pencil } from "lucide-react";
 import { UserDelete } from "./UserDelete";
-
-
+import { ErrorMessage } from "../userUI/ErrorMessage";
 
 export const UserTable = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState<string | null>(null);
   const [userCreate, setUserCreate] = useState(false);
   const [userUpdate, setUserUpdate] = useState(false);
   const [userDelete, setUserDelete] = useState(false);
@@ -21,15 +20,15 @@ export const UserTable = () => {
     2: 'Admin',
     3: 'Super User',
   };
+
   const fetchUsers = async () => {
     try {
       setLoading(true);
       const data = await getUsers();
       setUsers(data);
-      setError('');
+      setError(null);
     } catch (err) {
       setError('Failed to fetch users');
-      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -40,16 +39,9 @@ export const UserTable = () => {
   }, [])
 
   if (error) {
-    return (
-      <div>
-        <div className= "flex-center">
-          <div className="text-center">
-            <h2 className="text-danger">Error</h2>
-          </div>
-        </div>
-      </div>
-    )
+    return <ErrorMessage error={error} />
   }
+
 
   if (loading && users.length === 0) {
     return (

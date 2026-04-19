@@ -5,7 +5,7 @@ import { useEffect, useState, lazy, Suspense } from 'react';
 import { AuthProvider } from './contexts/AuthContext';
 import { StageProvider } from './contexts/StageContext';
 import { useAuth } from './contexts/AuthContext';
-
+import { NotFound } from './pages/NotFound';
 import { LandingPage } from './pages/LandingPage';
 
 const StageRead = lazy(() => import('./components/shared/stage/StageRead').then(m => ({ default: m.StageRead })));
@@ -41,6 +41,7 @@ function AppRoutes() {
           path="/admin"
           element={(user?.roleId ?? 0) >= 2 ? <AdminPage /> : <Navigate to="/" />}
         />
+        <Route path='*' element={<NotFound />} />
       </Routes>
     </Suspense>
   );

@@ -4,6 +4,7 @@ import { Turnstile } from '@marsidev/react-turnstile'
 import { createUser } from '../../../api/users'
 import { loginUser } from "../../../api/auth";
 import { type User } from "../../../types/api";
+import { ErrorMessage } from '../../../components/userUI/ErrorMessage'
 interface SignUpProps {
   onClose: () => void;
   onSuccess: (user: User) => void;
@@ -42,7 +43,7 @@ export function SignUp({ onClose, onSuccess }: SignUpProps) {
         onSuccess(res.user);
       }
     } catch (err) {
-      console.error(err);
+      setError("Unable to sign in");
     }
   };
 
@@ -120,9 +121,7 @@ export function SignUp({ onClose, onSuccess }: SignUpProps) {
           </div>
 
           {error && (
-            <div role="alert" className="alert alert-error mb-4">
-              <span>{error}</span>
-            </div>
+            <ErrorMessage error={error} />
           )}
 
           <div className="modal-footer">

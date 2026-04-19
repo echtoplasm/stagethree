@@ -1,6 +1,8 @@
-import { useState} from 'react';
+import { useState } from 'react';
 import { createUser } from '../../api/users';
 import { UserPlus, X } from 'lucide-react';
+import { ErrorMessage } from '../userUI/ErrorMessage';
+
 interface UserCreateProps {
   onClose: () => void;
   onSuccess: () => void;
@@ -13,8 +15,6 @@ export const UserCreate = ({ onClose, onSuccess }: UserCreateProps) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-
-
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,7 +34,6 @@ export const UserCreate = ({ onClose, onSuccess }: UserCreateProps) => {
       setError(null);
     } catch (err) {
       setError('Failed to create user');
-      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -56,7 +55,7 @@ export const UserCreate = ({ onClose, onSuccess }: UserCreateProps) => {
 
         <form onSubmit={handleSubmit} className="modal-body">
           {error && (
-            <div className="alert alert-error mb-4">{error}</div>
+            <ErrorMessage error={error} />
           )}
 
           <div className="grid grid-cols-2 gap-4">

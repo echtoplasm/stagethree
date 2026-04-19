@@ -26,7 +26,6 @@ export function Navbar({ onThemeToggle, theme }: NavbarProps) {
   const { isAuthenticated, user, login, logout } = useAuth();
   const [showLogin, setShowLogin] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
-
   /** Logs out the current user, clears auth state, and redirects to the home page. */
   const handleLogOut = async () => {
     try {
@@ -34,10 +33,10 @@ export function Navbar({ onThemeToggle, theme }: NavbarProps) {
       logout();
       navigate('/');
     } catch (err) {
-      console.error('Logout failed', err);
+      return;
     }
   };
-  
+
   /**
    * Updates auth context with the authenticated user and redirects based on role.
    * Users with roleId >= 2 are redirected to the admin panel, others to the app.

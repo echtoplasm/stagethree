@@ -4,6 +4,8 @@ import { fetchAllImages, type Image } from '../../../api/images';
 import { ImageDataUpdate } from './ModelUpdate';
 import { ImageDelete } from './ModelDelete';
 import { ModelCreate } from './ModelCreate';
+import { ErrorMessage } from '../../../components/userUI/ErrorMessage';
+
 export const ImageTable = () => {
   //state management
   const [images, setImages] = useState<Image[]>([]);
@@ -12,7 +14,7 @@ export const ImageTable = () => {
   const [imageDelete, setImageDelete] = useState(false);
   const [selectedImage, setSelectedImage] = useState<Image | null>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState<string | null>(null);
 
   const fetchImages = async () => {
     try {
@@ -22,7 +24,6 @@ export const ImageTable = () => {
       setError('');
     } catch (err) {
       setError('Failed to fetch images');
-      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -47,16 +48,9 @@ export const ImageTable = () => {
   }
 
   if (error) {
-    return (
-      <div>
-        <div className="flex-center">
-          <div className="text-center">
-            <h2 className="text-danger">Error</h2>
-          </div>
-        </div>
-      </div>
-    )
+    return <ErrorMessage error={error} />
   }
+
 
   return (
 
@@ -67,6 +61,9 @@ export const ImageTable = () => {
             <h1>images Management</h1>
             <p className="text-secondary">Manage all registered images</p>
           </div>
+          {error && (
+            <ErrorMessage error={error} />
+          )}
           <button className="btn btn-primary" onClick={() => setImageCreate(true)}>
             <Plus size={18} />
             Create New image

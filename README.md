@@ -98,6 +98,9 @@ PostgreSQL with Knex migrations.
 | `input_channel_inc` | Per-plot input channel list |
 | `state_sta` | US states lookup |
 
+
+[DB Diagram](https://dbdiagram.io/d/Stage-three-finalized-69d7d5f50f7c9ef2c0bc85d0)
+
 ---
 
 ## License

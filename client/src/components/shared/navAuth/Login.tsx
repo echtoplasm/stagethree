@@ -2,7 +2,7 @@ import { useState } from "react";
 import { X, LogIn } from "lucide-react";
 import { loginUser } from "../../../api/auth";
 import { type User } from "../../../types/api";
-
+import { ErrorMessage } from "../../../components/userUI/ErrorMessage";
 interface LoginProps {
   onClose: () => void;
   onSuccess: (user: User) => void;
@@ -19,23 +19,22 @@ interface LoginProps {
 export function Login({ onClose, onSuccess }: LoginProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-/**
- * Submits email and password credentials to the auth API.
- * Calls onSuccess with the returned user on success, or sets error state on failure.
- *
- * @param e - The form submission event.
- */
+  /**
+   * Submits email and password credentials to the auth API.
+   * Calls onSuccess with the returned user on success, or sets error state on failure.
+   *
+   * @param e - The form submission event.
+   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const res = await loginUser(email, password);
-      setError(false);
+      setError(null);
       onSuccess(res.user);
     } catch (err) {
-      setError(true);
-      console.error(err);
+      setError("Unable to Log in");
     }
   };
 
@@ -55,9 +54,7 @@ export function Login({ onClose, onSuccess }: LoginProps) {
 
         <form onSubmit={handleSubmit} className="modal-body">
           {error && (
-            <div className="alert alert-error mb-4">
-              Invalid email or password
-            </div>
+            <ErrorMessage error={error} />
           )}
           <div className="form-group">
             <label className="form-label" htmlFor="email">Email</label>

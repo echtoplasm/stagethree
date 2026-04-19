@@ -1,5 +1,6 @@
-
 import { type Image, deleteImageById } from '../../../api/images';
+import { useState } from 'react';
+import { ErrorMessage } from '../../../components/userUI/ErrorMessage';
 
 interface ImageDeleteProps {
   selectedImage: Image
@@ -7,8 +8,8 @@ interface ImageDeleteProps {
   onSuccess: () => void;
 }
 
-
 export function ImageDelete({ selectedImage, onClose, onSuccess }: ImageDeleteProps) {
+  const [error, setError] = useState<string | null>(null);
 
   if (!selectedImage) return null;
   const handleSubmit = async (e: React.FormEvent) => {
@@ -17,7 +18,7 @@ export function ImageDelete({ selectedImage, onClose, onSuccess }: ImageDeletePr
       await deleteImageById(selectedImage.id);
       onSuccess();
     } catch (err) {
-      console.error('caught error:', err);
+      setError('Failed to delete image, please try again.');
     }
   }
   return (
@@ -36,6 +37,10 @@ export function ImageDelete({ selectedImage, onClose, onSuccess }: ImageDeletePr
             <p className="text-danger">Are you sure you want to delete image?</p>
           </div>
         </div>
+        {error && (
+          <ErrorMessage
+            error={error} />
+        )}
         <div className="modal-footer">
           <button className="btn btn-ghost" onClick={onClose}>No, Cancel</button>
           <button className="btn btn-danger btn-sm" onClick={handleSubmit}>Yes, Delete</button>
