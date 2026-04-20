@@ -190,6 +190,7 @@ export const createDefaultPlotAndProject = async (req: Request, res: Response): 
           ...defaultPlotDb,
           id_prj_stp: project!.id_prj,
           id_stg_stp: stage!.id_stg,
+          uuid_stp: crypto.randomUUID(),
         })
         .returning('*');
     });
