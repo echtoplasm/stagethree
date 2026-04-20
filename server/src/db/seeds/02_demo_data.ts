@@ -55,7 +55,6 @@ export async function seed(knex: Knex): Promise<void> {
     id_rol_usr: superRole.id_rol,
   });
 
-console.log(demoUser);
 
   // ============================================
   // VENUES
