@@ -1,5 +1,13 @@
 import { Knex } from 'knex';
 import bcrypt from 'bcrypt';
+import dotenv from 'dotenv';
+
+if (process.env.NODE_ENV !== 'production') {
+  dotenv.config({ path: '/home/zach/dev/TS-practice/stagethree/server/.env' });
+}
+
+console.log('DEMO PASSWORD:', JSON.stringify(process.env.DEMO_USER_PASSWORD));
+
 
 export async function seed(knex: Knex): Promise<void> {
   // ============================================
@@ -11,8 +19,8 @@ export async function seed(knex: Knex): Promise<void> {
 
   const [demoUser] = await knex('user_usr')
     .insert({
-      email_usr: 'demo@stagethree.com',
-      password_hash_usr: await bcrypt.hash('demo123', 10),
+      email_usr: 'demo@stagethree.dev',
+      password_hash_usr: await bcrypt.hash(process.env.DEMO_USER_PASSWORD ?? '', 10),
       first_name_usr: 'Demo',
       last_name_usr: 'User',
       id_rol_usr: regularRole.id_rol,
@@ -21,8 +29,8 @@ export async function seed(knex: Knex): Promise<void> {
 
   const [adminUser] = await knex('user_usr')
     .insert({
-      email_usr: 'admin@stagethree.com',
-      password_hash_usr: await bcrypt.hash('admin123', 10),
+      email_usr: 'admin@stagethree.dev',
+      password_hash_usr: await bcrypt.hash(process.env.ADMIN_USER_PASSWORD ?? '', 10),
       first_name_usr: 'Admin',
       last_name_usr: 'User',
       id_rol_usr: adminRole.id_rol,
@@ -31,8 +39,8 @@ export async function seed(knex: Knex): Promise<void> {
 
   const [regularUser] = await knex('user_usr')
     .insert({
-      email_usr: 'user@stagethree.com',
-      password_hash_usr: await bcrypt.hash('user123', 10),
+      email_usr: 'user@stagethree.dev',
+      password_hash_usr: await bcrypt.hash(process.env.REGULAR_USER_PASSWORD ?? '', 10),
       first_name_usr: 'Regular',
       last_name_usr: 'User',
       id_rol_usr: regularRole.id_rol,
@@ -40,12 +48,14 @@ export async function seed(knex: Knex): Promise<void> {
     .returning('*');
 
   await knex('user_usr').insert({
-    email_usr: 'superuser@stagethree.com',
-    password_hash_usr: await bcrypt.hash('sudo123', 10),
+    email_usr: 'superuser@stagethree.dev',
+    password_hash_usr: await bcrypt.hash(process.env.SUPER_USER_PASSWORD ?? '', 10),
     first_name_usr: 'Super',
     last_name_usr: 'User',
     id_rol_usr: superRole.id_rol,
   });
+
+console.log(demoUser);
 
   // ============================================
   // VENUES
@@ -385,5 +395,4 @@ export async function seed(knex: Knex): Promise<void> {
       mic_type_inc: 'SM58',
     },
   ]);
-
 }
