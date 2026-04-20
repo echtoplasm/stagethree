@@ -40,6 +40,10 @@ jobs:
             DB_PASSWORD=${{ secrets.DB_PASSWORD }}
             DATABASE_URL=postgresql://${{ secrets.DB_USER }}:${{ secrets.DB_PASSWORD }}@postgres:5432/stagethree
             JWT_SECRET=${{ secrets.JWT_SECRET_PROD }}
+            DEMO_USER_PASSWORD=${{ secrets.DEMO_USER_PASSWORD }}
+            ADMIN_USER_PASSWORD=${{ secrets.ADMIN_USER_PASSWORD }}
+            REGULAR_USER_PASSWORD=${{ secrets.REGULAR_USER_PASSWORD }}
+            SUPER_USER_PASSWORD=${{ secrets.SUPER_USER_PASSWORD }}
             EOF
             
             docker-compose down
