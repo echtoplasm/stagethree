@@ -1,9 +1,8 @@
 import { Knex } from 'knex';
 import bcrypt from 'bcrypt';
 
-console.log('NODE_ENV called from demo data:', process.env.NODE_ENV);
-console.log('DEMO PASSWORD:', JSON.stringify(process.env.DEMO_USER_PASSWORD));
-console.log('FULL ENV KEYS', Object.keys(process.env).join(', '))
+console.log('RAW:', process.env['DEMO_USER_PASSWORD']);
+console.log('LENGTH:', process.env['DEMO_USER_PASSWORD']?.length);
 
 
 export async function seed(knex: Knex): Promise<void> {
