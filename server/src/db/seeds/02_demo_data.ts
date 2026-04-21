@@ -4,13 +4,10 @@ import dotenv from 'dotenv';
 import path from 'path';
 
 if (process.env.NODE_ENV === 'production') {
-  dotenv.config({ path: '/app/.env' });
+  dotenv.config({ path: '/app/.env', override: true });
 } else {
   dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
 }
-
-const result = dotenv.config({ path: '/app/.env' });
-console.log('DOTENV RESULT:', result.parsed);
 
 console.log('RAW:', process.env['DEMO_USER_PASSWORD']);
 console.log('LENGTH:', process.env['DEMO_USER_PASSWORD']?.length);
