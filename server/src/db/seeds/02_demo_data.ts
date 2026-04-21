@@ -8,7 +8,6 @@ if (process.env.NODE_ENV !== 'production') {
 
 console.log('DEMO PASSWORD:', JSON.stringify(process.env.DEMO_USER_PASSWORD));
 
-
 export async function seed(knex: Knex): Promise<void> {
   // ============================================
   // USERS
@@ -54,7 +53,6 @@ export async function seed(knex: Knex): Promise<void> {
     last_name_usr: 'User',
     id_rol_usr: superRole.id_rol,
   });
-
 
   // ============================================
   // VENUES
