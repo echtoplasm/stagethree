@@ -9,8 +9,6 @@ if (process.env.NODE_ENV === 'production') {
   dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
 }
 
-console.log('RAW:', process.env['DEMO_USER_PASSWORD']);
-console.log('LENGTH:', process.env['DEMO_USER_PASSWORD']?.length);
 
 export async function seed(knex: Knex): Promise<void> {
   // ============================================
