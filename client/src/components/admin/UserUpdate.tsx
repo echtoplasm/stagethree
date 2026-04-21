@@ -6,7 +6,7 @@ import { useAuth } from '../../contexts/AuthContext';
 interface UserUpdateProps {
   userUpdate: User | null;
   onClose: () => void;
-  onSuccess: () => void;
+  onSuccess: (updateUser: User) => void;
 }
 
 
@@ -26,7 +26,7 @@ export function UserUpdate({ userUpdate, onClose, onSuccess }: UserUpdateProps) 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     await updateUser(userForm.id, userForm);
-    onSuccess();
+    onSuccess(userForm);
 
   }
 

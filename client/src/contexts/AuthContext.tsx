@@ -7,6 +7,7 @@ interface AuthContextType {
   loading: boolean;
   login: (user: User) => void;
   logout: () => void;
+  updateUser: (user: User) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -35,6 +36,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   /** Sets the authenticated user in state. */
   const login = (user: User) => setUser(user);
 
+  const updateUser = (user: User) => setUser(user);
+
   /** Clears user state, calls the logout API, and redirects to the home page. */
   const logout = async () => {
     try {
@@ -51,7 +54,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       isAuthenticated: !!user,
       loading,
       login,
-      logout
+      logout,
+      updateUser
     }}>
       {children}
     </AuthContext.Provider>

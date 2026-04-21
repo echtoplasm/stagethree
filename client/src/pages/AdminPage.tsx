@@ -15,7 +15,6 @@ export const AdminPage = () => {
       </section>
       <section className="mt-2">
         <StageTable />
-
       </section>
       <section>
         <ImageTable />

@@ -2147,6 +2147,17 @@ nav ul button:hover::after {
 }
 
 /* ==========================================
+   USER PORTAL
+   ========================================== */
+
+.portal-account-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-top: 0.5rem;
+}
+
+/* ==========================================
    SCROLLBAR
    ========================================== */
 
