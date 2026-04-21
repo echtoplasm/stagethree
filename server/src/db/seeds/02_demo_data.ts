@@ -1,9 +1,16 @@
 import { Knex } from 'knex';
 import bcrypt from 'bcrypt';
+import dotenv from 'dotenv';
+import path from 'path';
+
+if (process.env.NODE_ENV === 'production') {
+  dotenv.config({ path: '/app/.env' });
+} else {
+  dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
+}
 
 console.log('RAW:', process.env['DEMO_USER_PASSWORD']);
 console.log('LENGTH:', process.env['DEMO_USER_PASSWORD']?.length);
-
 
 export async function seed(knex: Knex): Promise<void> {
   // ============================================
