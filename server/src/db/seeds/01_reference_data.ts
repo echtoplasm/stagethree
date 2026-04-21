@@ -1,8 +1,4 @@
 import { Knex } from 'knex';
-import dotenv from 'dotenv';
-import path from 'path';
-
-dotenv.config({ path: path.resolve(process.cwd(), '.env') });
 
 const r2 = 'https://pub-69909cf75f764e599dc141922a0696eb.r2.dev';
 

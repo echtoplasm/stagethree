@@ -1,13 +1,10 @@
 import { Knex } from 'knex';
 import bcrypt from 'bcrypt';
-import dotenv from 'dotenv';
-
-if (process.env.NODE_ENV !== 'production') {
-  dotenv.config({ path: '/home/zach/dev/TS-practice/stagethree/server/.env' });
-}
 
 console.log('NODE_ENV called from demo data:', process.env.NODE_ENV);
 console.log('DEMO PASSWORD:', JSON.stringify(process.env.DEMO_USER_PASSWORD));
+console.log('FULL ENV KEYS', Object.keys(process.env).join(', '))
+
 
 export async function seed(knex: Knex): Promise<void> {
   // ============================================
