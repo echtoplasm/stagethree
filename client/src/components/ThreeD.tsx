@@ -102,6 +102,8 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
   const { isAuthenticated } = useAuth();
   const isSandbox = !isAuthenticated;
 
+
+
   /**
    * Loads a GLTF model from the given path, normalizing its scale to a unit cube.
    * Returns a cached clone on subsequent calls to avoid redundant network requests.
@@ -311,10 +313,38 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
     directionalLight.position.set(5, 10, 5);
     scene.add(directionalLight);
 
-    // Stage floor (grid)
-    const gridHelper = new THREE.GridHelper(stage?.width ?? 20, stage?.depth ?? 20, 0x444444, 0x222222);
-    scene.add(gridHelper);
+    const createRectGrid = (width: number, depth: number) => {
+      const group = new THREE.Group();
+      const material = new THREE.LineBasicMaterial({ color: 0x444444 });
 
+      for (let i = 0; i <= width; i++) {
+        const x = -width / 2 + i;
+        const geo = new THREE.BufferGeometry().setFromPoints([
+          new THREE.Vector3(x, 0, -depth / 2),
+          new THREE.Vector3(x, 0, depth / 2),
+        ]);
+        group.add(new THREE.Line(geo, material));
+      }
+
+      for (let i = 0; i <= depth; i++) {
+        const z = -depth / 2 + i;
+        const geo = new THREE.BufferGeometry().setFromPoints([
+          new THREE.Vector3(-width / 2, 0, z),
+          new THREE.Vector3(width / 2, 0, z),
+        ]);
+        group.add(new THREE.Line(geo, material));
+      }
+
+      return group;
+    };
+    const grid = createRectGrid(stage?.width ?? 20, stage?.depth ?? 20);
+    scene.add(grid);
+
+    /*
+        // Stage floor (grid)
+        const gridHelper = new THREE.GridHelper(stage?.width ?? 20, stage?.depth ?? 20, 0x444444, 0x222222);
+        scene.add(gridHelper);
+    */
     // Stage plane (invisible for raycasting)
     const planeGeometry = new THREE.PlaneGeometry(stage?.width ?? 20, stage?.depth ?? 20);
     const planeMaterial = new THREE.MeshBasicMaterial({
@@ -460,6 +490,9 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
       if (mountRef.current && renderer.domElement) {
         mountRef.current.removeChild(renderer.domElement);
       }
+
+
+    
     };
   }, [stage]);
 
@@ -476,6 +509,7 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
         addInstrument(placement);
       }
     });
+  console.log(typeof stage?.width, typeof stage?.depth) 
   }, [elementPlacements]);
 
   /** Updates the Three.js scene background color whenever the user selects a new color. */

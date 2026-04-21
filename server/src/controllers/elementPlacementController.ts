@@ -72,7 +72,8 @@ export const createElp = async (req: Request, res: Response): Promise<void> => {
       });
       return;
     }
-    
+   
+/*
     //crazy hacky way for getting proper scale without refactoring everything
     if(dbData.id_elt_elp == 2){
       dbData.scale_x_elp = '0.175',
@@ -83,7 +84,7 @@ export const createElp = async (req: Request, res: Response): Promise<void> => {
     if(dbData.id_elt_elp == 1) {
       dbData.position_y_elp = '0.5'
     }
-
+*/
     const [newPlacement] = await db('element_placement_elp').insert(dbData).returning('*');
 
     res.status(201).json({

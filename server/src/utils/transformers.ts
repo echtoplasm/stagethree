@@ -241,9 +241,9 @@ export const dbStageToApi = (dbStage: StageDB): StageAPI => ({
   id: dbStage.id_stg,
   venueId: dbStage.id_ven_stg || undefined,
   name: dbStage.name_stg,
-  width: dbStage.width_stg,
-  depth: dbStage.depth_stg,
-  height: dbStage.height_stg || undefined,
+  width: Number(dbStage.width_stg),
+  depth: Number(dbStage.depth_stg),
+  height: Number(dbStage.height_stg) || undefined,
   isPublic: dbStage.is_public_stg,
   deletedAt: dbStage.deleted_at_stg || null,
   createdBy: dbStage.created_by_stg,
@@ -446,9 +446,9 @@ export interface ElementTypeDB {
   id_img_elt: number | null;
   file_path_img: string;
   default_color_elt: string | null;
-  default_scale_x_elt: number;
-  default_scale_y_elt: number;
-  default_scale_z_elt: number;
+  default_scale_x_elt: string;
+  default_scale_y_elt: string;
+  default_scale_z_elt: string;
   id_emc_elt: number;
 }
 
@@ -478,9 +478,9 @@ export const dbElementTypeToApi = (dbElementType: ElementTypeDB): ElementTypeAPI
   imageId: dbElementType.id_img_elt || undefined,
   filePathImg: dbElementType.file_path_img || undefined,
   defaultColor: dbElementType.default_color_elt || undefined,
-  defaultScaleX: dbElementType.default_scale_x_elt,
-  defaultScaleY: dbElementType.default_scale_y_elt,
-  defaultScaleZ: dbElementType.default_scale_z_elt,
+  defaultScaleX: Number(dbElementType.default_scale_x_elt),
+  defaultScaleY: Number(dbElementType.default_scale_y_elt),
+  defaultScaleZ: Number(dbElementType.default_scale_z_elt),
   elementCategoryId: dbElementType.id_emc_elt,
 });
 
@@ -498,9 +498,9 @@ export const apiElementTypeToDb = (
   ...(apiElementType.imageId && { id_img_elt: apiElementType.imageId }),
   ...(apiElementType.filePathImg && { file_path_img: apiElementType.filePathImg }),
   ...(apiElementType.defaultColor && { default_color_elt: apiElementType.defaultColor }),
-  ...(apiElementType.defaultScaleX && { default_scale_x_elt: apiElementType.defaultScaleX }),
-  ...(apiElementType.defaultScaleY && { default_scale_y_elt: apiElementType.defaultScaleY }),
-  ...(apiElementType.defaultScaleZ && { default_scale_z_elt: apiElementType.defaultScaleZ }),
+  ...(apiElementType.defaultScaleX && { default_scale_x_elt: apiElementType.defaultScaleX.toString() }),
+  ...(apiElementType.defaultScaleY && { default_scale_y_elt: apiElementType.defaultScaleY.toString() }),
+  ...(apiElementType.defaultScaleZ && { default_scale_z_elt: apiElementType.defaultScaleZ.toString() }),
   ...(apiElementType.elementCategoryId && { id_emc_elt: apiElementType.elementCategoryId }),
 });
 
