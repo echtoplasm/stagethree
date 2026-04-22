@@ -144,6 +144,11 @@ export async function seed(knex: Knex): Promise<void> {
         file_path_img: `${r2}/1776869505328-custom-made_bass_guitar.glb`,
         file_type_img: 'model/gltf-binary',
       },
+      {
+        name_img: 'Acoustic Guitar',
+        file_path_img: `${r2}/1776874382022-acoustic_guitar.glb`,
+        file_type_img: 'model/gltf-binary',
+      },
     ])
     .returning('id_img');
 
@@ -158,6 +163,7 @@ export async function seed(knex: Knex): Promise<void> {
     lightingRigId,
     wedgeMonitorId,
     bassGuitarId,
+    acousticGuitarId,
   ] = imageRows.map((row: { id_img: number }) => row.id_img);
 
   // ============================================
@@ -199,9 +205,9 @@ export async function seed(knex: Knex): Promise<void> {
       default_color_elt: '#000000',
       id_img_elt: grandPianoId,
       id_emc_elt: keysId,
-      default_scale_x_elt: 3.5,
-      default_scale_y_elt: 3.5,
-      default_scale_z_elt: 3.5,
+      default_scale_x_elt: 1.5,
+      default_scale_y_elt: 1.5,
+      default_scale_z_elt: 1.5,
     },
     {
       name_elt: 'Mic Stand',
@@ -239,9 +245,9 @@ export async function seed(knex: Knex): Promise<void> {
       default_color_elt: '#000000',
       id_img_elt: musicStandId,
       id_emc_elt: otherId,
-      default_scale_x_elt: 0.03,
-      default_scale_y_elt: 0.03,
-      default_scale_z_elt: 0.03,
+      default_scale_x_elt: 1,
+      default_scale_y_elt: 1,
+      default_scale_z_elt: 1,
     },
     {
       name_elt: 'Electric Guitar',
@@ -269,9 +275,9 @@ export async function seed(knex: Knex): Promise<void> {
       default_color_elt: '#000000',
       id_img_elt: wedgeMonitorId,
       id_emc_elt: monitorsId,
-      default_scale_x_elt: 0.025,
-      default_scale_y_elt: 0.025,
-      default_scale_z_elt: 0.025,
+      default_scale_x_elt: 1, 
+      default_scale_y_elt: 1,
+      default_scale_z_elt: 1,
     },
     {
       name_elt: 'Bass Guitar',
@@ -283,6 +289,16 @@ export async function seed(knex: Knex): Promise<void> {
       default_scale_y_elt: 1,
       default_scale_z_elt: 1,
     },
+    {
+      name_elt: 'Acoustic Guitar',
+      description_elt: 'An Acoustic Guitar',
+      default_color_elt: '#000000',
+      id_img_elt: acousticGuitarId,
+      id_emc_elt: stringsId,
+      default_scale_x_elt: 2,
+      default_scale_y_elt: 2,
+      default_scale_z_elt: 2,
+    }
   ]);
 
   // ============================================
