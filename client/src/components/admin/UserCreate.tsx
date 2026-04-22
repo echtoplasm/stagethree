@@ -90,7 +90,7 @@ export const UserCreate = ({ onClose, onSuccess }: UserCreateProps) => {
             <button type="submit" className="btn btn-primary" disabled={loading}>
               {loading ? (
                 <>
-                  <div className="spinner" style={{ width: '16px', height: '16px' }} />
+                  <div className="spinner spinner-sm" />
                   Creating...
                 </>
               ) : (

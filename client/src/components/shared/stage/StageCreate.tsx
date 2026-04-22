@@ -95,7 +95,7 @@ export function StageCreate({ venueId,  onClose, onSuccess }: StageCreateProps) 
           <div className="form-group">
             <label className="form-label">Visibility</label>
             <div className="flex gap-4">
-              <label className="flex gap-2 font-medium" style={{ cursor: 'pointer' }}>
+              <label className="flex gap-2 font-medium label-clickable">
                 <input
                   type="radio"
                   name="isPublic"
@@ -105,7 +105,7 @@ export function StageCreate({ venueId,  onClose, onSuccess }: StageCreateProps) 
                 />
                 Public
               </label>
-              <label className="flex gap-2 font-medium" style={{ cursor: 'pointer' }}>
+              <label className="flex gap-2 font-medium label-clickable">
                 <input
                   type="radio"
                   name="isPublic"

@@ -52,14 +52,14 @@ export const StagePlotsDocs = ({ onClose }: StagePlotsDocsProps) => {
 
           <section>
             <h3 className="mb-4">How it Fits Together</h3>
-            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <ul className="docs-list">
               {[
                 { label: 'Project', description: 'The top level container. A project groups one or more stage plots together — for example a tour, a festival, or a recurring event.' },
                 { label: 'Stage', description: 'The physical platform your plot is built on. Defines the width, depth, and height of your 3D scene.' },
                 { label: 'Stage Plot', description: 'Lives inside a project and references a stage. Contains all of your element placements and input channel assignments.' },
               ].map((item) => (
-                <li key={item.label} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }} className="text-secondary">
-                  <LayoutTemplate size={14} style={{ marginTop: '3px', flexShrink: 0 }} />
+                <li key={item.label} className="text-secondary docs-list-item">
+                  <LayoutTemplate size={14} className="docs-list-icon" />
                   <span>{item.label}: {item.description}</span>
                 </li>
               ))}

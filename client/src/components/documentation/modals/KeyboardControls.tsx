@@ -1,4 +1,4 @@
-
+import { Divider } from "../utilityComponents/Divider";
 import { createPortal } from "react-dom"
 import { Keyboard, X } from "lucide-react"
 
@@ -6,30 +6,13 @@ interface ControlsDocModalProps {
   onClose: () => void;
 }
 
-/** 
- * Component for visual styling and line breaks
- */
-const Divider = () => (
-  <hr style={{ border: 'none', borderTop: '1px solid var(--border)', margin: '1.5rem 0' }} />
-)
-
 /**
  * Component for rendering logos that look like keyboard keys 
  * 
  * @param  - label the key letter to be rendered 
  */
 const KeyBadge = ({ label }: { label: string }) => (
-  <kbd style={{
-    display: 'inline-block',
-    padding: '2px 8px',
-    fontSize: '0.8125rem',
-    fontFamily: 'monospace',
-    border: '1px solid var(--border-strong)',
-    borderRadius: '4px',
-    background: 'var(--bg-elevated)',
-    color: 'var(--text-primary)',
-    marginRight: '4px',
-  }}>{label}</kbd>
+  <kbd className="key-badge">{label}</kbd>
 )
 
 /**
@@ -63,7 +46,7 @@ export const ControlsDocModal = ({ onClose }: ControlsDocModalProps) => {
               The 3D canvas supports both mouse and keyboard camera controls. Use the mouse to orbit
               and zoom, or use keyboard shortcuts for precise navigation.
             </p>
-            <div style={{ display: 'grid', gap: '0.75rem' }}>
+            <div className="controls-grid">
               <div className="flex-between">
                 <span className="text-secondary">Move forward / backward</span>
                 <div><KeyBadge label="W" /> <KeyBadge label="S" /></div>
@@ -96,7 +79,7 @@ export const ControlsDocModal = ({ onClose }: ControlsDocModalProps) => {
               Click any element in the scene to select it. Once selected, you can reposition it by
               dragging or use keyboard shortcuts for fine-grain rotation control. Ensure that you are holding the left click button on the element while click the rotate buttons in order to actually rotate the element.
             </p>
-            <div style={{ display: 'grid', gap: '0.75rem' }}>
+            <div className="controls-grid">
               <div className="flex-between">
                 <span className="text-secondary">Select element</span>
                 <span className="text-secondary">Left click</span>
@@ -121,7 +104,7 @@ export const ControlsDocModal = ({ onClose }: ControlsDocModalProps) => {
               Right-clicking any element in the scene opens the context menu, which provides access to
               fine-grain controls for that element.
             </p>
-            <div style={{ display: 'grid', gap: '0.75rem' }}>
+            <div className="controls-grid">
               <div className="flex-between">
                 <span className="text-secondary">Open context menu</span>
                 <span className="text-secondary">Right click element</span>

@@ -1,16 +1,11 @@
 import { createPortal } from 'react-dom';
 import { X, Info, Link, Users } from 'lucide-react';
+import { Divider } from '../utilityComponents/Divider';
 
 export interface SharePlotDocsProps {
   onClose: () => void;
 }
 
-/**
- * Divider component for rendering a line break within the modal
- */
-const Divider = () => (
-  <hr style={{ border: 'none', borderTop: '1px solid var(--border)', margin: '1.5rem 0' }} />
-);
 
 /**
  * Renders a documentation modal component about plot sharing
@@ -52,13 +47,13 @@ export const SharePlotDocs = ({ onClose }: SharePlotDocsProps) => {
 
           <section>
             <h3 className="mb-4">What the Recipient Gets</h3>
-            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <ul className="docs-list">
               {[
                 { icon: <Link size={14} />, text: 'A direct link to a live 3D view of your stage plot' },
                 { icon: <Users size={14} />, text: 'The ability to move and explore elements in the scene' },
                 { icon: <Info size={14} />, text: 'No account required to view or interact with the shared plot' },
               ].map((item, i) => (
-                <li key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }} className="text-secondary">
+                <li key={i} className="text-secondary docs-list-item">
                   {item.icon}
                   {item.text}
                 </li>

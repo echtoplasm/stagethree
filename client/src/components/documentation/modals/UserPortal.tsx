@@ -1,17 +1,11 @@
 import { createPortal } from "react-dom";
 import { X, TriangleAlert, Info } from "lucide-react";
+import {Divider} from '../utilityComponents/Divider'
 
 export interface UserPortalDocProps {
   onClose: () => void;
 }
 
-/** 
- * A divider component for visual line breaks
- *
- */
-const Divider = () => (
-  <hr style={{ border: 'none', borderTop: '1px solid var(--border)', margin: '1.5rem 0' }} />
-)
 
 /**
  * A documentation component for rendering information about the user portal

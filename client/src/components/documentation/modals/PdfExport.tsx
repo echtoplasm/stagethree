@@ -1,16 +1,10 @@
 import { createPortal } from 'react-dom';
 import { X, Info, FileDown, Camera } from 'lucide-react';
-
+import { Divider } from '../utilityComponents/Divider';
 export interface PdfExportDocsProps {
   onClose: () => void;
 }
 
-/**
- * Divider component for rendering a line break within the modal
- */
-const Divider = () => (
-  <hr style={{ border: 'none', borderTop: '1px solid var(--border)', margin: '1.5rem 0' }} />
-);
 
 /**
  * Renders a documentation modal component about PDF export
@@ -51,13 +45,13 @@ export const PdfExportDocs = ({ onClose }: PdfExportDocsProps) => {
 
           <section>
             <h3 className="mb-4">What's Included</h3>
-            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <ul className="docs-list">
               {[
                 { icon: <Camera size={14} />, text: 'A screenshot of your 3D scene at the time of export' },
                 { icon: <FileDown size={14} />, text: 'A table containing your stage dimensions and configuration' },
                 { icon: <FileDown size={14} />, text: 'A table containing your full input channel list' },
               ].map((item, i) => (
-                <li key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }} className="text-secondary">
+                <li key={i} className="docs-list-item">
                   {item.icon}
                   {item.text}
                 </li>

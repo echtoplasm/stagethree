@@ -40,8 +40,10 @@ export const ImageTable = () => {
     return (
       <div className="flex-center">
         <div className="text-center">
-          <div className="spinner" style={{ width: '48px', height: '48px', margin: '0 auto 1rem' }} />
-          <p className="text-secondary">Loading images</p>
+          <div className="spinner-container">
+            <div className="spinner" />
+            <p className="text-secondary">Loading images</p>
+          </div>
         </div>
       </div>
     );
@@ -70,7 +72,7 @@ export const ImageTable = () => {
           </button>
         </header>
 
-        <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+        <div className="card admin-table-card">
           <table className="table">
             <thead>
               <tr>

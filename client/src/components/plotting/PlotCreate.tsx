@@ -173,7 +173,7 @@ export const PlotCreate = ({ onClose, onSuccess, projectId }: PlotCreateProps) =
           )}
 
           <div className="modal-footer">
-            <p className="text-secondary" style={{ fontSize: '0.8rem', marginTop: '0.5rem' }}>
+            <p className="text-muted mt-2">
               Not seeing your venue or stage?{' '}
               <button type="button" className="btn-link" onClick={() => { onClose(); navigate('/portal'); }}>
                 Manage venues & stages

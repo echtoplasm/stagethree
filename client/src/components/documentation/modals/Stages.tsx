@@ -71,14 +71,14 @@ export const StagesDocs = ({ onClose }: StagesDocsProps) => {
 
           <section>
             <h3 className="mb-4">Stage Dimensions</h3>
-            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <ul className="docs-list">
               {[
                 { label: 'Width', description: 'The left-to-right measurement of the stage in feet.' },
                 { label: 'Depth', description: 'The front-to-back measurement of the stage in feet.' },
                 { label: 'Height', description: 'The height of the stage platform from the floor in feet.' },
               ].map((item) => (
-                <li key={item.label} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }} className="text-secondary">
-                  <Theater size={14} style={{ marginTop: '3px', flexShrink: 0 }} />
+                <li key={item.label} className="text-secondary doc-list-item">
+                  <Theater size={14} className="doc-list-icon"/>
                   <span><strong>{item.label}:</strong> {item.description}</span>
                 </li>
               ))}

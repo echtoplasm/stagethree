@@ -44,7 +44,7 @@ export function StageTable() {
 
     loadStages();
   }, [user]);
-  
+
   /** Refreshes the stage list after any CRUD operation. */
   const resetStageState = async () => {
     const data = await getStagesByUserId(user.id);
@@ -55,8 +55,10 @@ export function StageTable() {
     return (
       <div className="page-container flex-center">
         <div className="text-center">
-          <div className="spinner" style={{ width: '48px', height: '48px', margin: '0 auto 1rem' }} />
-          <p className="text-secondary">Loading stages...</p>
+          <div className='spinner-container'>
+            <div className="spinner" />
+            <p className="text-secondary">Loading stages...</p>
+          </div>
         </div>
       </div>
     );

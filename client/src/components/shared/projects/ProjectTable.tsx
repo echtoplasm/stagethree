@@ -143,8 +143,10 @@ export function ProjectTable() {
     return (
       <div className="page-container flex-center">
         <div className="text-center">
-          <div className="spinner" style={{ width: '48px', height: '48px', margin: '0 auto 1rem' }} />
-          <p className="text-secondary">Loading projects</p>
+          <div className="spinner-container">
+            <div className="spinner" />
+            <p className="text-secondary">Loading projects</p>
+          </div>
         </div>
       </div>
     );
@@ -190,10 +192,10 @@ export function ProjectTable() {
                   }
                 }}>
                   <span className='icon'><Box size={18} /></span>
-                  <div style={{ flex: 1 }}>
+                  <div className="flex-1">
                     <span className='name'>{project.name}</span>
                     {project.description && (
-                      <span className='text-muted' style={{ marginLeft: '0.5rem' }}>— {project.description}</span>
+                      <span className='text-muted ml-2'>— {project.description}</span>
                     )}
                   </div>
                   <button aria-label="Delete project." className='btn btn-danger btn-sm' onClick={(e) => { e.stopPropagation(); setSelectedProject(project); setProjectDelete(true); }}>
@@ -205,16 +207,16 @@ export function ProjectTable() {
                 </div>
 
                 {selectedProject?.id === project.id && plots && (
-                  <div style={{ marginLeft: '2.75rem', borderLeft: '1px solid var(--border-accent)', paddingBottom: '0.5rem' }}>
+                  <div className="stage-plots-dropdown">
                     {plotsLoading ? (
                       <div className='plot-row'>
-                        <div className='spinner' style={{ width: '16px', height: '16px' }} />
+                        <div className='spinner spinner-sm' />
                         <span className='text-muted'>Loading plots...</span>
                       </div>
                     ) : (
                       plots.map(plot => (
                         <div key={plot.id} className='plot-row'>
-                          <span style={{ flex: 1 }}>{plot.name}</span>
+                          <span className="flex-1">{plot.name}</span>
                           {plot.gigDate && (
                             <span className='mr-6'>
                               <span className='text-tertiary font-small'>Gig Date: </span>
@@ -247,7 +249,7 @@ export function ProjectTable() {
                         </div>
                       ))
                     )}
-                    <button aria-label="Create new plot." className='btn btn-ghost btn-sm' style={{ margin: '0.25rem 0.5rem' }} onClick={() => setPlotCreate(true)}>
+                    <button aria-label="Create new plot." className="btn btn-ghost btn-sm create-plot-btn" onClick={() => setPlotCreate(true)}>
                       <Plus size={14} /> Add Plot
                     </button>
                   </div>

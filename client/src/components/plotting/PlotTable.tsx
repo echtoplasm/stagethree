@@ -62,8 +62,10 @@ export function PlotTable({ selectedProject, onClose }: PlotTableProps) {
     return (
       <div className="page-container flex-center">
         <div className="text-center">
-          <div className="spinner" style={{ width: '48px', height: '48px', margin: '0 auto 1rem' }} />
-          <p className="text-secondary">Loading plots</p>
+          <div className="spinner-container">
+            <div className="spinner" />
+            <p className="text-secondary">Loading plots</p>
+          </div>
         </div>
       </div>
     );

@@ -95,9 +95,8 @@ export const Documentation = () => {
           {docs.map(({ key, title, description, icon: Icon }) => (
             <button
               key={key}
-              className="card"
+              className="card docs-card"
               onClick={() => setOpen(key)}
-              style={{ cursor: 'pointer', textAlign: 'left' }}
             >
               <div className="card-header flex-between">
                 <Icon size={20} color="var(--accent-light)" />

@@ -86,8 +86,10 @@ export function VenueTable() {
     return (
       <div className="page-container flex-center">
         <div className="text-center">
-          <div className="spinner" style={{ width: '48px', height: '48px', margin: '0 auto 1rem' }} />
-          <p className="text-secondary">Loading Venues...</p>
+          <div className="spinner-container">
+            <div className="spinner" />
+            <p className="text-secondary">Loading Venues...</p>
+          </div>
         </div>
       </div>
     );
@@ -135,12 +137,12 @@ export function VenueTable() {
 
                 }}>
                   <span className='icon'><Box size={18} /></span>
-                  <div style={{ flex: 1 }}>
+                  <div className="flex-1">
                     <span className='name'>{venue.name}</span>
-                    {venue.city && <span className='text-muted' style={{ marginLeft: '0.5rem' }}>{venue.city}</span>}
-                    {venue.address && <span className='text-muted' style={{ marginLeft: '0.5rem' }}>— {venue.address}</span>}
+                    {venue.city && <span className="ml-2">{venue.city}</span>}
+                    {venue.address && <span className='text-muted ml-2'>— {venue.address}</span>}
                   </div>
-                  {venue.capacity && <span className='text-secondary' style={{ fontSize: '0.8rem' }}>cap. {venue.capacity.toLocaleString()}</span>}
+                  {venue.capacity && <span className='text-secondary venue-capacity'>cap. {venue.capacity.toLocaleString()}</span>}
                   <button aria-label="Delete venue." className='btn btn-danger btn-sm' onClick={(e) => { e.stopPropagation(); setSelectedVenue(venue); setVenueDelete(true); }}>
                     <Trash size={16} />
                   </button>
@@ -150,10 +152,10 @@ export function VenueTable() {
                 </div>
 
                 {showStages && selectedVenue?.id === venue.id && (
-                  <div style={{ marginLeft: '2.75rem', borderLeft: '1px solid var(--border-accent)', paddingBottom: '0.5rem' }}>
+                  <div className="stage-plots-dropdown">
                     {stages.map(stage => (
                       <div key={stage.id} className='plot-row'>
-                        <span style={{ flex: 1 }}>{stage.name}</span>
+                        <span className="flex-1">{stage.name}</span>
                         <span className='text-muted'>{stage.width}ft × {stage.depth}ft × {stage.height}ft</span>
                         <button aria-label="Delete stage." className='btn btn-danger btn-sm plot-delete' onClick={() => { setSelectedStage(stage); setStageDelete(true); }}>
                           <Trash size={14} />
@@ -163,8 +165,12 @@ export function VenueTable() {
                         </button>
                       </div>
                     ))}
-                    <button aria-label="Create new stage." className='btn btn-ghost btn-sm' style={{ margin: '0.25rem 0.5rem' }} onClick={() => setStageCreate(true)}>
-                      <Plus size={14} /> Add Stage
+                    <button
+                      aria-label="Create new stage."
+                      className='btn btn-ghost btn-sm create-plot-btn'
+                      onClick={() => setStageCreate(true)}>
+                      <Plus size={14} />
+                      Add Stage
                     </button>
                   </div>
                 )}

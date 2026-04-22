@@ -26,10 +26,24 @@ const ShareView = lazy(() => import('./components/sharedPlot/SharedScene').then(
 function AppRoutes() {
   const { user, loading } = useAuth();
   if (loading) {
-    return <div>loading...</div>;
+
+    return (
+      <>
+        <div className="spinner-container">
+          <div className="spinner" />
+          <p className="text-secondary">Loading...</p>
+        </div>
+      </>
+    );
+
   }
   return (
-    <Suspense fallback={<div>loading...</div>}>
+    <Suspense fallback={
+      <div className="spinner-container">
+        <div className="spinner" />
+        <p className="text-secondary">Loading...</p>
+      </div>
+    }>
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/stages" element={<StageRead />} />

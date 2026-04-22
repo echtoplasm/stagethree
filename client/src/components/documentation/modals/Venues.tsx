@@ -61,15 +61,15 @@ export const VenuesDocs = ({ onClose }: VenuesDocsProps) => {
               navigation bar. Inside the portal you'll find a Venues section that lists all venues
               associated with your account. From here you can:
             </p>
-            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <ul className="docs-list">
               {[
                 { label: 'Create a venue', description: 'Add a new venue with a name, address, city, state, and capacity.' },
                 { label: 'Edit a venue', description: 'Update any venue details at any time.' },
                 { label: 'Delete a venue', description: 'Remove a venue from your account. Any stages associated with that venue will remain but will no longer have venue context.' },
                 { label: 'Expand a venue', description: 'Click a venue row to expand it and view all stages attached to that venue, and manage them directly.' },
               ].map((item) => (
-                <li key={item.label} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }} className="text-secondary">
-                  <MapPin size={14} style={{ marginTop: '3px', flexShrink: 0 }} />
+                <li key={item.label} className="docs-list-item text-secondary">
+                  <MapPin size={14} className="docs-list-icon" />
                   <span><strong>{item.label}:</strong> {item.description}</span>
                 </li>
               ))}
