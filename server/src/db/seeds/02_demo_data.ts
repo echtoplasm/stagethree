@@ -9,7 +9,6 @@ if (process.env.NODE_ENV === 'production') {
   dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
 }
 
-
 export async function seed(knex: Knex): Promise<void> {
   // ============================================
   // USERS
