@@ -7,6 +7,7 @@ import { StageDelete } from './StageDelete';
 import { StageCreate } from './StageCreate';
 import { useAuth } from '../../../contexts/AuthContext';
 import { Spinner } from '../../../components/userUI/Spinner';
+import { ErrorMessage } from 'src/components/userUI/ErrorMessage';
 
 /**
  * Displays a table of all stages belonging to the authenticated user.
@@ -51,22 +52,11 @@ export function StageTable() {
     setStages(data);
   }
 
-  if (loading) {
-    return (
-      <Spinner />
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="page-container flex-center">
-        <div className="alert alert-error">
-          {error}
-        </div>
-      </div>
-    );
-  }
-
+  //early returns for loading and error state
+  if (loading) return <Spinner />
+  if (error) return <ErrorMessage error={error} />
+  
+  //proper component return
   return (
     <div>
       <div className="content-wrapper">
