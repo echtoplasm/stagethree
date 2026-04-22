@@ -140,11 +140,6 @@ export async function seed(knex: Knex): Promise<void> {
         file_type_img: 'model/gltf-binary',
       },
       {
-        name_img: 'Acoustic Guitar',
-        file_path_img: `${r2}/1776871990306-dd_acoustic_guitar.glb`,
-        file_type_img: 'model/gltf-binary',
-      },
-      {
         name_img: 'Bass Guitar',
         file_path_img: `${r2}/1776869505328-custom-made_bass_guitar.glb`,
         file_type_img: 'model/gltf-binary',
@@ -162,7 +157,6 @@ export async function seed(knex: Knex): Promise<void> {
     electricGuitarId,
     lightingRigId,
     wedgeMonitorId,
-    accousticGuitarId,
     bassGuitarId,
   ] = imageRows.map((row: { id_img: number }) => row.id_img);
 
@@ -278,16 +272,6 @@ export async function seed(knex: Knex): Promise<void> {
       default_scale_x_elt: 0.025,
       default_scale_y_elt: 0.025,
       default_scale_z_elt: 0.025,
-    },
-    {
-      name_elt: 'Acoustic Guitar',
-      description_elt: 'An Acoustic Guitar',
-      default_color_elt: '#000000',
-      id_img_elt: accousticGuitarId,
-      id_emc_elt: stringsId,
-      default_scale_x_elt: 0.002,
-      default_scale_y_elt: 0.002,
-      default_scale_z_elt: 0.002,
     },
     {
       name_elt: 'Bass Guitar',
