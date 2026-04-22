@@ -10,7 +10,8 @@ import { type Stage, getStagesByVenueId } from '../../../api/stages'
 import { StageCreate } from '../stage/StageCreate';
 import { StageDelete } from '../stage/StageDelete';
 import { StageUpdate } from '../stage/StageUpdate';
-
+import { Spinner } from '../../../components/userUI/Spinner';
+import { ErrorMessage } from '../../../components/userUI/ErrorMessage';
 
 /**
  * Displays all venues belonging to the authenticated user with expandable stage rows.
@@ -82,29 +83,12 @@ export function VenueTable() {
     setShowStages(true);
   }
 
-  if (loading) {
-    return (
-      <div className="page-container flex-center">
-        <div className="text-center">
-          <div className="spinner-container">
-            <div className="spinner" />
-            <p className="text-secondary">Loading Venues...</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
-  if (error) {
-    return (
-      <div className="page-container flex-center">
-        <div className="alert alert-error">
-          {error}
-        </div>
-      </div>
-    );
-  }
+  //Early return component mounts for loading and error
+  if (loading) return <Spinner />
+  if (error) return <ErrorMessage error={error} />
 
+  //Acutal component mount
   return (
     <div>
       <div className="content-wrapper">

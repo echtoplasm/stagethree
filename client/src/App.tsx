@@ -15,6 +15,7 @@ const UserPortal = lazy(() => import('./pages/UserPortal').then(m => ({ default:
 const Documentation = lazy(() => import('./components/documentation/Documentation').then(m => ({ default: m.Documentation })));
 const ShareView = lazy(() => import('./components/sharedPlot/SharedScene').then(m => ({ default: m.ShareView })))
 
+const Spinner = lazy(() => import('./components/userUI/Spinner').then(m => ({ default: m.Spinner })));
 
 /**
  * Renders the application route tree within a Suspense boundary.
@@ -25,25 +26,18 @@ const ShareView = lazy(() => import('./components/sharedPlot/SharedScene').then(
  */
 function AppRoutes() {
   const { user, loading } = useAuth();
-  if (loading) {
 
+
+  if (loading) {
     return (
       <>
-        <div className="spinner-container">
-          <div className="spinner" />
-          <p className="text-secondary">Loading...</p>
-        </div>
+        <Spinner />
       </>
     );
 
   }
   return (
-    <Suspense fallback={
-      <div className="spinner-container">
-        <div className="spinner" />
-        <p className="text-secondary">Loading...</p>
-      </div>
-    }>
+    <Suspense fallback={<Spinner />}>
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/stages" element={<StageRead />} />

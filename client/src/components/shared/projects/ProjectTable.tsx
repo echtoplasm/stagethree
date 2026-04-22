@@ -12,6 +12,8 @@ import { PlotDelete } from '../../../components/plotting/PlotDelete'
 import { PlotCreate } from '../../../components/plotting/PlotCreate';
 import { useStageContext } from '../../../contexts/StageContext';
 import { useNavigate } from 'react-router-dom';
+import { ErrorMessage } from '../../../components/userUI/ErrorMessage';
+import { Spinner } from '../../../components/userUI/Spinner';
 
 /**
  * Displays all projects belonging to the authenticated user with expandable stage plot rows.
@@ -139,29 +141,12 @@ export function ProjectTable() {
     loadProjects();
   }, [user]);
 
-  if (loading) {
-    return (
-      <div className="page-container flex-center">
-        <div className="text-center">
-          <div className="spinner-container">
-            <div className="spinner" />
-            <p className="text-secondary">Loading projects</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
-  if (error) {
-    return (
-      <div className="page-container flex-center">
-        <div className="alert alert-error">
-          {error}
-        </div>
-      </div>
-    );
-  }
+  //early return component mounts for loading and error
+  if (loading) return <Spinner />
+  if (error) return <ErrorMessage error={error} />
 
+  //actual component mount
   return (
     <div>
       <div className="content-wrapper">

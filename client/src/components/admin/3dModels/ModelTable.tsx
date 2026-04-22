@@ -5,7 +5,7 @@ import { ImageDataUpdate } from './ModelUpdate';
 import { ImageDelete } from './ModelDelete';
 import { ModelCreate } from './ModelCreate';
 import { ErrorMessage } from '../../../components/userUI/ErrorMessage';
-
+import { Spinner } from '../../../components/userUI/Spinner';
 export const ImageTable = () => {
   //state management
   const [images, setImages] = useState<Image[]>([]);
@@ -37,16 +37,7 @@ export const ImageTable = () => {
   }, [])
 
   if (loading && images.length === 0) {
-    return (
-      <div className="flex-center">
-        <div className="text-center">
-          <div className="spinner-container">
-            <div className="spinner" />
-            <p className="text-secondary">Loading images</p>
-          </div>
-        </div>
-      </div>
-    );
+    return <Spinner />
   }
 
   if (error) {

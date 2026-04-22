@@ -4,6 +4,8 @@ import { Box, Ruler, Layers, Users } from 'lucide-react';
 import { fetchAllPublicStages, type PublicStage } from '../../../api/stages';
 import { PlotCreateFromPublicStage } from '../../../components/plotting/PublicPlotCreate';
 import { useAuth } from '../../../contexts/AuthContext';
+import { Spinner } from '../../../components/userUI/Spinner'
+import { ErrorMessage } from '../../../components/userUI/ErrorMessage';
 /**
  * Displays a grid of all publicly available stage templates with their dimensions.
  * Renders loading and error states while fetching.
@@ -53,29 +55,14 @@ export function StageRead() {
     loadStages();
   }, []);
 
-  if (loading) {
-    return (
-      <div className="page-container flex-center">
-        <div className="text-center">
-        <div className="spinner-container">
-          <div className="spinner"/>
-          <p className="text-secondary">Loading stages...</p>
-        </div>
-        </div>
-      </div>
-    );
-  }
 
-  if (error) {
-    return (
-      <div className="page-container flex-center">
-        <div className="alert alert-error">
-          {error}
-        </div>
-      </div>
-    );
-  }
+  //Early return component mounts for loading and error
+  if (loading) return <Spinner />
 
+  if (error) return <ErrorMessage error={error} />
+
+
+  //Actual component mount
   return (
     <div className="page-container">
       <div className="content-wrapper">

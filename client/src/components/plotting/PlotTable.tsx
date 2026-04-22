@@ -8,6 +8,8 @@ import { PlotUpdate } from './PlotUpdate';
 import { type Project } from '../../api/projects';
 import { useAuth } from '../../contexts/AuthContext';
 import { X } from 'lucide-react'
+import { ErrorMessage } from '../userUI/ErrorMessage';
+import { Spinner } from '../userUI/Spinner';
 
 //PROPS for PlotTable
 interface PlotTableProps {
@@ -58,29 +60,12 @@ export function PlotTable({ selectedProject, onClose }: PlotTableProps) {
   }
 
 
-  if (loading) {
-    return (
-      <div className="page-container flex-center">
-        <div className="text-center">
-          <div className="spinner-container">
-            <div className="spinner" />
-            <p className="text-secondary">Loading plots</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  //early returns for loading state and error state
+  if (loading) return <Spinner />
 
-  if (error) {
-    return (
-      <div className="page-container flex-center">
-        <div className="alert alert-error">
-          {error}
-        </div>
-      </div>
-    );
-  }
-
+  if (error) return <ErrorMessage error={error} />
+  
+  //proper component return
   return (
     <div className='mt-8 card'>
       <div className="content-wrapper">

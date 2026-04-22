@@ -6,6 +6,7 @@ import { UserUpdate } from "./UserUpdate";
 import { Plus, Trash, Pencil } from "lucide-react";
 import { UserDelete } from "./UserDelete";
 import { ErrorMessage } from "../userUI/ErrorMessage";
+import { Spinner } from "../userUI/Spinner";
 
 export const UserTable = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -45,12 +46,7 @@ export const UserTable = () => {
 
   if (loading && users.length === 0) {
     return (
-      <div className="flex-center">
-        <div className="text-center">
-          <div className="spinner"/>
-          <p className="text-secondary">Loading users...</p>
-        </div>
-      </div>
+      <Spinner />
     );
   }
 

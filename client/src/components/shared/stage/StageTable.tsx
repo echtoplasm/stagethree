@@ -6,7 +6,7 @@ import { StageUpdate } from './StageUpdate';
 import { StageDelete } from './StageDelete';
 import { StageCreate } from './StageCreate';
 import { useAuth } from '../../../contexts/AuthContext';
-
+import { Spinner } from '../../../components/userUI/Spinner';
 
 /**
  * Displays a table of all stages belonging to the authenticated user.
@@ -53,14 +53,7 @@ export function StageTable() {
 
   if (loading) {
     return (
-      <div className="page-container flex-center">
-        <div className="text-center">
-          <div className='spinner-container'>
-            <div className="spinner" />
-            <p className="text-secondary">Loading stages...</p>
-          </div>
-        </div>
-      </div>
+      <Spinner />
     );
   }
 
