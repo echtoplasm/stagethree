@@ -7,7 +7,7 @@ import { StageDelete } from './StageDelete';
 import { StageCreate } from './StageCreate';
 import { useAuth } from '../../../contexts/AuthContext';
 import { Spinner } from '../../../components/userUI/Spinner';
-import { ErrorMessage } from 'src/components/userUI/ErrorMessage';
+import { ErrorMessage } from '../../../components/userUI/ErrorMessage';
 
 /**
  * Displays a table of all stages belonging to the authenticated user.
