@@ -115,6 +115,22 @@ export const AttributionModal = ({ onClose }: AttributionModalProps) => {
                 </div>
               </div>
 
+              <div className="attribution-item">
+                <span className="attribution-name">Bass Guitar</span>
+                <div className="attribution-meta">
+                  <span>serefatilla</span>
+                  <a href="https://sketchfab.com/3d-models/custom-made-bass-guitar-54b2e94353d843eb8daba50b62edd78f" target="_blank" rel="noreferrer">sketchfab.com/serfatilla</a>
+                </div>
+              </div>
+
+              <div className="attribution-item">
+                <span className="attribution-name">Acoustic Guitar</span>
+                <div className="attribution-meta">
+                  <span>afurokn</span>
+                  <a href="https://sketchfab.com/3d-models/acoustic-guitar-b52fcec4b641493f8939c50c253c4ac3" target="_blank" rel="noreferrer">sketchfab.com/afurokn</a>
+                </div>
+              </div>
+
             </div>
           </section>
 

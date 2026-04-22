@@ -3,8 +3,10 @@ import { ProjectTable } from '../components/shared/projects/ProjectTable';
 import { User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { VenueTable } from '../components/shared/venues/VenueTable'
+import { VenueTable } from '../components/shared/venues/VenueTable';
 import { UserUpdate } from '../components/admin/UserUpdate';
+
+type PortalTab = 'projects' | 'venues';
 
 /**
  * Authenticated user portal displaying account info, projects, and venues.
@@ -16,6 +18,7 @@ export const UserPortal = () => {
   const { user, isAuthenticated, updateUser } = useAuth();
   const navigate = useNavigate();
   const [update, setUpdate] = useState(false);
+  const [activeTab, setActiveTab] = useState<PortalTab>('projects');
 
   useEffect(() => {
     if (!isAuthenticated) navigate('/');
@@ -49,11 +52,23 @@ export const UserPortal = () => {
           </div>
         </div>
 
-        <div className="mb-8">
-          <ProjectTable />
+        <div className="tab-bar mb-8">
+          <button
+            className={`tab ${activeTab === 'projects' ? 'active' : ''}`}
+            onClick={() => setActiveTab('projects')}
+          >
+            Projects
+          </button>
+          <button
+            className={`tab ${activeTab === 'venues' ? 'active' : ''}`}
+            onClick={() => setActiveTab('venues')}
+          >
+            Venues
+          </button>
         </div>
 
-        <VenueTable />
+        {activeTab === 'projects' && <ProjectTable />}
+        {activeTab === 'venues' && <VenueTable />}
       </div>
 
       {update && (
