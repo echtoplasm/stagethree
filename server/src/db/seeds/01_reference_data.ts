@@ -281,7 +281,7 @@ export async function seed(knex: Knex): Promise<void> {
     },
     {
       name_elt: 'Acoustic Guitar',
-      description: 'An Acoustic Guitar',
+      description_elt: 'An Acoustic Guitar',
       default_color_elt: '#000000',
       id_img_elt: accousticGuitarId,
       id_emc_elt: stringsId,
@@ -291,7 +291,7 @@ export async function seed(knex: Knex): Promise<void> {
     },
     {
       name_elt: 'Bass Guitar',
-      description: 'A Bass Guitar',
+      description_elt: 'A Bass Guitar',
       default_color_elt: '#000000',
       id_img_elt: bassGuitarId,
       id_emc_elt: stringsId,
