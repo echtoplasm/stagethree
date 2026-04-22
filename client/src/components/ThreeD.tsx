@@ -129,8 +129,20 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
         const maxDim = Math.max(size.x, size.y, size.z);
         model.scale.setScalar(1 / maxDim);
 
-        modelCache.set(modelPath, model);
+        // Normalize pivot to base
+        const normalizedBox = new THREE.Box3().setFromObject(model);
+        if (normalizedBox.min.y < -0.01) {
+          const group = new THREE.Group();
+          model.position.y -= normalizedBox.min.y;
+          group.add(model);
+          modelCache.set(modelPath, group);
+          const clone = group.clone();
+          clone.scale.setScalar(placement.scaleX);
+          resolve(clone);
+          return;
+        }
 
+        modelCache.set(modelPath, model);
         const clone = model.clone();
         clone.scale.setScalar(placement.scaleX);
         resolve(clone);
@@ -492,7 +504,7 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
       }
 
 
-    
+
     };
   }, [stage]);
 
@@ -509,7 +521,7 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
         addInstrument(placement);
       }
     });
-  console.log(typeof stage?.width, typeof stage?.depth) 
+    console.log(typeof stage?.width, typeof stage?.depth)
   }, [elementPlacements]);
 
   /** Updates the Three.js scene background color whenever the user selects a new color. */
