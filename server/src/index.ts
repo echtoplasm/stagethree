@@ -14,6 +14,7 @@ import inputChannelRoutes from './routes/inputChannels';
 import elpRoutes from './routes/elementPlacements';
 import authRoutes from './routes/auth';
 import imgRoutes from './routes/images';
+import elementCategoriesRoutes from './routes/elementCategories';
 import db from './db/knex';
 
 const app = express();
@@ -41,6 +42,7 @@ app.use('/api/inputchannels', inputChannelRoutes);
 app.use('/api/elp', elpRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/images', imgRoutes);
+app.use('/api/elementcategories', elementCategoriesRoutes);
 
 /*
 if (process.env.NODE_ENV === 'production') {

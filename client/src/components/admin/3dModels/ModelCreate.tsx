@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { createNewImage, type Image } from '../../../api/images';
 import { ErrorMessage } from '../../../components/userUI/ErrorMessage';
+import { fetchAllElementCategories, type ElementCategory } from '../../../api/elementCategory';
 
 export interface ModelCreateProps {
   onSuccess: () => void;
@@ -24,6 +25,21 @@ export const ModelCreate = ({ onSuccess, onClose }: ModelCreateProps) => {
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [categories, setCategories] = useState<ElementCategory[] | null>(null);
+
+  const getElementCategories = async () => {
+    try {
+      const data = await fetchAllElementCategories();
+      setCategories(data);
+    } catch (err) {
+      setError('Failed to load categories');
+    }
+  };
+
+
+  useEffect(() => {
+    getElementCategories();
+  }, [])
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files?.[0]) {
@@ -42,6 +58,8 @@ export const ModelCreate = ({ onSuccess, onClose }: ModelCreateProps) => {
       await createNewImage(imageForm.name, imageForm.category, imageForm.description ?? '', file);
       onSuccess();
       onClose();
+    } catch (err) {
+      setError('Failed to upload model');
     } finally {
       setLoading(false);
     }
@@ -76,13 +94,17 @@ export const ModelCreate = ({ onSuccess, onClose }: ModelCreateProps) => {
           </div>
           <div className="form-group">
             <label className="form-label" htmlFor="category">Category</label>
-            <input
+            <select
               id="category"
-              className="form-input"
-              type="number"
-              value={imageForm.category}
+              className="form-select"
+              value={imageForm.category ?? ''}
               onChange={(e) => setImageForm({ ...imageForm, category: Number(e.target.value) })}
-            />
+            >
+              <option value="" disabled>Select a category</option>
+              {categories?.map((cat) => (
+                <option key={cat.id} value={cat.id}>{cat.name}</option>
+              ))}
+            </select>
           </div>
           <div className='form-group'>
             <label>Description</label>
