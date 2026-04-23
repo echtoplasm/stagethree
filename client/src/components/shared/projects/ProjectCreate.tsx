@@ -49,7 +49,7 @@ export function ProjectCreate({ onClose, onSuccess }: ProjectCreateProps) {
             <h2>Create Project</h2>
             <p className="text-secondary">Fill out the form below to create a project</p>
           </div>
-          <button className="btn btn-ghost btn-sm" onClick={onClose}>
+          <button aria-label="Exit modal." className="btn btn-ghost btn-sm" onClick={onClose}>
             <X size={18} />
           </button>
         </div>

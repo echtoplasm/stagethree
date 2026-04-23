@@ -93,7 +93,7 @@ export function VenueTable() {
     <div>
       <div className="content-wrapper">
         <header className="mb-8">
-          <h1>Manage Your Venues and Stages</h1>
+          <h2>Manage Your Venues and Stages</h2>
           <p className="text-secondary mb-4">Here are all of the Venues associated with your account, click on a venue to see the associated stages with it. You can create venues and stages together in one place here.</p>
           <button aria-label="Create new venue." className="btn btn-primary" onClick={() => setVenueCreate(true)}>
             <Plus size={18} />

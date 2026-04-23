@@ -14,6 +14,9 @@ export const LandingPage = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [visible, setVisible] = useState(false);
   const [promptSignUp, setPromptSignUp] = useState(false);
+  const [animatedBg, setAnimatedBg] = useState(
+    !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  );
 
   /** Sets visible to true on mount to trigger CSS fade-in transitions. */
   useEffect(() => {
@@ -24,7 +27,9 @@ export const LandingPage = () => {
    * Renders an animated scrolling grid with intersection dots onto the canvas background.
    * Handles canvas sizing on mount and window resize, and cancels the animation loop on unmount.
    */
+
   useEffect(() => {
+    if (!animatedBg) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -65,7 +70,7 @@ export const LandingPage = () => {
         ctx.stroke();
       }
 
-      // intersections of moving grid canvas
+      //intersections of moving grid canvas
       ctx.fillStyle = 'rgba(59, 130, 246, 0.15)';
       for (let i = 0; i < cols; i++) {
         for (let j = 0; j < rows; j++) {
@@ -87,10 +92,17 @@ export const LandingPage = () => {
       cancelAnimationFrame(animId);
       window.removeEventListener('resize', resize);
     };
-  }, []);
+  }, [animatedBg]);
 
   return (
     <div className="landing">
+      <button
+        className="landing-motion-toggle"
+        onClick={() => setAnimatedBg(prev => !prev)}
+        aria-label={animatedBg ? 'Disable background animation' : 'Enable background animation'}
+      >
+        {animatedBg ? 'Disable animation' : 'Enable animation'}
+      </button>
       <canvas ref={canvasRef} className="landing-canvas" />
 
       {/* heading section */}
@@ -122,22 +134,22 @@ export const LandingPage = () => {
       <section className={`landing-features ${visible ? 'landing-visible' : ''}`}>
         <div className="landing-feature">
           <div className="landing-feature-icon"><Rotate3d size={20} /></div>
-          <h3>Real-time 3D Plotting</h3>
+          <h2>Real-time 3D Plotting</h2>
           <p>Visualize your stage setup in three dimensions before load-in day.</p>
         </div>
         <div className="landing-feature">
           <div className="landing-feature-icon"><LucideInfinity size={20} /></div>
-          <h3>Unlimited Projects</h3>
+          <h2>Unlimited Projects</h2>
           <p>Organize plots by project. Keep every tour, festival, and corporate event separate.</p>
         </div>
         <div className="landing-feature">
           <div className="landing-feature-icon"><List size={20} /></div>
-          <h3>Input List Built In</h3>
+          <h2>Input List Built In</h2>
           <p>Channel-by-channel input lists attached to each stage plot. No more spreadsheets.</p>
         </div>
         <div className="landing-feature">
           <div className="landing-feature-icon"><Spotlight size={20} /></div>
-          <h3>Stage Templates</h3>
+          <h2>Stage Templates</h2>
           <p>Start from proven stage configurations or build from your own dimensions.</p>
         </div>
       </section>

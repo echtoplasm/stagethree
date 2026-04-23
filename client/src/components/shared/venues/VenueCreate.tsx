@@ -72,7 +72,7 @@ export function VenueCreate({ onClose, onSuccess }: VenueCreateProps) {
             <h2>Create Venue</h2>
             <p className="text-secondary">Fill out the form below to create a venue</p>
           </div>
-          <button className="btn btn-ghost btn-sm" onClick={onClose}>
+          <button aria-label="Exit modal." className="btn btn-ghost btn-sm" onClick={onClose}>
             <X size={18} />
           </button>
         </div>

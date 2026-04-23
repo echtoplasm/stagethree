@@ -28,8 +28,8 @@ export const UserPortal = () => {
     <div className="page-container">
       <div className="content-wrapper">
         <header className="mb-8">
-          <h1>Welcome back, {user?.firstName}</h1>
-          <p className="text-secondary">Stay awhile</p>
+          <h1>{user?.firstName}'s User Portal</h1>
+          <p className="text-secondary">Manage your user information, and stage data here.</p>
         </header>
 
         <div className="card mb-8">
@@ -37,7 +37,7 @@ export const UserPortal = () => {
             <div className="flex-between">
               <div className="flex gap-2">
                 <User size={24} />
-                <h3>Account</h3>
+                <h2>Account</h2>
               </div>
               <button className="btn btn-ghost btn-sm" onClick={() => setUpdate(true)}>
                 Update Account

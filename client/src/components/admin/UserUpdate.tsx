@@ -52,7 +52,7 @@ export function UserUpdate({ userUpdate, onClose, onSuccess }: UserUpdateProps) 
             <h2>Update User</h2>
             <p className="text-secondary">Edit the user information</p>
           </div>
-          <button className="btn btn-ghost btn-sm" onClick={onClose}>
+          <button aria-label="Exit modal." className="btn btn-ghost btn-sm" onClick={onClose}>
             <X size={18} />
           </button>
         </div>
@@ -64,7 +64,7 @@ export function UserUpdate({ userUpdate, onClose, onSuccess }: UserUpdateProps) 
           <div className="form-group">
             <label className="form-label" htmlFor="firstName">First name</label>
             <input
-              id="name"
+              id="firstName"
               className="form-input"
               type="text"
               value={userForm.firstName}

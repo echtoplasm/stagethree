@@ -85,13 +85,13 @@ export const Documentation = () => {
     <div className="page-container">
       <div className="content-wrapper-narrow">
         <div className="mb-8">
-          <h2 className="mb-2">Documentation</h2>
+          <h1 className="mb-2">Documentation</h1>
           <p className="text-secondary">
             Everything you need to get the most out of StageThree.
           </p>
         </div>
 
-        <div className="grid grid-cols-2">
+        <div className="grid grid-cols-2 docs-card-container">
           {docs.map(({ key, title, description, icon: Icon }) => (
             <button
               key={key}
@@ -102,7 +102,7 @@ export const Documentation = () => {
                 <Icon size={20} color="var(--accent-light)" />
                 <span className="badge badge-success">Docs</span>
               </div>
-              <h4 className="mb-2">{title}</h4>
+              <h2 className="mb-2">{title}</h2>
               <p className="text-muted">{description}</p>
             </button>
           ))}

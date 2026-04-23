@@ -151,7 +151,7 @@ export function ProjectTable() {
     <div>
       <div className="content-wrapper">
         <header className="mb-8">
-          <h1>Manage Your Projects</h1>
+          <h2>Manage Your Projects</h2>
           <p className="text-secondary mb-4">Here are all of the projects associated with your account</p>
           <button aria-label="Create new project." className="btn btn-primary" onClick={() => setProjectCreate(true)}>
             <Plus size={18} />
