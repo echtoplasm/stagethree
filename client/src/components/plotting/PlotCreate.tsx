@@ -48,13 +48,15 @@ export const PlotCreate = ({ onClose, onSuccess, projectId }: PlotCreateProps) =
    */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!stagePlotForm.name) return setError('Plot name is required.');
+    if (!stagePlotForm.stageId) return setError('Please select a stage.');
     try {
       await createStagePlot(stagePlotForm);
       onSuccess();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Missing One or 2 fields for form submission');
+      setError(err instanceof Error ? err.message : 'Failed to create stage plot.');
     }
-  }
+  };
 
   /** 
    * Fetches venues using client/api fetchallvenues function and sets 

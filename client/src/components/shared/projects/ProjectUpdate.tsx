@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { X } from 'lucide-react';
 import { type Project, updateProject } from '../../../api/projects';
 import { createPortal } from 'react-dom';
+import { ErrorMessage } from '../../../components/userUI/ErrorMessage';
+
 interface ProjectUpdateProps {
   project: Project;
   onClose: () => void;
@@ -16,6 +18,7 @@ interface ProjectUpdateProps {
  * @returns An update modal portal mounted to document.body.
  */
 export function ProjectUpdate({ project, onClose }: ProjectUpdateProps) {
+  const [error, setError] = useState<string | null>(null);
   const [projectForm, setProjectForm] = useState<Project>({
     id: project.id,
     userId: project.userId,
@@ -28,10 +31,14 @@ export function ProjectUpdate({ project, onClose }: ProjectUpdateProps) {
   /** Submits the updated project form and calls onClose on completion. */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await updateProject(projectForm.id, projectForm);
-    onClose();
-  }
-
+    if (!projectForm.name) return setError('Project name is required.');
+    try {
+      await updateProject(projectForm.id, projectForm);
+      onClose();
+    } catch (err) {
+      setError('Failed to update project.');
+    }
+  };
 
   return createPortal(
     <>
@@ -54,6 +61,9 @@ export function ProjectUpdate({ project, onClose }: ProjectUpdateProps) {
         </div>
 
         <form onSubmit={handleSubmit} className="modal-body">
+          {error && (
+            <ErrorMessage error={error} />
+          )}
           {/* PROJECT NAME */}
           <div className="form-group">
             <label className="form-label" htmlFor="name">Project Name</label>

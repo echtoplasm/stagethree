@@ -20,7 +20,7 @@ interface StageCreateProps {
  * @param onSuccess - Callback invoked after the stage is successfully created.
  * @returns The create stage modal with dimension and visibility fields.
  */
-export function StageCreate({ venueId,  onClose, onSuccess }: StageCreateProps) {
+export function StageCreate({ venueId, onClose, onSuccess }: StageCreateProps) {
   //AUTH CHECK
   const { user } = useAuth();
   if (!user) return null
@@ -40,14 +40,18 @@ export function StageCreate({ venueId,  onClose, onSuccess }: StageCreateProps) 
 
 
 
-/** Submits the stage form and calls onSuccess on completion, or sets error state on failure. */
+  /** Submits the stage form and calls onSuccess on completion, or sets error state on failure. */
   const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!stageForm.name) return setError('Stage name is required');
+    if (!stageForm.width || stageForm.width <= 0) return setError('Width must be greater than 0');
+    if (!stageForm.depth || stageForm.depth <= 0) return setError('Depth must be greater than 0');
+    if (stageForm.height && stageForm.height <= 0) return setError('Height must be greater than 0');
     try {
-      e.preventDefault();
       await createStage(stageForm);
       onSuccess();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Missing One or 2 fields for form submission')
+      setError(err instanceof Error ? err.message : 'Failed to create stage');
     }
   };
 

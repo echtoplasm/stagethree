@@ -29,12 +29,14 @@ export function Login({ onClose, onSuccess }: LoginProps) {
    */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!email) return setError('Email is required.');
+    if (!password) return setError('Password is required.');
     try {
       const res = await loginUser(email, password);
       setError(null);
       onSuccess(res.user);
     } catch (err) {
-      setError("Unable to Log in");
+      setError('Invalid email or password.');
     }
   };
 

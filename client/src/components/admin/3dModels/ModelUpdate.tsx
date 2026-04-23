@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { X } from 'lucide-react';
 import { type Image, updateImageById } from '../../../api/images';
+import { ErrorMessage } from '../../../components/userUI/ErrorMessage';
 
 export interface ImageDataUpdateProps {
   onClose: () => void;
@@ -21,12 +22,21 @@ export const ImageDataUpdate = ({ onClose, onSuccess, selectedImage }: ImageData
     defaultScaleZ: selectedImage.defaultScaleZ
   });
 
+  const [error, setError] = useState<string | null>(null);
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await updateImageById(selectedImage.id, imageDataForm)
-    onSuccess(imageDataForm);
+    if (!selectedImage) return setError('No image selected');
+    try {
+      await updateImageById(selectedImage.id, imageDataForm);
+      onSuccess(imageDataForm);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to update image');
+    }
   };
+
+  if (error) return <ErrorMessage error={error} />
 
   return (
     <>

@@ -3,6 +3,7 @@ import { X } from 'lucide-react';
 import { type User } from "../../types/api";
 import { updateUser } from '../../api/users';
 import { useAuth } from '../../contexts/AuthContext';
+import { ErrorMessage } from '../userUI/ErrorMessage';
 interface UserUpdateProps {
   userUpdate: User | null;
   onClose: () => void;
@@ -20,16 +21,21 @@ export function UserUpdate({ userUpdate, onClose, onSuccess }: UserUpdateProps) 
     lastName: userUpdate.lastName,
     email: userUpdate.email,
   });
-
+  const [error, setError] = useState<string | null>(null);
 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await updateUser(userForm.id, userForm);
-    onSuccess(userForm);
-
-  }
-
+    if (!userForm.firstName || !userForm.lastName || !userForm.email) {
+      return setError('All fields are required');
+    }
+    try {
+      await updateUser(userForm.id, userForm);
+      onSuccess(userForm);
+    } catch (error) {
+      setError('Unable to update user');
+    }
+  };
 
   return (
     <>
@@ -52,6 +58,9 @@ export function UserUpdate({ userUpdate, onClose, onSuccess }: UserUpdateProps) 
         </div>
 
         <form onSubmit={handleSubmit} className="modal-body">
+          {error && (
+            <ErrorMessage error={error} />
+          )}
           <div className="form-group">
             <label className="form-label" htmlFor="firstName">First name</label>
             <input

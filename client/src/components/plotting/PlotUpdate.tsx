@@ -35,14 +35,15 @@ export function PlotUpdate({ plot, onClose }: PlotUpdateProps) {
    * @param e - React.FormEvent, read type declaration
    */
   const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!plotForm.name) return setError('Plot name is required.');
     try {
-      e.preventDefault();
       await updatePlot(plotForm.id, plotForm);
       onClose();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Missing One or 2 fields for form submission')
+      setError(err instanceof Error ? err.message : 'Failed to update plot.');
     }
-  }
+  };
 
 
   return createPortal(

@@ -43,7 +43,7 @@ export function SignUp({ onClose, onSuccess }: SignUpProps) {
         onSuccess(res.user);
       }
     } catch (err) {
-      setError("Unable to sign in");
+      setError("Unable to sign up");
     }
   };
 

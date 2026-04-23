@@ -36,9 +36,9 @@ export const AdminPage = () => {
           </button>
         </div>
 
-        {activeTab === 'users' && <UserTable />}
-        {activeTab === 'stages' && <StageTable />}
-        {activeTab === 'models' && <ImageTable />}
+        { activeTab === 'users' && <UserTable />}
+        { activeTab === 'stages' && <StageTable />}
+        { activeTab === 'models' && <ImageTable />}
       </div>
     </div>
   );

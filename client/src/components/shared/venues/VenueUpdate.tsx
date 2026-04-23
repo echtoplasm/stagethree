@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { X } from 'lucide-react';
 import { type Venue, updateVenue } from '../../../api/venues';
-
+import { ErrorMessage } from '../../../components/userUI/ErrorMessage';
 interface VenueUpdateProps {
   venue: Venue;
   onClose: () => void;
@@ -26,12 +26,22 @@ export function VenueUpdate({ venue, onClose }: VenueUpdateProps) {
     createdBy: venue.createdBy
   });
 
+  const [error, setError] = useState<string | null>(null);
+
   /** Submits the updated venue form and calls onClose on completion. */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await updateVenue(venueForm.id, venueForm);
-    onClose();
-  }
+    if (!venueForm.name) return setError('Venue name is required.');
+    if (!venueForm.address) return setError('Address is required.');
+    if (!venueForm.city) return setError('City is required.');
+    if (!venueForm.stateId) return setError('State is required.');
+    try {
+      await updateVenue(venueForm.id, venueForm);
+      onClose();
+    } catch (err) {
+      setError('Failed to update venue');
+    }
+  };
 
 
   return (
@@ -55,6 +65,9 @@ export function VenueUpdate({ venue, onClose }: VenueUpdateProps) {
         </div>
 
         <form onSubmit={handleSubmit} className="modal-body">
+          {error && (
+            <ErrorMessage error={error} />
+          )}
           <div className="form-group">
             <label className="form-label" htmlFor="name">Venue Name</label>
             <input

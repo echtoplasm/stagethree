@@ -49,6 +49,9 @@ export const PlotCreateFromPublicStage = ({ onClose, onSuccess, stage }: PlotCre
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
+    if (!stagePlotForm.name) return setError('Plot name is required.');
+    if (!newProjectMode && !stagePlotForm.projectId) return setError('Please select a project.');
+    if (newProjectMode && !newProjectName.trim()) return setError('Project name is required.');
     try {
       let projectId = stagePlotForm.projectId;
 

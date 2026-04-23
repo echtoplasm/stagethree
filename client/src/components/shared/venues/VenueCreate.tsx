@@ -42,16 +42,19 @@ export function VenueCreate({ onClose, onSuccess }: VenueCreateProps) {
 
   /** Submits the venue form and calls onSuccess on completion, or sets error state on failure. */
   const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!venueForm.name) return setError('Venue name is required.');
+    if (!venueForm.address) return setError('Venue address is required');
+    if (!venueForm.city) return setError('Venue city is required.');
+    if (!venueForm.stateId) return setError('Venue state is required.');
+    if (!venueForm.capacity) return setError('Venue capacity is required.');
     try {
-      e.preventDefault();
       await createVenue(venueForm);
       onSuccess();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Missing One or 2 fields for form submission')
+      setError(err instanceof Error ? err.message : 'Failed to create venue');
     }
-  };
-
-  const fetchStates = async () => {
+  }; const fetchStates = async () => {
     const states = await getAllStates();
     setStates(states);
   }

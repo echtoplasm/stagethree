@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { X } from 'lucide-react';
 import { createNewImage, type Image } from '../../../api/images';
+import { ErrorMessage } from '../../../components/userUI/ErrorMessage';
 
 export interface ModelCreateProps {
   onSuccess: () => void;
@@ -22,6 +23,7 @@ export const ModelCreate = ({ onSuccess, onClose }: ModelCreateProps) => {
 
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files?.[0]) {
@@ -31,7 +33,10 @@ export const ModelCreate = ({ onSuccess, onClose }: ModelCreateProps) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!file || !imageForm.name || !imageForm.category) return;
+    if (!file || !imageForm.name || !imageForm.category) {
+      setError('missing required fields');
+      return
+    };
     setLoading(true);
     try {
       await createNewImage(imageForm.name, imageForm.category, imageForm.description ?? '', file);
@@ -55,6 +60,9 @@ export const ModelCreate = ({ onSuccess, onClose }: ModelCreateProps) => {
             <X size={18} />
           </button>
         </div>
+        {error && (
+          <ErrorMessage error={error} />
+        )}
         <form onSubmit={handleSubmit} className="modal-body">
           <div className="form-group">
             <label className="form-label" htmlFor="name">Name</label>
@@ -91,8 +99,8 @@ export const ModelCreate = ({ onSuccess, onClose }: ModelCreateProps) => {
             <label className="form-label" htmlFor="file">File</label>
             <input
               id="file"
-              className="form-input"
               type="file"
+              accept=".glb,.gltf"
               onChange={handleFileChange}
             />
           </div>

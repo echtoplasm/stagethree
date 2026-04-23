@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { X } from 'lucide-react';
 import { type Stage, updateStage } from '../../../api/stages';
+import { ErrorMessage } from '../../../components/userUI/ErrorMessage';
 
 interface StageUpdateProps {
   stage: Stage;
@@ -27,12 +28,23 @@ export function StageUpdate({ stage, onClose }: StageUpdateProps) {
     isPublic: stage.isPublic
   });
 
+  const [error, setError] = useState<string | null>(null);
+
+
   /** Submits the updated stage form and calls onClose on completion. */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await updateStage(stageForm.id, stageForm);
-    onClose();
-  }
+    if (!stageForm.name) return setError('Stage name is required');
+    if (!stageForm.width || stageForm.width <= 0) return setError('Width must be greater than 0');
+    if (!stageForm.depth || stageForm.depth <= 0) return setError('Depth must be greater than 0');
+    if (stageForm.height && stageForm.height <= 0) return setError('Height must be greater than 0');
+    try {
+      await updateStage(stageForm.id, stageForm);
+      onClose();
+    } catch (err) {
+      setError('Failed to update stage');
+    }
+  };
 
 
   return (
@@ -56,6 +68,9 @@ export function StageUpdate({ stage, onClose }: StageUpdateProps) {
         </div>
 
         <form onSubmit={handleSubmit} className="modal-body">
+          {error && (
+            <ErrorMessage error={error} />
+          )}
           <div className="form-group">
             <label className="form-label" htmlFor="name">Stage Name</label>
             <input

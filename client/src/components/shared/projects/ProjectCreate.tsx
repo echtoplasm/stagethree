@@ -3,7 +3,7 @@ import { X } from 'lucide-react';
 import { createNewProject } from '../../../api/projects';
 import { useAuth } from '../../../contexts/AuthContext';
 import { createPortal } from 'react-dom';
-
+import { ErrorMessage } from '../../../components/userUI/ErrorMessage'
 export interface ProjectCreateProps {
   onClose: () => void;
   onSuccess: () => void;
@@ -19,6 +19,7 @@ export interface ProjectCreateProps {
  * @returns A modal portal mounted to document.body with name and description fields.
  */
 export function ProjectCreate({ onClose, onSuccess }: ProjectCreateProps) {
+  const [error, setError] = useState<string | null>(null);
   const { user } = useAuth();
   const [projectForm, setProjectForm] = useState({
     name: '',
@@ -26,12 +27,17 @@ export function ProjectCreate({ onClose, onSuccess }: ProjectCreateProps) {
   });
 
   if (!user) return null;
-  
+
   /** Submits the project form and calls onSuccess on completion. */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await createNewProject({ ...projectForm, userId: user.id });
-    onSuccess();
+    if (!projectForm.name) return setError('Project name is required.');
+    try {
+      await createNewProject({ ...projectForm, userId: user.id });
+      onSuccess();
+    } catch (err) {
+      setError('Failed to create project.');
+    }
   };
 
   return createPortal(
@@ -48,6 +54,9 @@ export function ProjectCreate({ onClose, onSuccess }: ProjectCreateProps) {
           </button>
         </div>
         <form onSubmit={handleSubmit} className="modal-body">
+          {error && (
+            <ErrorMessage error={error} />
+          )}
           <div className="form-group">
             <label className="form-label" htmlFor="name">Project Name</label>
             <input id="name" className="form-input" type="text" value={projectForm.name}
