@@ -87,7 +87,7 @@
   /* Semantic*/
   --danger: #dc2626;
   --danger-muted: rgba(220, 38, 38, 0.08);
-  --success: #16a34a;
+  --success: #01660d;
   --success-muted: rgba(22, 163, 74, 0.08);
   --warning: #d97706;
   --warning-muted: rgba(217, 119, 6, 0.08);
@@ -211,8 +211,7 @@ input[type='number']::-webkit-inner-spin-button {
   grid-template-columns: 1fr 1fr;
   grid-template-rows: auto 1fr;
   overflow: auto;
-  padding: 1rem;
-  padding-top: 4rem;
+  padding: 4rem 1rem 1rem;
 }
 
 .content-wrapper {
@@ -393,7 +392,7 @@ nav ul button:hover::after {
 }
 
 .attribution-meta a {
-  color: var(--color-success);
+  color: var(--success);
   text-decoration: none;
 }
 
@@ -416,8 +415,8 @@ nav ul button:hover::after {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  min-height: 100vh;
   justify-content: center;
+  min-height: 100vh;
   text-align: center;
 }
 
@@ -1059,8 +1058,8 @@ nav ul button:hover::after {
 
 .landing-btn-ghost {
   align-items: center;
-  background: rgba(15, 17, 23, 0.6);
   backdrop-filter: blur(8px);
+  background: rgba(15, 17, 23, 0.6);
   border: 1px solid rgba(139, 154, 181, 0.35);
   border-radius: 8px;
   color: #c8d0e0;
@@ -1174,13 +1173,12 @@ nav ul button:hover::after {
 }
 
 .landing-motion-toggle {
-  background: rgba(15, 17, 23, 0.85);
   backdrop-filter: blur(8px);
+  background: rgba(15, 17, 23, 0.85);
   border: 1px solid rgba(59, 130, 246, 0.4);
   border-radius: 8px;
   top: 5rem;
   right: 1.5rem;
-  bottom: unset;
   color: #60a5fa;
   cursor: pointer;
   font-family: 'DM Mono', monospace;
@@ -1304,8 +1302,8 @@ nav ul button:hover::after {
    ========================================== */
 
 .pipette {
-  background: var(--bg-surface);
   backdrop-filter: blur(8px);
+  background: var(--bg-surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
@@ -1516,8 +1514,8 @@ nav ul button:hover::after {
 
 .sandbox-banner {
   align-items: center;
-  background: var(--bg-surface);
   backdrop-filter: blur(8px);
+  background: var(--bg-surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
@@ -1717,9 +1715,9 @@ nav ul button:hover::after {
   align-items: center;
   display: flex;
   flex-direction: column;
+  gap: 1rem;
   height: 100vh;
   justify-content: center;
-  gap: 1rem;
 }
 
 .spinner {
