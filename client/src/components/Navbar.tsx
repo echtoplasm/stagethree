@@ -30,6 +30,10 @@ export function Navbar({ onThemeToggle, theme }: NavbarProps) {
 
   const closeMenu = () => setMenuOpen(false);
 
+  /**
+   * Logs out the current user, clears auth state, and redirects to the home page.
+   * Closes the mobile menu on completion.
+   */
   const handleLogOut = async () => {
     try {
       await logoutUser();
@@ -41,6 +45,12 @@ export function Navbar({ onThemeToggle, theme }: NavbarProps) {
     }
   };
 
+  /**
+   * Authenticates the user in context, closes any open modals, and redirects
+   * based on role. Users with roleId >= 2 are sent to the admin panel, others to the app.
+   *
+   * @param user - The authenticated user returned from the login or signup flow.
+   */
   const evaluateUser = (user: User) => {
     login(user);
     setShowLogin(false);
@@ -48,6 +58,10 @@ export function Navbar({ onThemeToggle, theme }: NavbarProps) {
     user.roleId >= 2 ? navigate('/admin') : navigate('/app');
   };
 
+  /**
+   * Closes the mobile menu when the viewport exceeds 768px.
+   * Prevents the menu from persisting if the user resizes from mobile to desktop.
+   */
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth > 768) closeMenu();

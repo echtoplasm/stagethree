@@ -13,6 +13,7 @@ export interface ElementType {
   elementCategoryId: number;
 }
 
+/** fetches all element types */
 export const fetchAllElementTypes = async (): Promise<ElementType[]> => {
   const elementTypes = await apiFetch('/api/elements');
   return elementTypes;

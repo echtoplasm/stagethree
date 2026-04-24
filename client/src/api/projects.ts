@@ -4,6 +4,8 @@ import { type Stage } from './stages';
 import type { FullStagePlotResponse } from './stagePlots';
 import { type StagePlot } from './stagePlots';
 
+
+/** Represents a project that groups stage plots under a single user. */
 export interface Project {
   id: number;
   userId: number;
@@ -13,24 +15,24 @@ export interface Project {
   updatedAt?: string;
 }
 
-/**
- * @returns
- */
+/** Fetches all projects across all users. */
 export const fetchAllProjects = async (): Promise<Project[]> => {
   return apiFetch('/api/projects');
 };
 
 /**
- * @param id -
- * @returns
+ * Fetches all projects belonging to a specific user.
+ *
+ * @param id - The ID of the user to fetch projects for.
  */
 export const fetchAllProjectByUserId = async (id: number): Promise<Project[]> => {
   return apiFetch(`/api/projects/user/${id}`);
 };
 
 /**
- * @param project -
- * @returns
+ * Creates a new project.
+ *
+ * @param project - Project fields excluding the auto-generated id.
  */
 export const createNewProject = async (project: Omit<Project, 'id'>): Promise<Project> => {
   return apiFetch('/api/projects', {
@@ -40,8 +42,9 @@ export const createNewProject = async (project: Omit<Project, 'id'>): Promise<Pr
 };
 
 /**
- * @param projectId -
- * @returns
+ * Deletes a project by ID.
+ *
+ * @param projectId - The ID of the project to delete.
  */
 export const deleteProject = async (projectId: number): Promise<Project> => {
   return apiFetch(`/api/projects/${projectId}`, {
@@ -50,8 +53,10 @@ export const deleteProject = async (projectId: number): Promise<Project> => {
 };
 
 /**
- * @param user -
- * @returns
+ * Creates a default project, stage, and stage plot for a newly registered user.
+ * Sends a single request that bootstraps all three resources server-side.
+ *
+ * @param user - The authenticated user to create the default project for.
  */
 export const createDefaultProjectAndPlot = async (user: User): Promise<FullStagePlotResponse> => {
   const defaultProject: Omit<Project, 'id' | 'createdAt'> = {
@@ -80,9 +85,10 @@ export const createDefaultProjectAndPlot = async (user: User): Promise<FullStage
 };
 
 /**
- * @param projectId -
- * @param projectData -
- * @returns
+ * Updates an existing project by ID with the provided data.
+ *
+ * @param projectId - The ID of the project to update.
+ * @param projectData - Project fields excluding the id.
  */
 export const updateProject = async (
   projectId: number,
