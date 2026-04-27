@@ -14,6 +14,17 @@ The app supports multi-project workflows, per-plot input channel lists, public s
 
 ---
 
+## For Reviewers 
+
+Model attribution documentation is available via markdown at root/attribution.md
+
+Sql schema dump is located at root/schema.sql
+
+[DB Diagram](https://dbdiagram.io/d/Stage-three-finalized-69d7d5f50f7c9ef2c0bc85d0)
+
+
+---
+
 ## Tech Stack
 
 **Frontend** — React, TypeScript, Three.js, React Router, custom CSS design system with dark/light theming via CSS custom properties, Cloudflare Turnstile for bot protection on auth forms.
