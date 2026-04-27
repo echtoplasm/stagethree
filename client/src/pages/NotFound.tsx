@@ -1,5 +1,8 @@
 import { Link } from 'react-router-dom';
 
+/**
+ * 404 not found page. Displays when a route does not match any defined paths.
+ */
 export function NotFound() {
   return (
     <div className="not-found">

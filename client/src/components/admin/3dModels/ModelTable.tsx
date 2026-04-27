@@ -57,7 +57,10 @@ export const ImageTable = () => {
           {error && (
             <ErrorMessage error={error} />
           )}
-          <button className="btn btn-primary" onClick={() => setImageCreate(true)}>
+          <button
+            aria-label="Create a new model."
+            className="btn btn-primary" 
+            onClick={() => setImageCreate(true)}>
             <Plus size={18} />
             Create New image
           </button>
@@ -82,7 +85,9 @@ export const ImageTable = () => {
                   <td>{image.fileType}</td>
                   <td>{image.category}</td>
                   <td className="flex gap-2">
-                    <button className="btn btn-sm btn-ghost"
+                    <button 
+                      aria-label="Update image."
+                      className="btn btn-sm btn-ghost"
                       onClick={() => {
                         setSelectedImage(image)
                         setImageUpdate(true)
@@ -90,7 +95,9 @@ export const ImageTable = () => {
                       }>
                       <Pencil size={16} />
                     </button>
-                    <button className="btn btn-sm btn-danger"
+                    <button 
+                      aria-label="Delete image."
+                      className="btn btn-sm btn-danger"
                       onClick={() => {
                         setSelectedImage(image)
                         setImageDelete(true)

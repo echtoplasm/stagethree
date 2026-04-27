@@ -4,13 +4,22 @@ import { type User } from "../../types/api";
 import { updateUser } from '../../api/users';
 import { useAuth } from '../../contexts/AuthContext';
 import { ErrorMessage } from '../userUI/ErrorMessage';
+
 interface UserUpdateProps {
   userUpdate: User | null;
   onClose: () => void;
   onSuccess: (updateUser: User) => void;
 }
 
-
+/**
+ * Modal form for updating an existing user's information from the admin portal.
+ * Renders nothing if no user is selected. Role assignment is only visible to
+ * users with a Super User role (roleId 3).
+ *
+ * @param userUpdate - The user to be updated, or null if no user is selected.
+ * @param onClose - Callback to close the modal without making changes.
+ * @param onSuccess - Callback invoked with the updated user data on successful update.
+ */
 export function UserUpdate({ userUpdate, onClose, onSuccess }: UserUpdateProps) {
   const { user } = useAuth();
   if (!userUpdate) return null;
@@ -23,7 +32,12 @@ export function UserUpdate({ userUpdate, onClose, onSuccess }: UserUpdateProps) 
   });
   const [error, setError] = useState<string | null>(null);
 
-
+  /**
+   * Validates required fields and submits the updated user data.
+   * Sets an error message if validation fails or the request throws.
+   *
+   * @param e - The form submission event.
+   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!userForm.firstName || !userForm.lastName || !userForm.email) {
@@ -111,11 +125,6 @@ export function UserUpdate({ userUpdate, onClose, onSuccess }: UserUpdateProps) 
               </select>
             </div>
           )}
-
-
-
-
-
 
           <div className="modal-footer">
             <button type="button" className="btn btn-ghost" onClick={onClose}>

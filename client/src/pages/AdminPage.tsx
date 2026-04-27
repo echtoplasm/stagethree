@@ -5,6 +5,11 @@ import { ImageTable } from "../components/admin/3dModels/ModelTable";
 
 type AdminTab = 'users' | 'stages' | 'models';
 
+
+/**
+ * Admin dashboard page with tabbed navigation for managing users, stages, and 3D models.
+ * Renders the corresponding management table based on the active tab.
+ */
 export const AdminPage = () => {
   const [activeTab, setActiveTab] = useState<AdminTab>('users');
 

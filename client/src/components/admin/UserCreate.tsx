@@ -8,6 +8,14 @@ interface UserCreateProps {
   onSuccess: () => void;
 }
 
+/**
+ * Modal form for creating a new user account from the admin portal.
+ * Handles form state, submission, loading, and error display.
+ * Calls onSuccess and resets form fields on successful creation.
+ *
+ * @param onClose - Callback to close the modal without making changes.
+ * @param onSuccess - Callback invoked after a user is successfully created.
+ */
 export const UserCreate = ({ onClose, onSuccess }: UserCreateProps) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -16,6 +24,13 @@ export const UserCreate = ({ onClose, onSuccess }: UserCreateProps) => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+
+  /**
+   * Submits the form to create a new user.
+   * Resets all fields on success. Sets an error message on failure.
+   *
+   * @param e - The form submission event.
+   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {

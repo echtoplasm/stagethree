@@ -36,7 +36,11 @@ export function PlottingPage() {
 
   const { width } = useWindowSize();
 
-  /** Toggles the active tab, closing it if the same tab is clicked again. */
+  /**
+    * Toggles the active bottom drawer tab. Clicking the currently active tab closes the drawer.
+    *
+    * @param tab - The tab identifier to activate or deactivate.
+    */
   const handleTabClick = (tab: string) => {
     setActiveTab(activeTab === tab ? null : tab);
   };

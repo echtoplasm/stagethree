@@ -14,6 +14,16 @@ interface PlotCreateFromPublicStageProps {
   stage: PublicStage;
 }
 
+/**
+ * Modal for creating a new stage plot from a public stage template.
+ * Allows the user to assign the plot to an existing project or create a new one inline.
+ * On success, loads the full plot configuration into the stage context and triggers onSuccess.
+ * Rendered via a React Portal mounted to document.body.
+ *
+ * @param onClose - Callback to close the modal without making changes.
+ * @param onSuccess - Callback invoked after the plot is successfully created and context is loaded.
+ * @param stage - The public stage template to base the new plot on.
+ */
 export const PlotCreateFromPublicStage = ({ onClose, onSuccess, stage }: PlotCreateFromPublicStageProps) => {
   const [error, setError] = useState<string | null>(null);
   const [projects, setProjects] = useState<Project[]>([]);
@@ -46,6 +56,14 @@ export const PlotCreateFromPublicStage = ({ onClose, onSuccess, stage }: PlotCre
     loadProjects();
   }, []);
 
+
+  /**
+   * Validates form fields, optionally creates a new project, then creates the stage plot.
+   * On success, fetches the full plot configuration and loads it into the stage context.
+   * Sets an error message if validation fails or any request throws.
+   *
+   * @param e - The form submission event.
+   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;

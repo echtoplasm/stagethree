@@ -58,7 +58,7 @@ export const UserTable = () => {
             <h1>Users Management</h1>
             <p className="text-secondary">Manage all registered users</p>
           </div>
-          <button className="btn btn-primary" onClick={() => setUserCreate(true)}>
+          <button aria-label="Create a new user." className="btn btn-primary" onClick={() => setUserCreate(true)}>
             <Plus size={18} />
             Create New User
           </button>
@@ -85,7 +85,9 @@ export const UserTable = () => {
                   <td>{user.email}</td>
                   <td>{roleLabel[user.roleId] ?? 'User'}</td>
                   <td className="flex gap-2">
-                    <button className="btn btn-sm btn-ghost"
+                    <button 
+                      aria-label="Update selected user."
+                      className="btn btn-sm btn-ghost"
                       onClick={() => {
                         setSelectedUser(user)
                         setUserUpdate(true)
@@ -93,7 +95,9 @@ export const UserTable = () => {
                       }>
                       <Pencil size={16} />
                     </button>
-                    <button className="btn btn-sm btn-danger"
+                    <button
+                      aria-label="Delete selected user."
+                      className="btn btn-sm btn-danger"
                       onClick={() => {
                         setSelectedUser(user)
                         setUserDelete(true)

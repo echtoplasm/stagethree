@@ -20,6 +20,7 @@ export const UserPortal = () => {
   const [update, setUpdate] = useState(false);
   const [activeTab, setActiveTab] = useState<PortalTab>('projects');
 
+  /** Redirects to the home page if the user is not authenticated. */
   useEffect(() => {
     if (!isAuthenticated) navigate('/');
   }, [isAuthenticated]);

@@ -2049,7 +2049,7 @@ nav ul button:hover::after {
 }
 
 .table th {
-  color: var(--text-tertiary);
+  color: var(--text-primary);
   font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.08em;

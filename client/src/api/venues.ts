@@ -12,7 +12,6 @@ export interface Venue {
 
 /**
  * fetch all venues
- *
  */
 
 export const fetchAllVenues = async (): Promise<Venue[]> => {
@@ -23,7 +22,6 @@ export const fetchAllVenues = async (): Promise<Venue[]> => {
 
 /**
  * Create a venue
- *
  */
 
 export const createVenue = async (formData: Omit<Venue, 'id' | 'createdAt'>): Promise<void> => {

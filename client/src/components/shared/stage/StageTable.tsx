@@ -55,7 +55,7 @@ export function StageTable() {
   //early returns for loading and error state
   if (loading) return <Spinner />
   if (error) return <ErrorMessage error={error} />
-  
+
   //proper component return
   return (
     <div>
@@ -94,8 +94,19 @@ export function StageTable() {
                     <td>{stage.width} ft</td>
                     <td>{stage.depth} ft</td>
                     <td>{stage.height ? `${stage.height} ft` : '—'}</td>
-                    <td>
+                    <td className="flex gap-2">
                       <button
+                        aria-label="Update stage."
+                        className='btn btn-sm btn-ghost'
+                        onClick={() => {
+                          setSelectedStage(stage)
+                          setUpdate(true)
+                        }}
+                      >
+                        <Pencil size={16} />
+                      </button>
+                      <button
+                        aria-label="Delete stage."
                         className="btn btn-danger btn-sm"
                         onClick={() => {
                           setSelectedStage(stage)
@@ -103,19 +114,6 @@ export function StageTable() {
                         }}
                       >
                         <Trash size={16} />
-                        Delete
-                      </button>
-                    </td>
-                    <td>
-                      <button
-                        className='btn btn-update btn-sm'
-                        onClick={() => {
-                          setSelectedStage(stage)
-                          setUpdate(true)
-                        }}
-                      >
-                        <Pencil size={16} />
-                        Update
                       </button>
                     </td>
                   </tr>
@@ -156,13 +154,6 @@ export function StageTable() {
             setStageCreate(false)
 
           }}
-
-          //***//
-          //DOUBLE CHECK THIS VENUE ID NULL!
-          //if there are any errors within the admin portal 
-          //but really an admin should not be creating stages 
-          //from the admin portal but from within their own user portal 
-          //***//
 
           venueId={null!}
           onClose={() => setStageCreate(false)}

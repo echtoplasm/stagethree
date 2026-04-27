@@ -1,3 +1,7 @@
+/**
+ * Full-page centered loading spinner with a 'Loading...' label.
+ * Used as an early return during data fetch operations.
+ */
 export const Spinner = () => {
   return (
     <div className="flex-center">
