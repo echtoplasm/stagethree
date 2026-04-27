@@ -7,7 +7,7 @@ export interface State {
 }
 
 /**
- *
+ * Gets all states for populating state field form
  */
 
 export const getAllStates = async (): Promise<State[]> => {
