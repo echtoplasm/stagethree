@@ -74,6 +74,7 @@ export async function seed(knex: Knex): Promise<void> {
       capacity_ven: 9525,
     })
     .returning('*');
+
   const [madisonSquareVenue] = await knex('venue_ven')
     .insert({
       name_ven: 'Madison Square Garden',
@@ -83,6 +84,7 @@ export async function seed(knex: Knex): Promise<void> {
       capacity_ven: 20789,
     })
     .returning('*');
+
   const [riverbendVenue] = await knex('venue_ven')
     .insert({
       name_ven: 'Riverbend Music Center',
@@ -92,6 +94,7 @@ export async function seed(knex: Knex): Promise<void> {
       capacity_ven: 20500,
     })
     .returning('*');
+
   const [rymVenue] = await knex('venue_ven')
     .insert({
       name_ven: 'Ryman Auditorium',
@@ -101,6 +104,7 @@ export async function seed(knex: Knex): Promise<void> {
       capacity_ven: 2362,
     })
     .returning('*');
+
   const [fillmoreVenue] = await knex('venue_ven')
     .insert({
       name_ven: 'The Fillmore',
