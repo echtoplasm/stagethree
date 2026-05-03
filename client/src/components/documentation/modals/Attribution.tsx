@@ -91,6 +91,15 @@ export const AttributionModal = ({ onClose }: AttributionModalProps) => {
               </div>
 
               <div className="attribution-item">
+                <span className="attribution-name">Music Stand</span>
+                <div className="attribution-meta">
+                  <span>JeremyMichael</span>
+                  <span className="badge badge-warning">CC Non-Commercial</span>
+                  <a href="https://sketchfab.com/3d-models/manhasset-music-stand-17cff430f0354453b978bbd6d6f65e61" target="_blank" rel="noreferrer">sketchfab.com/JeremyMichael</a>
+                </div>
+              </div>
+
+              <div className="attribution-item">
                 <span className="attribution-name">Monitor Wedge</span>
                 <div className="attribution-meta">
                   <span>oldessexboy</span>
