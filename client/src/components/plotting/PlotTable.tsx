@@ -64,7 +64,7 @@ export function PlotTable({ selectedProject, onClose }: PlotTableProps) {
   if (loading) return <Spinner />
 
   if (error) return <ErrorMessage error={error} />
-  
+
   //proper component return
   return (
     <div className='mt-8 card'>
@@ -147,6 +147,11 @@ export function PlotTable({ selectedProject, onClose }: PlotTableProps) {
         <PlotUpdate
           plot={selectedPlot}
           onClose={() => {
+            updatePlotState();
+            setUpdate(false);
+            setSelectedPlot(null);
+          }}
+          onSuccess={() => {
             updatePlotState();
             setUpdate(false);
             setSelectedPlot(null);

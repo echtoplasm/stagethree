@@ -274,6 +274,11 @@ export function ProjectTable() {
             setSelectedPlot(null);
             setPlotUpdate(false);
           }}
+          onSuccess={() => {
+            updatePlotState();
+            setSelectedPlot(null);
+            setPlotUpdate(false);
+          }}
         />
       )}
 
