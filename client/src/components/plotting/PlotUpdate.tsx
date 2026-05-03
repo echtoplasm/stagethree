@@ -7,6 +7,7 @@ import { ErrorMessage } from '../userUI/ErrorMessage';
 interface PlotUpdateProps {
   plot: StagePlot;
   onClose: () => void;
+  onSuccess: () => void;
 }
 
 
@@ -16,7 +17,7 @@ interface PlotUpdateProps {
  * 
  * @returns - JSX portal form for updating plot information  
  */
-export function PlotUpdate({ plot, onClose }: PlotUpdateProps) {
+export function PlotUpdate({ plot, onClose, onSuccess }: PlotUpdateProps) {
   //state management
   const [plotForm, setPlotForm] = useState<StagePlot>({
     id: plot.id,
@@ -39,6 +40,7 @@ export function PlotUpdate({ plot, onClose }: PlotUpdateProps) {
     if (!plotForm.name) return setError('Plot name is required.');
     try {
       await updatePlot(plotForm.id, plotForm);
+      onSuccess();
       onClose();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to update plot.');

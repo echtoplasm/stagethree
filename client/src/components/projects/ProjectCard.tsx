@@ -299,6 +299,10 @@ export function ProjectCard({ onStageSelect }: ProjectCardProps) {
             <PlotUpdate
               plot={selectedPlot}
               onClose={() => { setPlotUpdate(false) }}
+              onSuccess={() => {
+                setPlotUpdate(false);
+                handleProjectClick(selectedProjectId!)
+              }}
             />
           )}
 
