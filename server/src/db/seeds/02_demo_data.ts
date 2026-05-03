@@ -58,47 +58,55 @@ export async function seed(knex: Knex): Promise<void> {
   // ============================================
   // VENUES
   // ============================================
+
+  const states = await knex('state_sta')
+    .whereIn('abbreviation_sta', ['CO', 'NY', 'OH', 'TN', 'CA'])
+    .select('id_sta', 'abbreviation_sta');
+
+  const stateMap = Object.fromEntries(states.map(s => [s.abbreviation_sta, s.id_sta]));
+
   const [redRocksVenue] = await knex('venue_ven')
     .insert({
       name_ven: 'Red Rocks Amphitheatre',
       address_ven: '18300 W Alameda Pkwy',
       city_ven: 'Morrison',
+      id_sta_ven: stateMap['CO'],
       capacity_ven: 9525,
     })
     .returning('*');
-
   const [madisonSquareVenue] = await knex('venue_ven')
     .insert({
       name_ven: 'Madison Square Garden',
       address_ven: '4 Pennsylvania Plaza',
       city_ven: 'New York',
+      id_sta_ven: stateMap['NY'],
       capacity_ven: 20789,
     })
     .returning('*');
-
   const [riverbendVenue] = await knex('venue_ven')
     .insert({
       name_ven: 'Riverbend Music Center',
       address_ven: '6295 Kellogg Ave',
       city_ven: 'Cincinnati',
+      id_sta_ven: stateMap['OH'],
       capacity_ven: 20500,
     })
     .returning('*');
-
   const [rymVenue] = await knex('venue_ven')
     .insert({
       name_ven: 'Ryman Auditorium',
       address_ven: '116 5th Ave N',
       city_ven: 'Nashville',
+      id_sta_ven: stateMap['TN'],
       capacity_ven: 2362,
     })
     .returning('*');
-
   const [fillmoreVenue] = await knex('venue_ven')
     .insert({
       name_ven: 'The Fillmore',
       address_ven: '1805 Geary Blvd',
       city_ven: 'San Francisco',
+      id_sta_ven: stateMap['CA'],
       capacity_ven: 1150,
     })
     .returning('*');
