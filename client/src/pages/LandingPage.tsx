@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { LucideInfinity, List, Rotate3d, Spotlight } from 'lucide-react';
 import { SignUp } from '../components/shared/navAuth/Signup';
-
+import { useAuth } from '../contexts/AuthContext';
 
 /**
  * Marketing landing page with an animated canvas background and feature highlights.
@@ -17,6 +17,8 @@ export const LandingPage = () => {
   const [animatedBg, setAnimatedBg] = useState(
     !window.matchMedia('(prefers-reduced-motion: reduce)').matches
   );
+
+  const { login } = useAuth();
 
   /** Sets visible to true on mount to trigger CSS fade-in transitions. */
   useEffect(() => {
@@ -164,7 +166,7 @@ export const LandingPage = () => {
       </section>
       {promptSignUp && (
         <SignUp
-          onSuccess={() => setPromptSignUp(false)}
+          onSuccess={(user) => {setPromptSignUp(false); login(user)}}
           onClose={() => setPromptSignUp(false)} />
       )}
     </div>

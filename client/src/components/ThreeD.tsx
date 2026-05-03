@@ -24,7 +24,6 @@ type ContextMenuState = {
   x: number;
   y: number;
   object: StageObject;
-
 }
 
 export interface StageSceneHandle {
@@ -56,8 +55,12 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
   const { showStageObjects, showColorPicker, showCurrentStage } = props;
 
   useImperativeHandle(ref, () => ({
-    getSnapshot: () => rendererRef.current?.domElement.toDataURL('image/png') ?? null
-  }))
+    getSnapshot: () => {
+      if (!rendererRef.current || !sceneRef.current || !cameraRef.current) return null;
+      rendererRef.current.render(sceneRef.current, cameraRef.current);
+      return rendererRef.current.domElement.toDataURL('image/png');
+    }
+  }));
 
   //STATE MANAGEMENT
   const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null);
@@ -69,13 +72,13 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
 
   //state for selected element positioning and rotation
   const [selectedElementPosition, setSelectedElementPosition] = useState<THREE.Vector3 | null>(null);
-  const [selectedObjectRotation, setSelectedObjectRotation] = useState<THREE.Euler | null>(null)
+  const [selectedObjectRotation, setSelectedObjectRotation] = useState<THREE.Euler | null>(null);
   const [selectedObject, setSelectedObject] = useState<StageObject | null>(null);
 
-  //state for object overlay expanded view 
+  //state for object overlay expanded view
   const [objOverlay, setObjOverlay] = useState(false);
 
-  //state for stage overlay expanded view 
+  //state for stage overlay expanded view
   const [stageOverlay, setStageOverlay] = useState(false);
 
   //state for sandbox doc help
@@ -83,7 +86,7 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
 
   //state for background color
   const [customBackGround, setCustomBackGround] = useState(false);
-  const [backgroundColor, setBackGroundColor] = useState('#5a6a9a')
+  const [backgroundColor, setBackGroundColor] = useState('#5a6a9a');
 
   //REFS
   const objectsRef = useRef<StageObject[]>([]);
@@ -101,7 +104,6 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
   const { elementPlacements, stage, activeProject, setElementPlacements } = useStageContext();
   const { isAuthenticated } = useAuth();
   const isSandbox = !isAuthenticated;
-
 
 
   /**
@@ -229,7 +231,7 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
                 positionZ: selected.position.z,
               });
             }
-            return { ...obj, position: selected.position.clone() }
+            return { ...obj, position: selected.position.clone() };
           }
           return obj;
         });
@@ -237,7 +239,7 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
         return next;
       });
     }
-  }
+  };
 
   /**
    * Initializes the Three.js scene, camera, renderer, orbit controls, lighting, stage grid,
@@ -246,7 +248,6 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
    */
   useEffect(() => {
     if (!mountRef.current) return;
-
 
     // Scene setup
     const scene = new THREE.Scene();
@@ -264,20 +265,20 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
     camera.lookAt(0, 0, 0);
     cameraRef.current = camera;
 
-    // renderer setup
+    // Renderer setup
     const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+    renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(mountRef.current.clientWidth, mountRef.current.clientHeight);
     mountRef.current.appendChild(renderer.domElement);
     rendererRef.current = renderer;
 
-    // controls setup
+    // Controls setup
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
     controlsRef.current = controls;
 
     const keys = new Set<string>();
-
 
     /**
      * Handles WASD/QE camera translation and arrow key rotation/elevation of the selected object.
@@ -287,8 +288,7 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
       const tag = (document.activeElement as HTMLElement)?.tagName.toLowerCase();
       if (tag === 'input' || tag === 'textarea' || tag === 'select' || tag === 'button') return;
 
-
-      keys.add(e.key.toLowerCase())
+      keys.add(e.key.toLowerCase());
       if (selectedObjectRef.current) {
         const rotationSpeed = Math.PI / 45;
 
@@ -300,11 +300,9 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
           selectedObjectRef.current.rotation.y -= rotationSpeed;
           selectedObjectRef.current.rotation.y = Math.round(selectedObjectRef.current.rotation.y * (180 / Math.PI)) * (Math.PI / 180);
         }
-
         if (e.key === 'ArrowUp') {
           selectedObjectRef.current.position.y += rotationSpeed;
         }
-
         if (e.key === 'ArrowDown') {
           selectedObjectRef.current.position.y -= rotationSpeed;
         }
@@ -317,7 +315,7 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
 
-    // lighting
+    // Lighting
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
     scene.add(ambientLight);
 
@@ -349,19 +347,13 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
 
       return group;
     };
+
     const grid = createRectGrid(stage?.width ?? 20, stage?.depth ?? 20);
     scene.add(grid);
 
-    /*
-        // Stage floor (grid)
-        const gridHelper = new THREE.GridHelper(stage?.width ?? 20, stage?.depth ?? 20, 0x444444, 0x222222);
-        scene.add(gridHelper);
-    */
     // Stage plane (invisible for raycasting)
     const planeGeometry = new THREE.PlaneGeometry(stage?.width ?? 20, stage?.depth ?? 20);
-    const planeMaterial = new THREE.MeshBasicMaterial({
-      visible: false
-    });
+    const planeMaterial = new THREE.MeshBasicMaterial({ visible: false });
     const plane = new THREE.Mesh(planeGeometry, planeMaterial);
     plane.rotation.x = -Math.PI / 2;
     plane.name = 'stage-plane';
@@ -384,15 +376,21 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
     };
     animate();
 
-    /** Updates camera aspect ratio and renderer dimensions on container resize. */
+    /**
+     * Updates camera aspect ratio and renderer dimensions on container resize.
+     * Uses ResizeObserver on the mount div rather than window resize so that
+     * tiling WM reflows (e.g. Hyprland) are caught reliably.
+     */
     const handleResize = () => {
       if (!mountRef.current || !camera || !renderer) return;
-
       camera.aspect = mountRef.current.clientWidth / mountRef.current.clientHeight;
       camera.updateProjectionMatrix();
+      renderer.setPixelRatio(window.devicePixelRatio);
       renderer.setSize(mountRef.current.clientWidth, mountRef.current.clientHeight);
     };
-    window.addEventListener('resize', handleResize);
+
+    const resizeObserver = new ResizeObserver(handleResize);
+    resizeObserver.observe(mountRef.current);
 
     /**
      * Initiates a drag operation on left click by raycasting against scene instruments
@@ -400,7 +398,6 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
      */
     const handleMouseDown = (event: MouseEvent) => {
       if (event.button !== 0) return;
-
       if (!mountRef.current || !camera || !scene) return;
 
       const rect = mountRef.current.getBoundingClientRect();
@@ -447,7 +444,6 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
       }
     };
 
-
     /**
      * Opens the right-click context menu for the instrument under the cursor.
      * Clears the context menu if no instrument is hit.
@@ -489,7 +485,7 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
 
     // Cleanup
     return () => {
-      window.removeEventListener('resize', handleResize);
+      resizeObserver.disconnect();
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
       renderer.domElement.removeEventListener('mousedown', handleMouseDown);
@@ -502,9 +498,6 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
       if (mountRef.current && renderer.domElement) {
         mountRef.current.removeChild(renderer.domElement);
       }
-
-
-
     };
   }, [stage]);
 
@@ -521,7 +514,7 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
         addInstrument(placement);
       }
     });
-    console.log(typeof stage?.width, typeof stage?.depth)
+    console.log(typeof stage?.width, typeof stage?.depth);
   }, [elementPlacements]);
 
   /** Updates the Three.js scene background color whenever the user selects a new color. */
@@ -610,7 +603,7 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
           <ul className="context-menu__list">
             <li className="context-menu__item context-menu__item--danger" onClick={() => {
               if (!isSandbox) {
-                handleDeleteObject(contextMenu.object)
+                handleDeleteObject(contextMenu.object);
               } else {
                 contextMenu.object.mesh.removeFromParent();
                 setObjects(prev => {
@@ -690,4 +683,4 @@ export const StageScene = forwardRef<StageSceneHandle, StageSceneProps>((props, 
       )}
     </div>
   );
-})
+});

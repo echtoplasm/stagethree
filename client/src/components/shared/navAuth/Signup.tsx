@@ -5,6 +5,7 @@ import { createUser } from '../../../api/users'
 import { loginUser } from "../../../api/auth";
 import { type User } from "../../../types/api";
 import { ErrorMessage } from '../../../components/userUI/ErrorMessage'
+
 interface SignUpProps {
   onClose: () => void;
   onSuccess: (user: User) => void;
