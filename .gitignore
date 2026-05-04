@@ -51,3 +51,5 @@ temp/
 tmp/
 **/.env*
 client/.env*
+!**/.env.example
+!**/.env.*.example
