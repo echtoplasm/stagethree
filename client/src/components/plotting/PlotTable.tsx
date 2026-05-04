@@ -53,7 +53,7 @@ export function PlotTable({ selectedProject, onClose }: PlotTableProps) {
     loadPlots();
   }, [selectedProject.id]);
 
-  /**  */
+  /** fetches stageplots by projectid again to update ui state */
   const updatePlotState = async () => {
     const data = await fetchStagePlotsByProjectId(selectedProject.id);
     setPlots(data);
